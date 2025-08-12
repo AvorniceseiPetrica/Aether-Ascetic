@@ -16,6 +16,7 @@ class AA2_Game
 
         void InitSDL(std::string window_name, int window_width, int window_height);
         void Init(std::string window_name, int window_width, int window_height);
+        void HandleEvents();
         void Update();
         void Render();
         void Run();
