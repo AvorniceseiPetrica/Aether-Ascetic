@@ -33,9 +33,18 @@ void AA2_Game::Update()
 
 void AA2_Game::Render()
 {
+    SDL_SetRenderDrawColor(renderer, 0x22, 0x22, 0x22, 255);
     SDL_RenderClear(renderer);
 
-    // render here
+    SDL_SetRenderDrawColor(renderer, 0xff, 0xaa, 0xbb, 255);
+    SDL_FRect dst = {
+        .x = 100,
+        .y = 100,
+        .w = 100,
+        .h = 100
+    
+    };
+    SDL_RenderFillRect(renderer, &dst);
 
     SDL_RenderPresent(renderer);
 }
@@ -50,11 +59,8 @@ void AA2_Game::Run()
         {
             if(e.type == SDL_EVENT_QUIT)
                 is_running = false;
-            else
-            {
-                Update();
-                Render();
-            }
         }
+        Update();
+        Render();
     }
 }
