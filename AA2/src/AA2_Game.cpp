@@ -1,5 +1,8 @@
 #include "AA2_Game.h"
 
+#include "AA2_RefLinks.h"
+#include "AA2_TextureLoader.h"
+
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
     if(!SDL_Init(SDL_INIT_VIDEO))
@@ -24,6 +27,8 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
 {
     InitSDL(window_name, window_width, window_height);
     is_running = true;
+    AA2_RefLinks::SetWindow(window);
+    AA2_RefLinks::SetRenderer(renderer);
 }
 
 void AA2_Game::Update()
@@ -40,11 +45,13 @@ void AA2_Game::Render()
     SDL_FRect dst = {
         .x = 100,
         .y = 100,
-        .w = 100,
-        .h = 100
+        .w = 1000,
+        .h = 1000
     
     };
     SDL_RenderFillRect(renderer, &dst);
+    SDL_Texture *txt = AA2_TextureLoader::LoadTexture("assets/textures/pixel.png");
+    SDL_RenderTexture(renderer, txt, nullptr, &dst);
 
     SDL_RenderPresent(renderer);
 }
