@@ -2,6 +2,7 @@
 
 #include "AA2_RefLinks.h"
 #include "AA2_TextureLoader.h"
+#include "AA2_Map.h"
 
 SDL_Texture *txt;
 SDL_FRect dst = {
@@ -10,6 +11,8 @@ SDL_FRect dst = {
     .w = 100,
     .h = 100    
 };
+
+AA2_Map M;
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
@@ -40,6 +43,10 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     AA2_RefLinks::SetRenderer(renderer);
 
     txt = AA2_TextureLoader::LoadTexture("assets/textures/pixel.png");
+    M.Init();
+    M.PrintInfo();
+    M.LoadMap("configs/map.txt");
+    M.PrintInfo();
 }
 
 void AA2_Game::HandleEvents()
@@ -63,6 +70,7 @@ void AA2_Game::Render()
     SDL_RenderClear(renderer);
 
     SDL_RenderTexture(renderer, txt, nullptr, &dst);
+    M.Render();
 
     SDL_RenderPresent(renderer);
 }
