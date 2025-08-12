@@ -3,12 +3,13 @@
 #include <vector>
 
 #include "AA2_Tile.h"
+#include "AA2_Config.h"
 
 class AA2_TileManager
 {
     private:
 
-        AA2_Tile *tiles[3];
+        AA2_Tile *tiles[TILE_COUNT];
 
     public:
 

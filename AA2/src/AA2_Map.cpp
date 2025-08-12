@@ -27,7 +27,11 @@ void AA2_Map::LoadMap(std::string map_path)
     {
         for(int i = 0; i < TILEMAP_HEIGHT; i++)
             for(int j = 0; j < TILEMAP_WIDTH; j++)
+            {
+                SDL_Log("i = %d | j = %d\n", i, j);
                 f>>tilemap[i][j];   
+                SDL_Log("Read: %d\n", tilemap[i][j]);
+            }
     }
 
     f.close();

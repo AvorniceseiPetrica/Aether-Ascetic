@@ -44,7 +44,6 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
 
     txt = AA2_TextureLoader::LoadTexture("assets/textures/pixel.png");
     M.Init();
-    M.PrintInfo();
     M.LoadMap("configs/map.txt");
     M.PrintInfo();
 }

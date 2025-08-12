@@ -10,7 +10,7 @@ class AA2_Map
 {
     private:
 
-        int tilemap[TILEMAP_WIDTH][TILEMAP_HEIGHT];
+        int tilemap[TILEMAP_HEIGHT][TILEMAP_WIDTH];
         AA2_TileManager tile_manager;
 
     public:
