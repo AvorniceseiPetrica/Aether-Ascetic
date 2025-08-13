@@ -3,6 +3,8 @@
 #include <fstream>
 #include <SDL3/SDL.h>
 
+#include "AA2_RefLinks.h"
+
 AA2_Map::AA2_Map()
 {
     for(int i = 0; i < TILEMAP_HEIGHT; i++)
@@ -39,13 +41,14 @@ void AA2_Map::LoadMap(std::string map_path)
 
 void AA2_Map::Render()
 {
+    SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
     int tile_x, tile_y;
     int tile_id;
 
     for(int i = 0; i < TILEMAP_HEIGHT; i++)
         for(int j = 0; j < TILEMAP_WIDTH; j++)
         {
-            tile_x = j * TILE_WIDTH;
+            tile_x = j * TILE_WIDTH - camera.x;
             tile_y = i * TILE_HEIGHT;
             tile_id = tilemap[i][j];
             

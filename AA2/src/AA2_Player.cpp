@@ -32,5 +32,17 @@ void AA2_Player::Update()
 
 void AA2_Player::Render()
 {
-    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &data);
+    SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y,
+        .w = data.w,
+        .h = data.h
+    };
+    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &dst);
+}
+
+SDL_FRect* AA2_Player::GetRect()
+{
+    return &data;
 }

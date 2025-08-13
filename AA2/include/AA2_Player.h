@@ -19,4 +19,5 @@ class AA2_Player
         void Init();
         void Update();
         void Render();
+        SDL_FRect* GetRect();
 };

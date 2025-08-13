@@ -4,9 +4,11 @@
 #include "AA2_TextureLoader.h"
 #include "AA2_Map.h"
 #include "AA2_Player.h"
+#include "AA2_Camera.h"
 
 AA2_Map M;
 AA2_Player P(100, 100);
+AA2_Camera C;
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
@@ -35,11 +37,15 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     is_running = true;
     AA2_RefLinks::SetWindow(window);
     AA2_RefLinks::SetRenderer(renderer);
+    AA2_RefLinks::SetCamera(&C);
 
     M.Init();
     M.LoadMap("configs/map.txt");
     M.PrintInfo();
     P.Init();
+    SDL_FRect *p_rect = P.GetRect();
+    C.SetTarget(p_rect);
+
 }
 
 void AA2_Game::HandleEvents()
@@ -56,6 +62,9 @@ void AA2_Game::HandleEvents()
 void AA2_Game::Update()
 {
     P.Update();
+    SDL_Log("Player Rect: x = %f, y = %f\n", P.GetRect()->x, P.GetRect()->y);
+    C.Update();
+    SDL_Log("Camera Rect: x = %f, y = %f\n", C.GetViewPort().x, C.GetViewPort().y);
 }
 
 void AA2_Game::Render()
