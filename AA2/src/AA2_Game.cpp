@@ -40,7 +40,7 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     AA2_RefLinks::SetCamera(&C);
 
     M.Init();
-    M.LoadMap("configs/map.txt");
+    M.LoadMap("configs/map0.txt");
     M.PrintInfo();
     P.Init();
     SDL_FRect *p_rect = P.GetRect();
@@ -62,9 +62,9 @@ void AA2_Game::HandleEvents()
 void AA2_Game::Update()
 {
     P.Update();
-    SDL_Log("Player Rect: x = %f, y = %f\n", P.GetRect()->x, P.GetRect()->y);
+    //SDL_Log("Player Rect: x = %f, y = %f\n", P.GetRect()->x, P.GetRect()->y);
     C.Update();
-    SDL_Log("Camera Rect: x = %f, y = %f\n", C.GetViewPort().x, C.GetViewPort().y);
+    //SDL_Log("Camera Rect: x = %f, y = %f\n", C.GetViewPort().x, C.GetViewPort().y);
 }
 
 void AA2_Game::Render()

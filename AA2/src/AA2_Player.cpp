@@ -35,7 +35,7 @@ void AA2_Player::Render()
     SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
         .x = data.x - camera.x,
-        .y = data.y,
+        .y = data.y - camera.y,
         .w = data.w,
         .h = data.h
     };

@@ -30,9 +30,9 @@ void AA2_Map::LoadMap(std::string map_path)
         for(int i = 0; i < TILEMAP_HEIGHT; i++)
             for(int j = 0; j < TILEMAP_WIDTH; j++)
             {
-                SDL_Log("i = %d | j = %d\n", i, j);
+                //SDL_Log("i = %d | j = %d\n", i, j);
                 f>>tilemap[i][j];   
-                SDL_Log("Read: %d\n", tilemap[i][j]);
+                //SDL_Log("Read: %d\n", tilemap[i][j]);
             }
     }
 
@@ -49,7 +49,7 @@ void AA2_Map::Render()
         for(int j = 0; j < TILEMAP_WIDTH; j++)
         {
             tile_x = j * TILE_WIDTH - camera.x;
-            tile_y = i * TILE_HEIGHT;
+            tile_y = i * TILE_HEIGHT - camera.y;
             tile_id = tilemap[i][j];
             
             tile_manager.GetTile(tile_id)->Render(tile_x, tile_y);

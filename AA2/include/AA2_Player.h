@@ -8,8 +8,8 @@ class AA2_Player
 
         SDL_FRect data;
         float speed = 10;
-        float width = 100;
-        float height = 100;
+        float width = 150;
+        float height = 150;
         SDL_Texture *texture = nullptr;
 
     public:
