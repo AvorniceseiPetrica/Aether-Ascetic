@@ -5,9 +5,9 @@
 #include "AA2_Map.h"
 #include "AA2_Player.h"
 #include "AA2_Camera.h"
+#include "AA2_Level.h"
 
-AA2_Map M;
-AA2_Player P(100, 100);
+AA2_Level L("configs/map0.txt", {.x = 200, .y = 1000});
 AA2_Camera C;
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
@@ -39,12 +39,8 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     AA2_RefLinks::SetRenderer(renderer);
     AA2_RefLinks::SetCamera(&C);
 
-    M.Init();
-    M.LoadMap("configs/map0.txt");
-    M.PrintInfo();
-    P.Init();
-    SDL_FRect *p_rect = P.GetRect();
-    C.SetTarget(p_rect);
+    L.Init();
+    C.SetTarget(AA2_RefLinks::GetPlayer()->GetRect());
 
 }
 
@@ -61,19 +57,15 @@ void AA2_Game::HandleEvents()
 
 void AA2_Game::Update()
 {
-    P.Update();
-    //SDL_Log("Player Rect: x = %f, y = %f\n", P.GetRect()->x, P.GetRect()->y);
+    L.Update();
     C.Update();
-    //SDL_Log("Camera Rect: x = %f, y = %f\n", C.GetViewPort().x, C.GetViewPort().y);
 }
 
 void AA2_Game::Render()
 {
     SDL_RenderClear(renderer);
 
-    M.Render();
-    P.Render();
-
+    L.Render();
     SDL_RenderPresent(renderer);
 }
 

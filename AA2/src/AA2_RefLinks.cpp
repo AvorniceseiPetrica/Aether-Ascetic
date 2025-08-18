@@ -3,6 +3,7 @@
 SDL_Window *AA2_RefLinks::window = nullptr;
 SDL_Renderer *AA2_RefLinks::renderer = nullptr;
 AA2_Camera *AA2_RefLinks::camera = nullptr;
+AA2_Player *AA2_RefLinks::player = nullptr;
 
 void AA2_RefLinks::SetWindow(SDL_Window *p_window)
 {
@@ -33,7 +34,7 @@ SDL_Renderer* AA2_RefLinks::GetRenderer()
 void AA2_RefLinks::SetCamera(AA2_Camera *p_camera)
 {
     if(p_camera == nullptr)  
-        SDL_Log("\n\tAA2_RefLinks::SetCamera()\t<< Provided NULL for (AA2_Camera *camera) >>");
+        SDL_Log("\n\tAA2_RefLinks::SetCamera()\t<< Provided NULL for (AA2_Camera *camera) >>\n\n");
     else
         camera = p_camera;
 }
@@ -41,4 +42,17 @@ void AA2_RefLinks::SetCamera(AA2_Camera *p_camera)
 AA2_Camera* AA2_RefLinks::GetCamera()
 {
     return camera;
+}
+
+void AA2_RefLinks::SetPlayer(AA2_Player *p_player)
+{
+    if(p_player == nullptr)  
+        SDL_Log("\n\tAA2_RefLinks::SetPlayer()\t<< Provided NULL for (AA2_Player *player) >\n\n");
+    else
+        player = p_player;
+}
+
+AA2_Player* AA2_RefLinks::GetPlayer()
+{
+    return player;
 }

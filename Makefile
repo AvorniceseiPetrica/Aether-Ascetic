@@ -12,7 +12,8 @@ SOURCES=$(AA2_sources_path)/main.cpp \
 		$(AA2_sources_path)/AA2_Tile.cpp \
 		$(AA2_sources_path)/AA2_TileManager.cpp \
 		$(AA2_sources_path)/AA2_Player.cpp \
-		$(AA2_sources_path)/AA2_Camera.cpp
+		$(AA2_sources_path)/AA2_Camera.cpp \
+		$(AA2_sources_path)/AA2_Level.cpp
 
 HEADERS=$(AA2_headers_path)/AA2_Config.h \
 		$(AA2_headers_path)/AA2_Game.h \
@@ -22,7 +23,8 @@ HEADERS=$(AA2_headers_path)/AA2_Config.h \
 		$(AA2_headers_path)/AA2_Tile.h \
 		$(AA2_headers_path)/AA2_TileManager.h \
 		$(AA2_headers_path)/AA2_Player.h \
-		$(AA2_headers_path)/AA2_Camera.h
+		$(AA2_headers_path)/AA2_Camera.h \
+		$(AA2_headers_path)/AA2_Level.h
 
 $(exe): $(SOURCES) $(HEADERS)
 	g++ -Wall $(SOURCES) -o $(exe) -I$(AA2_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image

@@ -13,7 +13,7 @@ AA2_Player::AA2_Player(float x, float y)
 
 void AA2_Player::Init()
 {
-    texture = AA2_TextureLoader::LoadTexture("assets/textures/tiles/red.png");
+    texture = AA2_TextureLoader::LoadTexture("assets/tiles/red.png");
 }
 
 void AA2_Player::Update()

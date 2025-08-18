@@ -19,7 +19,6 @@ class AA2_Map
         ~AA2_Map() = default;
         void Init();
         void LoadMap(std::string map_path);
-        void Update();
         void Render();
         void PrintInfo();
 };
