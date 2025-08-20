@@ -25,6 +25,8 @@ void AA2_Level::Init()
 
     background = AA2_TextureLoader::LoadTexture(background_path);
     midground = AA2_TextureLoader::LoadTexture(midground_path);
+    
+    SDL_Log("Level initialized...\n");
 }
 
 void AA2_Level::Update()

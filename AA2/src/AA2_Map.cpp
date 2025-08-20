@@ -15,6 +15,8 @@ AA2_Map::AA2_Map()
 void AA2_Map::Init()
 {
     tile_manager.Init();
+
+    SDL_Log("Initialized map...\n");
 }
 
 void AA2_Map::LoadMap(std::string map_path)
@@ -37,6 +39,8 @@ void AA2_Map::LoadMap(std::string map_path)
     }
 
     f.close();
+
+    SDL_Log("Loaded map: %s...\n", map_path.c_str());
 }
 
 void AA2_Map::Render()

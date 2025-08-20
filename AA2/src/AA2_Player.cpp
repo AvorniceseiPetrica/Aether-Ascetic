@@ -3,17 +3,18 @@
 #include "AA2_TextureLoader.h"
 #include "AA2_RefLinks.h"
 
-AA2_Player::AA2_Player(float x, float y)
+AA2_Player::AA2_Player(float x, float y) : AA2_Creature(x, y, 0, 0)
 {
-    data.x = x;
-    data.y = y;
-    data.w = width;
-    data.h = height;
+    
 }
 
 void AA2_Player::Init()
 {
     texture = AA2_TextureLoader::LoadTexture("assets/tiles/red.png");
+    data.w = width;
+    data.h = height;
+
+    SDL_Log("Player initialized...\n");
 }
 
 void AA2_Player::Update()

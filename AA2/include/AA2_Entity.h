@@ -10,7 +10,7 @@ class AA2_Entity
 
     public:
 
-        AA2_Entity(float x, float y);
+        AA2_Entity(float x, float y, float width, float height);
         virtual ~AA2_Entity() = default;
         virtual void Update() = 0;
         virtual void Render() = 0;

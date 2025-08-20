@@ -52,6 +52,8 @@ void AA2_TileManager::Init()
     tiles[CONNECT_LOWER_RIGHT] = new AA2_Tile(CONNECT_LOWER_RIGHT, "assets/tiles/connect_lower_right.png", SOLID);
     tiles[CONNECT_UPPER_LEFT] = new AA2_Tile(CONNECT_UPPER_LEFT, "assets/tiles/connect_upper_left.png", SOLID);
     tiles[CONNECT_UPPER_RIGHT] = new AA2_Tile(CONNECT_UPPER_RIGHT, "assets/tiles/connect_upper_right.png", SOLID);
+
+    SDL_Log("Initialized tile manager...\n");
 }
 
 AA2_Tile* AA2_TileManager::GetTile(int id)

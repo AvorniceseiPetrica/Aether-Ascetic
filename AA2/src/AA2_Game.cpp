@@ -7,7 +7,7 @@
 #include "AA2_Camera.h"
 #include "AA2_Level.h"
 
-AA2_Level L("configs/map0.txt", {.x = 200, .y = 1000});
+AA2_Level L("configs/map0.txt", {.x = 0, .y = 0});
 AA2_Camera C;
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
@@ -28,6 +28,8 @@ void AA2_Game::InitSDL(std::string window_name, int window_width, int window_hei
                 SDL_Log("\n\t<< Could not create renderer >>\n\n");
         }
     }
+
+    SDL_Log("Created window and renderer..\n");
 }
 
 void AA2_Game::Init(std::string window_name, int window_width, int window_height)
@@ -41,7 +43,7 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
 
     L.Init();
     C.SetTarget(AA2_RefLinks::GetPlayer()->GetRect());
-
+    SDL_Log("Initialized game...\n");
 }
 
 void AA2_Game::HandleEvents()
@@ -51,7 +53,10 @@ void AA2_Game::HandleEvents()
     while(SDL_PollEvent(&e))
     {
         if(e.type == SDL_EVENT_QUIT)
+        {
             is_running = false;
+            SDL_Log("User requested quitting...\n");
+        }
     }
 }
 

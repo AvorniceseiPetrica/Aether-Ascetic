@@ -1,12 +1,12 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include "AA2_Creature.h"
 
-class AA2_Player
+class AA2_Player : public AA2_Creature
 {
     private:
 
-        SDL_FRect data;
         float speed = 10;
         float width = 150;
         float height = 150;
@@ -16,8 +16,8 @@ class AA2_Player
 
         AA2_Player(float x, float y);
         ~AA2_Player() = default;
-        void Init();
-        void Update();
-        void Render();
+        void Init() override;
+        void Update() override;
+        void Render() override;
         SDL_FRect* GetRect();
 };

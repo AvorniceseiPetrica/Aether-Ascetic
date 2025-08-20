@@ -10,6 +10,6 @@ class AA2_Creature : public AA2_DrawableEntity
 
     public:
 
-        AA2_Creature(float x, float y);
+        AA2_Creature(float x, float y, float width, float height);
         virtual ~AA2_Creature() = default;
 };

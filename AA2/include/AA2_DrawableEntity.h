@@ -10,7 +10,7 @@ class AA2_DrawableEntity : public AA2_Entity
 
     public:
 
-        AA2_DrawableEntity(float x, float y);
+        AA2_DrawableEntity(float x, float y, float width, float height);
         virtual ~AA2_DrawableEntity() = default;
         virtual void Init() = 0;
 };
