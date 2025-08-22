@@ -5,10 +5,13 @@
 #include "AA2_Map.h"
 #include "AA2_Player.h"
 #include "AA2_Camera.h"
-#include "AA2_Level.h"
+#include "AA2_LevelManager.h"
 
-AA2_Level L("configs/map0.txt", {.x = 0, .y = 0});
-AA2_Camera C;
+AA2_Game::~AA2_Game()
+{
+    if(LM != nullptr)
+        delete LM;
+}
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
@@ -32,6 +35,15 @@ void AA2_Game::InitSDL(std::string window_name, int window_width, int window_hei
     SDL_Log("Created window and renderer..\n");
 }
 
+void AA2_Game::DestroySDL()
+{
+    if(renderer != nullptr)
+        SDL_DestroyRenderer(renderer);
+    
+    if(window != nullptr)
+        SDL_DestroyWindow(window);
+}
+
 void AA2_Game::Init(std::string window_name, int window_width, int window_height)
 {
     InitSDL(window_name, window_width, window_height);
@@ -41,7 +53,8 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     AA2_RefLinks::SetRenderer(renderer);
     AA2_RefLinks::SetCamera(&C);
 
-    L.Init();
+    LM = new AA2_LevelManager("configs/levels_config.txt");
+    LM->Init();
     C.SetTarget(AA2_RefLinks::GetPlayer()->GetRect());
     SDL_Log("Initialized game...\n");
 }
@@ -62,7 +75,7 @@ void AA2_Game::HandleEvents()
 
 void AA2_Game::Update()
 {
-    L.Update();
+    LM->Update();
     C.Update();
 }
 
@@ -70,7 +83,7 @@ void AA2_Game::Render()
 {
     SDL_RenderClear(renderer);
 
-    L.Render();
+    LM->Render();
     SDL_RenderPresent(renderer);
 }
 
@@ -94,4 +107,6 @@ void AA2_Game::Run()
         if(current_frame_time < target_frame_time)
             SDL_Delay(target_frame_time - current_frame_time);
     }
+
+    DestroySDL();
 }

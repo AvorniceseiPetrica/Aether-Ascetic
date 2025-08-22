@@ -23,7 +23,7 @@ class AA2_Level
 
     public:
 
-        AA2_Level(std::string  p_map_path, SDL_Point p_player_spawn);
+        AA2_Level(std::string p_map_path, SDL_Point p_player_spawn);
         ~AA2_Level();
         void Init();
         void Update();

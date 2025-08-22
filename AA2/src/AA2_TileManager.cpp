@@ -24,7 +24,8 @@ enum TILES {
 
 AA2_TileManager::AA2_TileManager()
 {
-    
+    for(int i = 0; i < TILE_COUNT; ++i)
+        tiles[i] = nullptr;
 }
 
 AA2_TileManager::~AA2_TileManager()
@@ -44,7 +45,7 @@ void AA2_TileManager::Init()
     tiles[GROUND2] = new AA2_Tile(GROUND2, "assets/tiles/ground2.png", SOLID);
     tiles[WALL_LEFT] = new AA2_Tile(WALL_LEFT, "assets/tiles/wall_left.png", SOLID);
     tiles[WALL_RIGHT] = new AA2_Tile(WALL_RIGHT, "assets/tiles/wall_right.png", SOLID);
-    tiles[CORNER_LOWER_LEFT] = new AA2_Tile(CONNECT_LOWER_LEFT, "assets/tiles/corner_lower_left.png", SOLID);
+    tiles[CORNER_LOWER_LEFT] = new AA2_Tile(CORNER_LOWER_LEFT, "assets/tiles/corner_lower_left.png", SOLID);
     tiles[CORNER_LOWER_RIGHT] = new AA2_Tile(CORNER_LOWER_RIGHT, "assets/tiles/corner_lower_right.png", SOLID);
     tiles[CORNER_UPPER_LEFT] = new AA2_Tile(CORNER_UPPER_LEFT, "assets/tiles/corner_upper_left.png", SOLID);
     tiles[CORNER_UPPER_RIGHT] = new AA2_Tile(CORNER_UPPER_RIGHT, "assets/tiles/corner_upper_right.png", SOLID);
