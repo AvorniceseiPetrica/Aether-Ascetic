@@ -2,6 +2,7 @@
 
 #include "AA2_Map.h"
 #include "AA2_Player.h"
+#include "AA2_PropManager.h"
 
 class AA2_Level
 {
@@ -21,9 +22,12 @@ class AA2_Level
         float background_parallax = 0.3;
         float midground_parallax = 0.8;
 
+        AA2_PropManager props;
+        std::string props_config_path;
+
     public:
 
-        AA2_Level(std::string p_map_path, SDL_Point p_player_spawn);
+        AA2_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn);
         ~AA2_Level();
         void Init();
         void Update();

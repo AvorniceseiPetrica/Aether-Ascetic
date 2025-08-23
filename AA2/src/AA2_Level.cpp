@@ -3,9 +3,10 @@
 #include "AA2_RefLinks.h"
 #include "AA2_TextureLoader.h"
 
-AA2_Level::AA2_Level(std::string p_map_path, SDL_Point player_spawn) : player(player_spawn.x, player_spawn.y)
+AA2_Level::AA2_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point player_spawn) : player(player_spawn.x, player_spawn.y)
 {
     map_path = p_map_path;
+    props_config_path = p_props_config_path;
     background_path = "assets/backgrounds/background.png";
     midground_path = "assets/backgrounds/midground.png";
 }
@@ -25,6 +26,9 @@ void AA2_Level::Init()
 
     background = AA2_TextureLoader::LoadTexture(background_path);
     midground = AA2_TextureLoader::LoadTexture(midground_path);
+
+    props.LoadProps(props_config_path);
+    props.Init();
     
     SDL_Log("Level initialized...\n");
 }
@@ -32,6 +36,8 @@ void AA2_Level::Init()
 void AA2_Level::Update()
 {
     player.Update();
+
+    props.Update();
 }
 
 void AA2_Level::Render()
@@ -39,9 +45,12 @@ void AA2_Level::Render()
     RenderBackground();
     RenderMidground();
     
+    
     map.Render();
-
+    
     player.Render();
+    
+    props.Render();
 }
 
 void AA2_Level::RenderBackground()

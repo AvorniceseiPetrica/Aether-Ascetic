@@ -13,11 +13,12 @@ AA2_LevelManager::AA2_LevelManager(std::string levels_config_path)
     else
     {
         std::string map_path;
+        std::string props_config_path;
         int player_spawn_x, player_spawn_y;
 
-        f>>map_path>>player_spawn_x>>player_spawn_y;
+        f>>map_path>>props_config_path>>player_spawn_x>>player_spawn_y;
 
-        levels.push_back(AA2_Level(map_path, {.x = player_spawn_x, .y = player_spawn_y}));
+        levels.push_back(AA2_Level(map_path, props_config_path, {.x = player_spawn_x, .y = player_spawn_y}));
     }
 }
 

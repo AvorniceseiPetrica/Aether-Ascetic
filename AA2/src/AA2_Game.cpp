@@ -56,6 +56,7 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     LM = new AA2_LevelManager("configs/levels_config.txt");
     LM->Init();
     C.SetTarget(AA2_RefLinks::GetPlayer()->GetRect());
+
     SDL_Log("Initialized game...\n");
 }
 
@@ -84,6 +85,7 @@ void AA2_Game::Render()
     SDL_RenderClear(renderer);
 
     LM->Render();
+
     SDL_RenderPresent(renderer);
 }
 

@@ -1,1 +1,1 @@
-configs/map0.txt 100 100
+configs/level0/map0.txt configs/level0/props0.txt 100 100

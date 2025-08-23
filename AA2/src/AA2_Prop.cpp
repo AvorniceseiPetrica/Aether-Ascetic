@@ -25,5 +25,13 @@ void AA2_Prop::Update()
 
 void AA2_Prop::Render()
 {
-    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &data);
+    SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
+
+    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &dst);
 }

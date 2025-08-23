@@ -2,18 +2,13 @@
 
 #include <fstream>
 
-AA2_PropManager::AA2_PropManager(std::string p_props_config_path)
-{
-    props_config_path = p_props_config_path;
-}
-
 void AA2_PropManager::Init()
 {
-    for(auto prop : props)
+    for(auto& prop : props)
         prop.Init();
 }
 
-void AA2_PropManager::LoadProps()
+void AA2_PropManager::LoadProps(std::string props_config_path)
 {
     std::fstream f;
 
@@ -30,17 +25,20 @@ void AA2_PropManager::LoadProps()
             f>>x>>y>>width>>height>>prop_texture_path;
 
             props.push_back(AA2_Prop(x, y, width, height, prop_texture_path));
+            SDL_Log("Loaded prop: %s, %f, %f\n", prop_texture_path.c_str(), x, y);
         }
+
+    SDL_Log("Loaded props: %s...", props_config_path.c_str());
 }
 
 void AA2_PropManager::Update()
 {
-    for(auto prop : props)
+    for(auto& prop : props)
         prop.Update();
 }
 
 void AA2_PropManager::Render()
 {
-    for(auto prop : props)
+    for(auto& prop : props)
         prop.Render();
 }
