@@ -1,1 +1,1 @@
-100 1000 204 468 assets/props/pillar1.png
+100 1000 306 702 assets/props/pillar1.png

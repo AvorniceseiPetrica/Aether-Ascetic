@@ -7,7 +7,7 @@ class AA2_Player : public AA2_Creature
 {
     private:
 
-        float speed = 10;
+        float speed = 20;
         float width = 150;
         float height = 150;
         SDL_Texture *texture = nullptr;
