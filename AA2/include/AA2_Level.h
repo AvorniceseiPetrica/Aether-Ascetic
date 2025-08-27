@@ -11,8 +11,6 @@ class AA2_Level
         AA2_Map map;
         std::string map_path;
 
-        AA2_Player player;
-
         SDL_Texture *background = nullptr;
         std::string background_path;
 
@@ -25,6 +23,8 @@ class AA2_Level
         AA2_PropManager props;
         std::string props_config_path;
 
+        SDL_Point player_spawn;
+
     public:
 
         AA2_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn);
@@ -34,4 +34,5 @@ class AA2_Level
         void Render();
         void RenderBackground();
         void RenderMidground();
+        SDL_Point GetPlayerSpawn();
 };

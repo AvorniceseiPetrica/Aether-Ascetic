@@ -3,12 +3,13 @@
 #include "AA2_RefLinks.h"
 #include "AA2_TextureLoader.h"
 
-AA2_Level::AA2_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point player_spawn) : player(player_spawn.x, player_spawn.y)
+AA2_Level::AA2_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn)
 {
     map_path = p_map_path;
     props_config_path = p_props_config_path;
     background_path = "assets/backgrounds/background.png";
     midground_path = "assets/backgrounds/midground.png";
+    player_spawn = p_player_spawn;
 }
 
 AA2_Level::~AA2_Level()
@@ -21,9 +22,6 @@ void AA2_Level::Init()
     map.Init();
     map.LoadMap(map_path);
 
-    player.Init();
-    AA2_RefLinks::SetPlayer(&player);
-
     background = AA2_TextureLoader::LoadTexture(background_path);
     midground = AA2_TextureLoader::LoadTexture(midground_path);
 
@@ -35,8 +33,6 @@ void AA2_Level::Init()
 
 void AA2_Level::Update()
 {
-    player.Update();
-
     props.Update();
 }
 
@@ -48,9 +44,6 @@ void AA2_Level::Render()
     props.Render();
     
     map.Render();
-    
-    player.Render();
-    
 }
 
 void AA2_Level::RenderBackground()
@@ -85,4 +78,9 @@ void AA2_Level::RenderMidground()
     };
 
     SDL_RenderTexture(AA2_RefLinks::GetRenderer(), midground, nullptr, &midground_rect);
+}
+
+SDL_Point AA2_Level::GetPlayerSpawn()
+{
+    return player_spawn;
 }

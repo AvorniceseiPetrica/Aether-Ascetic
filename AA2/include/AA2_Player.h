@@ -20,4 +20,5 @@ class AA2_Player : public AA2_Creature
         void Update() override;
         void Render() override;
         SDL_FRect* GetRect();
+        void ChangePosition(float x, float y);
 };

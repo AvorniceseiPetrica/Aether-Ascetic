@@ -25,7 +25,7 @@ void AA2_PropManager::LoadProps(std::string props_config_path)
             f>>x>>y>>width>>height>>prop_texture_path;
 
             props.push_back(AA2_Prop(x, y, width, height, prop_texture_path));
-            SDL_Log("Loaded prop: %s, %f, %f\n", prop_texture_path.c_str(), x, y);
+            //SDL_Log("Loaded prop: %s, %f, %f\n", prop_texture_path.c_str(), x, y);
         }
 
     SDL_Log("Loaded props: %s...", props_config_path.c_str());

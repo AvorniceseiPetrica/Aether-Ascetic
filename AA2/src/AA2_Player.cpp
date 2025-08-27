@@ -47,3 +47,9 @@ SDL_FRect* AA2_Player::GetRect()
 {
     return &data;
 }
+
+void AA2_Player::ChangePosition(float x, float y)
+{
+    data.x = x;
+    data.y = y;
+}

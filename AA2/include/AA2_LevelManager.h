@@ -11,6 +11,8 @@ class AA2_LevelManager
         int current_level_id;
         AA2_Level *current_level = nullptr;
 
+        AA2_Player player;
+
     public:
 
         AA2_LevelManager(std::string levels_config_path);
@@ -18,5 +20,5 @@ class AA2_LevelManager
         void Init();
         void Update();
         void Render();
-        void ChangeLevel(int level_id);
+        void ChangeLevel(long unsigned int level_id);
 };
