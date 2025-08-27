@@ -1,5 +1,7 @@
 #include "AA2_Camera.h"
 
+#include "AA2_Config.h"
+
 AA2_Camera::AA2_Camera()
 {
     viewport.w = 1920;
@@ -22,6 +24,12 @@ void AA2_Camera::Update()
 
     if(viewport.y < 0)
         viewport.y = 0;
+
+    if(viewport.x + viewport.w > MAP_WIDTH)
+        viewport.x = MAP_WIDTH - viewport.w;
+
+    if(viewport.y + viewport.h > MAP_HEIGHT)
+        viewport.y = MAP_HEIGHT - viewport.h;
 }
 
 SDL_FRect AA2_Camera::GetViewPort()

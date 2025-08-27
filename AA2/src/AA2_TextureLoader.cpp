@@ -15,7 +15,11 @@ SDL_Texture* AA2_TextureLoader::LoadTexture(std::string texture_path)
         SDL_Texture *texture = SDL_CreateTextureFromSurface(AA2_RefLinks::GetRenderer(), surface);
 
         if(texture == nullptr)
+        {
             SDL_Log("\n\t<< Failed to create texture from surface: %s >>\n\n", texture_path.c_str());
+            SDL_Log("Error: %s", SDL_GetError());
+        }
+         
         else
             return texture;
     }

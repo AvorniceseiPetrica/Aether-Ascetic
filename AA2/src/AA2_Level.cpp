@@ -45,12 +45,12 @@ void AA2_Level::Render()
     RenderBackground();
     RenderMidground();
     
+    props.Render();
     
     map.Render();
     
     player.Render();
     
-    props.Render();
 }
 
 void AA2_Level::RenderBackground()
