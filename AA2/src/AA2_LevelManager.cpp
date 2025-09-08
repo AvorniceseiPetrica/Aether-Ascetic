@@ -31,10 +31,11 @@ void AA2_LevelManager::Init()
     
     player.Init();
 
+    for(auto &level : levels)
+        level.Init();
+    
     AA2_RefLinks::SetPlayer(&player);
     AA2_RefLinks::GetCamera()->SetTarget(player.GetRect());
-
-    SDL_Log("Levels count: %lu", levels.size());
 }
 
 void AA2_LevelManager::Update()
@@ -64,6 +65,6 @@ void AA2_LevelManager::ChangeLevel(long unsigned int level_id)
     }
 
     current_level = &levels[level_id];
-    current_level->Init();
+    //current_level->Init();
     player.ChangePosition(current_level->GetPlayerSpawn().x, current_level->GetPlayerSpawn().y);
 }

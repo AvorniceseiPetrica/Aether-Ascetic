@@ -11,6 +11,7 @@ class AA2_Player : public AA2_Creature
         float width = 150;
         float height = 150;
         SDL_Texture *texture = nullptr;
+        int current_state;
 
     public:
 
@@ -21,4 +22,6 @@ class AA2_Player : public AA2_Creature
         void Render() override;
         SDL_FRect* GetRect();
         void ChangePosition(float x, float y);
+        void MovingStateUpdate();
+        void MovingStateRender();
 };

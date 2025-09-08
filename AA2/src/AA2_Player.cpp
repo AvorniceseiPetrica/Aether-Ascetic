@@ -3,6 +3,10 @@
 #include "AA2_TextureLoader.h"
 #include "AA2_RefLinks.h"
 
+enum PLAYER_STATE {
+    PLAYER_MOVING_STATE
+};
+
 AA2_Player::AA2_Player(float x, float y) : AA2_Creature(x, y, 0, 0)
 {
     
@@ -14,10 +18,42 @@ void AA2_Player::Init()
     data.w = width;
     data.h = height;
 
+    current_state = PLAYER_MOVING_STATE;
+
     SDL_Log("Player initialized...\n");
 }
 
 void AA2_Player::Update()
+{
+    switch (current_state)
+    {
+        case PLAYER_MOVING_STATE: MovingStateUpdate();
+        break;
+
+    }
+}
+
+void AA2_Player::Render()
+{
+    switch(current_state)
+    {
+        case PLAYER_MOVING_STATE: MovingStateRender();
+        break;
+    }
+}
+
+SDL_FRect* AA2_Player::GetRect()
+{
+    return &data;
+}
+
+void AA2_Player::ChangePosition(float x, float y)
+{
+    data.x = x;
+    data.y = y;
+}
+
+void AA2_Player::MovingStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
 
@@ -31,7 +67,7 @@ void AA2_Player::Update()
         data.y += speed;
 }
 
-void AA2_Player::Render()
+void AA2_Player::MovingStateRender()
 {
     SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -41,15 +77,4 @@ void AA2_Player::Render()
         .h = data.h
     };
     SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &dst);
-}
-
-SDL_FRect* AA2_Player::GetRect()
-{
-    return &data;
-}
-
-void AA2_Player::ChangePosition(float x, float y)
-{
-    data.x = x;
-    data.y = y;
 }
