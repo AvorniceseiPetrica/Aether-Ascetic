@@ -32,9 +32,7 @@ void AA2_Map::LoadMap(std::string map_path)
         for(int i = 0; i < TILEMAP_HEIGHT; i++)
             for(int j = 0; j < TILEMAP_WIDTH; j++)
             {
-                //SDL_Log("i = %d | j = %d\n", i, j);
                 f>>tilemap[i][j];   
-                //SDL_Log("Read: %d\n", tilemap[i][j]);
             }
     }
 
@@ -70,4 +68,17 @@ void AA2_Map::PrintInfo()
         
         printf("\n");
     }
+}
+
+int AA2_Map::GetTileId(int x, int y)
+{
+    if(x < 0 || x >= TILEMAP_WIDTH || y < 0 || y >= TILEMAP_WIDTH)
+        SDL_Log("\n\tAA2_Map::GetTileId()\t<< Invalid tile id >>\n\n");
+
+    return tilemap[x][y];
+}
+
+bool AA2_Map::IsTileSolid(int id)
+{
+    return tile_manager.IsTileSolid(id);
 }

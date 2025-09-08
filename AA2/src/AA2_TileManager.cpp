@@ -60,9 +60,17 @@ void AA2_TileManager::Init()
 AA2_Tile* AA2_TileManager::GetTile(int id)
 {
     if(id < 0 || id >= TILE_COUNT)
-        SDL_Log("\n\tAA2_TileManager::GetTile()\t << Invalid tile id >>\n\n");
+        SDL_Log("\n\tAA2_TileManager::GetTile()\t<< Invalid tile id >>\n\n");
     else
         return tiles[id];
     
     return nullptr;
+}
+
+bool AA2_TileManager::IsTileSolid(int id)
+{
+    if(id < 0 || id >= TILE_COUNT)
+        SDL_Log("\n\tAA2_TileManager::IsTileSolid()\t<< Invalid tile id >>\n\n");
+
+    return tiles[id]->IsSolid();
 }

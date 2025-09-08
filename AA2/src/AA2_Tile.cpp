@@ -26,3 +26,8 @@ void AA2_Tile::Render(float x, float y)
 
     SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &dst);
 }
+
+bool AA2_Tile::IsSolid()
+{
+    return is_solid;
+}

@@ -17,4 +17,5 @@ class AA2_TileManager
         ~AA2_TileManager();
         void Init();
         AA2_Tile* GetTile(int id);
+        bool IsTileSolid(int id);
 };

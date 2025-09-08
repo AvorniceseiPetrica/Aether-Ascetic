@@ -27,6 +27,8 @@ void AA2_Level::Init()
 
     props.LoadProps(props_config_path);
     props.Init();
+
+    AA2_RefLinks::SetMap(&map);
     
     SDL_Log("Level initialized...\n");
 }

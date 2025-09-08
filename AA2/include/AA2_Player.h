@@ -22,6 +22,8 @@ class AA2_Player : public AA2_Creature
         void Render() override;
         SDL_FRect* GetRect();
         void ChangePosition(float x, float y);
+        bool CheckCollision(float x, float y);
         void MovingStateUpdate();
         void MovingStateRender();
+
 };

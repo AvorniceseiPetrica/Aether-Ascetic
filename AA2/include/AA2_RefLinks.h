@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 #include "AA2_Camera.h"
 #include "AA2_Player.h"
+#include "AA2_Map.h"
 
 class AA2_RefLinks
 {
@@ -12,6 +13,7 @@ class AA2_RefLinks
         static SDL_Renderer *renderer;
         static AA2_Camera *camera;
         static AA2_Player *player;
+        static AA2_Map *map;
 
     public:
 
@@ -23,4 +25,6 @@ class AA2_RefLinks
         static AA2_Camera* GetCamera();
         static void SetPlayer(AA2_Player *p_player);
         static AA2_Player* GetPlayer();
+        static void SetMap(AA2_Map *p_map);
+        static AA2_Map* GetMap();
 };

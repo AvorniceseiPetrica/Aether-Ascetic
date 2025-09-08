@@ -2,6 +2,7 @@
 
 #include "AA2_TextureLoader.h"
 #include "AA2_RefLinks.h"
+#include "AA2_Config.h"
 
 enum PLAYER_STATE {
     PLAYER_MOVING_STATE
@@ -53,18 +54,62 @@ void AA2_Player::ChangePosition(float x, float y)
     data.y = y;
 }
 
+bool AA2_Player::CheckCollision(float x, float y)
+{
+    int tile_x = (int)(x / TILE_WIDTH);
+    int tile_y = (int)(y / TILE_HEIGHT);
+
+    int tile_id = AA2_RefLinks::GetMap()->GetTileId(tile_y, tile_x);
+
+    return AA2_RefLinks::GetMap()->IsTileSolid(tile_id);
+}
+
 void AA2_Player::MovingStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
+    int new_x = data.x;
+    int new_y = data.y;
+    bool collision_top_left;
+    bool collision_top_right;
+    bool collision_bottom_left;
+    bool collision_bottom_right;
+
 
     if(keys[SDL_SCANCODE_A])
-        data.x -= speed;
+        new_x -= speed;
     if(keys[SDL_SCANCODE_D])
-        data.x += speed;
+        new_x += speed;
+
+    collision_top_left = CheckCollision(new_x, data.y);
+    collision_top_right = CheckCollision(new_x + width, data.y);
+    collision_bottom_left = CheckCollision(new_x, data.y + height);
+    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
+
+    if(
+        !collision_top_left &&
+        !collision_top_right &&
+        !collision_bottom_left &&
+        !collision_bottom_right
+    )
+        data.x = new_x;
+    
     if(keys[SDL_SCANCODE_W])
-        data.y -= speed;
+        new_y -= speed;
     if(keys[SDL_SCANCODE_S])
-        data.y += speed;
+        new_y += speed;
+
+    collision_top_left = CheckCollision(data.x, new_y);
+    collision_top_right = CheckCollision(data.x + width, new_y);
+    collision_bottom_left = CheckCollision(data.x, new_y + height);
+    collision_bottom_right = CheckCollision(data.x + width, new_y + height);
+
+    if(
+        !collision_top_left &&
+        !collision_top_right &&
+        !collision_bottom_left &&
+        !collision_bottom_right    
+    )
+        data.y = new_y;
 }
 
 void AA2_Player::MovingStateRender()

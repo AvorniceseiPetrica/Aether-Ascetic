@@ -21,4 +21,6 @@ class AA2_Map
         void LoadMap(std::string map_path);
         void Render();
         void PrintInfo();
+        int GetTileId(int x, int y);
+        bool IsTileSolid(int id);
 };
