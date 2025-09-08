@@ -7,11 +7,16 @@ class AA2_Player : public AA2_Creature
 {
     private:
 
-        float speed = 20;
+        float speed = 10;
         float width = 150;
         float height = 150;
         SDL_Texture *texture = nullptr;
         int current_state;
+        float gravity_strength = 1;
+        float jump_strength = 30;
+        float velocity_y = 0;
+        bool on_ground;
+        bool in_air;
 
     public:
 
@@ -23,7 +28,11 @@ class AA2_Player : public AA2_Creature
         SDL_FRect* GetRect();
         void ChangePosition(float x, float y);
         bool CheckCollision(float x, float y);
-        void MovingStateUpdate();
-        void MovingStateRender();
+        void IdleStateUpdate();
+        void IdleStateRender();
+        void RunningStateUpdate();
+        void RunningStateRender();
+        void JumpingStateUpdate();
+        void JumpingStateRender();
 
 };
