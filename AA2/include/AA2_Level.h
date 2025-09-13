@@ -17,8 +17,8 @@ class AA2_Level
         SDL_Texture *midground = nullptr;
         std::string midground_path;
 
-        float background_parallax = 0.3;
-        float midground_parallax = 0.8;
+        float background_parallax = 0.2;
+        float midground_parallax = 0.4;
 
         AA2_PropManager props;
         std::string props_config_path;

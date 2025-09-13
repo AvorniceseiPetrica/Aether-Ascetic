@@ -2,21 +2,22 @@
 
 enum TILES {
     NOTHING,
-    BLACK,
-    CEILING1,
-    CEILING2,
     GROUND1,
     GROUND2,
-    WALL_LEFT,
-    WALL_RIGHT,
-    CORNER_LOWER_LEFT,
-    CORNER_LOWER_RIGHT,
-    CORNER_UPPER_LEFT,
-    CORNER_UPPER_RIGHT,
-    CONNECT_LOWER_LEFT,
-    CONNECT_LOWER_RIGHT,
-    CONNECT_UPPER_LEFT,
-    CONNECT_UPPER_RIGHT
+    BRICK1,
+    BRICK2,
+    BRICK3,
+    BRICK4,
+    BRICK_BELOW1,
+    BRICK_BELOW2,
+    BRICK_BELOW3,
+    BRICK_DARK1,
+    BRICK_DARK2,
+    BRICK_DARK3,
+    BRICK_GRASSY1,
+    BRICK_GRASSY2,
+    PILLAR,
+    PILLAR_GRASSY
 };
 
 #define SOLID true
@@ -38,21 +39,22 @@ AA2_TileManager::~AA2_TileManager()
 void AA2_TileManager::Init()
 {
     tiles[NOTHING] = new AA2_Tile(NOTHING, "assets/tiles/empty.png", NOT_SOLID);
-    tiles[BLACK] = new AA2_Tile(BLACK, "assets/tiles/black.png", SOLID);
-    tiles[CEILING1] = new AA2_Tile(CEILING1, "assets/tiles/ceiling1.png", SOLID);
-    tiles[CEILING2] = new AA2_Tile(CEILING2, "assets/tiles/ceiling2.png", SOLID);
-    tiles[GROUND1] = new AA2_Tile(GROUND1, "assets/tiles/ground1.png", SOLID);
-    tiles[GROUND2] = new AA2_Tile(GROUND2, "assets/tiles/ground2.png", SOLID);
-    tiles[WALL_LEFT] = new AA2_Tile(WALL_LEFT, "assets/tiles/wall_left.png", SOLID);
-    tiles[WALL_RIGHT] = new AA2_Tile(WALL_RIGHT, "assets/tiles/wall_right.png", SOLID);
-    tiles[CORNER_LOWER_LEFT] = new AA2_Tile(CORNER_LOWER_LEFT, "assets/tiles/corner_lower_left.png", SOLID);
-    tiles[CORNER_LOWER_RIGHT] = new AA2_Tile(CORNER_LOWER_RIGHT, "assets/tiles/corner_lower_right.png", SOLID);
-    tiles[CORNER_UPPER_LEFT] = new AA2_Tile(CORNER_UPPER_LEFT, "assets/tiles/corner_upper_left.png", SOLID);
-    tiles[CORNER_UPPER_RIGHT] = new AA2_Tile(CORNER_UPPER_RIGHT, "assets/tiles/corner_upper_right.png", SOLID);
-    tiles[CONNECT_LOWER_LEFT] = new AA2_Tile(CONNECT_LOWER_LEFT, "assets/tiles/connect_lower_left.png", SOLID);
-    tiles[CONNECT_LOWER_RIGHT] = new AA2_Tile(CONNECT_LOWER_RIGHT, "assets/tiles/connect_lower_right.png", SOLID);
-    tiles[CONNECT_UPPER_LEFT] = new AA2_Tile(CONNECT_UPPER_LEFT, "assets/tiles/connect_upper_left.png", SOLID);
-    tiles[CONNECT_UPPER_RIGHT] = new AA2_Tile(CONNECT_UPPER_RIGHT, "assets/tiles/connect_upper_right.png", SOLID);
+    tiles[GROUND1] = new AA2_Tile(GROUND1, "assets/new/ground1.png", SOLID);
+    tiles[GROUND2] = new AA2_Tile(GROUND2, "assets/new/ground2.png", SOLID);
+    tiles[BRICK1] = new AA2_Tile(BRICK1, "assets/new/brick1.png", SOLID);
+    tiles[BRICK2] = new AA2_Tile(BRICK2, "assets/new/brick2.png", SOLID);
+    tiles[BRICK3] = new AA2_Tile(BRICK3, "assets/new/brick3.png", SOLID);
+    tiles[BRICK4] = new AA2_Tile(BRICK4, "assets/new/brick4.png", SOLID);
+    tiles[BRICK_BELOW1] = new AA2_Tile(BRICK_BELOW1, "assets/new/brick_below1.png", SOLID);
+    tiles[BRICK_BELOW2] = new AA2_Tile(BRICK_BELOW2, "assets/new/brick_below2.png", SOLID);
+    tiles[BRICK_BELOW3] = new AA2_Tile(BRICK_BELOW3, "assets/new/brick_below3.png", SOLID);
+    tiles[BRICK_DARK1] = new AA2_Tile(BRICK_DARK1, "assets/new/brick_dark1.png", SOLID);
+    tiles[BRICK_DARK2] = new AA2_Tile(BRICK_DARK2, "assets/new/brick_dark2.png", SOLID);
+    tiles[BRICK_DARK3] = new AA2_Tile(BRICK_DARK3, "assets/new/brick_dark3.png", SOLID);
+    tiles[BRICK_GRASSY1] = new AA2_Tile(BRICK_GRASSY1, "assets/new/brick_grassy1.png", SOLID);
+    tiles[BRICK_GRASSY2] = new AA2_Tile(BRICK_GRASSY2, "assets/new/brick_grassy2.png", SOLID);
+    tiles[PILLAR] = new AA2_Tile(PILLAR, "assets/new/pillar.png", SOLID);
+    tiles[PILLAR_GRASSY] = new AA2_Tile(PILLAR_GRASSY, "assets/new/pillar_grassy.png", SOLID);
 
     SDL_Log("Initialized tile manager...\n");
 }
