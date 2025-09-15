@@ -7,12 +7,6 @@
 #include "AA2_Camera.h"
 #include "AA2_LevelManager.h"
 
-AA2_Game::~AA2_Game()
-{
-    if(LM != nullptr)
-        delete LM;
-}
-
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
     if(!SDL_Init(SDL_INIT_VIDEO))
@@ -53,11 +47,8 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     is_running = true;
     AA2_RefLinks::SetWindow(window);
     AA2_RefLinks::SetRenderer(renderer);
-    AA2_RefLinks::SetCamera(&C);
 
-    LM = new AA2_LevelManager("configs/levels_config.txt");
-    LM->Init();
-    C.SetTarget(AA2_RefLinks::GetPlayer()->GetRect());
+    world.Init();
 
     SDL_Log("Initialized game...\n");
 }
@@ -78,15 +69,14 @@ void AA2_Game::HandleEvents()
 
 void AA2_Game::Update()
 {
-    LM->Update();
-    C.Update();
+    world.Update();
 }
 
 void AA2_Game::Render()
 {
     SDL_RenderClear(renderer);
 
-    LM->Render();
+    world.Render();
 
     SDL_RenderPresent(renderer);
 }

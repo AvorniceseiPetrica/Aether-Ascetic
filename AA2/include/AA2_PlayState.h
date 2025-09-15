@@ -1,6 +1,6 @@
 #pragma once
 
-class AA2_GameState
+class AA2_PlayState
 {
     private:
 
@@ -8,8 +8,8 @@ class AA2_GameState
 
     public:
 
-        AA2_GameState();
-        ~AA2_GameState();
+        AA2_PlayState();
+        ~AA2_PlayState();
         void Update();
         void Render();
 };

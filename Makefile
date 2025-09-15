@@ -19,7 +19,8 @@ SOURCES=$(AA2_sources_path)/main.cpp \
 		$(AA2_sources_path)/AA2_Creature.cpp \
 		$(AA2_sources_path)/AA2_LevelManager.cpp \
 		$(AA2_sources_path)/AA2_Prop.cpp \
-		$(AA2_sources_path)/AA2_PropManager.cpp
+		$(AA2_sources_path)/AA2_PropManager.cpp \
+		$(AA2_sources_path)/AA2_World.cpp
 
 HEADERS=$(AA2_headers_path)/AA2_Config.h \
 		$(AA2_headers_path)/AA2_Game.h \
@@ -36,7 +37,8 @@ HEADERS=$(AA2_headers_path)/AA2_Config.h \
 		$(AA2_headers_path)/AA2_Creature.h \
 		$(AA2_headers_path)/AA2_LevelManager.h \
 		$(AA2_headers_path)/AA2_Prop.h \
-		$(AA2_headers_path)/AA2_PropManager.h
+		$(AA2_headers_path)/AA2_PropManager.h \
+		$(AA2_headers_path)/AA2_World.h
 
 $(exe): $(SOURCES) $(HEADERS)
 	g++ -Wall $(SOURCES) -o $(exe) -I$(AA2_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image
