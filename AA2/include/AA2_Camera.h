@@ -9,6 +9,8 @@ class AA2_Camera
         SDL_FRect viewport;
         SDL_FRect *target;
 
+        float camera_zoom_factor = 0.5;
+
     public:
 
         AA2_Camera();

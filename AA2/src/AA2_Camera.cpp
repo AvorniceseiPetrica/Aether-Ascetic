@@ -16,8 +16,8 @@ void AA2_Camera::SetTarget(SDL_FRect *p_target)
 
 void AA2_Camera::Update()
 {
-    viewport.x = target->x - 1920/2;
-    viewport.y = target->y - 1080/2;
+    viewport.x = target->x - viewport.w / 2;
+    viewport.y = target->y - viewport.h / 2;
 
     if(viewport.x < 0)
         viewport.x = 0;

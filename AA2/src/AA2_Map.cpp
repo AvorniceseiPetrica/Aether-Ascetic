@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 
 #include "AA2_RefLinks.h"
+#include "AA2_Config.h"
 
 AA2_Map::AA2_Map()
 {

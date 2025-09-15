@@ -97,7 +97,6 @@ void AA2_Player::RunningStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
     int new_x = data.x;
-    int new_y = data.y;
     bool collision_top_left;
     bool collision_top_right;
     bool collision_bottom_left;
@@ -129,7 +128,7 @@ void AA2_Player::RunningStateUpdate()
     }
 
     collision_bottom_left = CheckCollision(data.x, data.y + height);
-    collision_bottom_right + CheckCollision(data.x + width, data.y + height);
+    collision_bottom_right = CheckCollision(data.x + width, data.y + height);
 
     if(!collision_bottom_left && !collision_bottom_right)
     {

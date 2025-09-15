@@ -8,7 +8,8 @@ AA2_Level::AA2_Level(std::string p_map_path, std::string p_props_config_path, SD
     map_path = p_map_path;
     props_config_path = p_props_config_path;
     background_path = "assets/backgrounds/background.png";
-    midground_path = "assets/backgrounds/midground.png";
+    midground1_path = "assets/backgrounds/midground.png";
+    midground2_path = "assets/backgrounds/midground2.png";
     player_spawn = p_player_spawn;
 }
 
@@ -23,7 +24,8 @@ void AA2_Level::Init()
     map.LoadMap(map_path);
 
     background = AA2_TextureLoader::LoadTexture(background_path);
-    midground = AA2_TextureLoader::LoadTexture(midground_path);
+    midground1 = AA2_TextureLoader::LoadTexture(midground1_path);
+    midground2 = AA2_TextureLoader::LoadTexture(midground2_path);
 
     props.LoadProps(props_config_path);
     props.Init();
@@ -41,8 +43,9 @@ void AA2_Level::Update()
 void AA2_Level::Render()
 {
     RenderBackground();
-    RenderMidground();
-    
+    RenderMidground1();
+    RenderMidground2();
+        
     props.Render();
     
     map.Render();
@@ -65,21 +68,38 @@ void AA2_Level::RenderBackground()
     SDL_RenderTexture(AA2_RefLinks::GetRenderer(), background, nullptr, &background_rect);
 }
 
-void AA2_Level::RenderMidground()
+void AA2_Level::RenderMidground1()
 {
     float midground_width, midground_height;
 
-    SDL_GetTextureSize(midground, &midground_width, &midground_height);
+    SDL_GetTextureSize(midground1, &midground_width, &midground_height);
 
     SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect midground_rect = {
-        .x = -camera.x * midground_parallax,
-        .y = -camera.y * midground_parallax,
+        .x = -camera.x * midground1_parallax,
+        .y = -camera.y * midground1_parallax,
         .w = midground_width,
         .h = midground_height
     };
 
-    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), midground, nullptr, &midground_rect);
+    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), midground1, nullptr, &midground_rect);
+}
+
+void AA2_Level::RenderMidground2()
+{
+    float midground_width, midground_height;
+
+    SDL_GetTextureSize(midground2, &midground_width, &midground_height);
+
+    SDL_FRect camera = AA2_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect midground_rect = {
+        .x = -camera.x * midground2_parallax,
+        .y = -camera.y * midground2_parallax,
+        .w = midground_width,
+        .h = midground_height
+    };
+
+    SDL_RenderTexture(AA2_RefLinks::GetRenderer(), midground2, nullptr, &midground_rect);
 }
 
 SDL_Point AA2_Level::GetPlayerSpawn()

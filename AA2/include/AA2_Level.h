@@ -14,11 +14,15 @@ class AA2_Level
         SDL_Texture *background = nullptr;
         std::string background_path;
 
-        SDL_Texture *midground = nullptr;
-        std::string midground_path;
+        SDL_Texture *midground1 = nullptr;
+        std::string midground1_path;
+
+        SDL_Texture *midground2 = nullptr;
+        std::string midground2_path;
 
         float background_parallax = 0.2;
-        float midground_parallax = 0.4;
+        float midground1_parallax = 0.35;
+        float midground2_parallax = 0.45;
 
         AA2_PropManager props;
         std::string props_config_path;
@@ -33,6 +37,7 @@ class AA2_Level
         void Update();
         void Render();
         void RenderBackground();
-        void RenderMidground();
+        void RenderMidground1();
+        void RenderMidground2();
         SDL_Point GetPlayerSpawn();
 };

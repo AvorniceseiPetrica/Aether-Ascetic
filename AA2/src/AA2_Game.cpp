@@ -32,6 +32,8 @@ void AA2_Game::InitSDL(std::string window_name, int window_width, int window_hei
         }
     }
 
+    SDL_SetRenderScale(renderer, 0.85, 0.85);
+
     SDL_Log("Created window and renderer..\n");
 }
 
