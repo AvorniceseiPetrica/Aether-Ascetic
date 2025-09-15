@@ -27,7 +27,7 @@ void AA2_Map::LoadMap(std::string map_path)
     f.open(map_path);
 
     if(!f.is_open())
-        SDL_Log("\n\tAA2_Map::LoadMap()\t<< Could not open map config file >>\n\n");
+        SDL_Log("\n\tAA2_Map::LoadMap()\t<< Could not open config file >>\n\n");
     else
     {
         for(int i = 0; i < TILEMAP_HEIGHT; i++)
@@ -74,7 +74,7 @@ void AA2_Map::PrintInfo()
 int AA2_Map::GetTileId(int x, int y)
 {
     if(x < 0 || x >= TILEMAP_WIDTH || y < 0 || y >= TILEMAP_WIDTH)
-        SDL_Log("\n\tAA2_Map::GetTileId()\t<< Invalid tile id >>\n\n");
+        SDL_Log("\n\tAA2_Map::GetTileId()\t<< Invalid tile coords | x = %d | y = %d >>\n\n", x, y);
 
     return tilemap[x][y];
 }

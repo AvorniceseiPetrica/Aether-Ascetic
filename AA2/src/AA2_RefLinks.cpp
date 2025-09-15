@@ -75,7 +75,7 @@ AA2_Map* AA2_RefLinks::GetMap()
 void AA2_RefLinks::SetGame(AA2_Game *p_game)
 {
     if(p_game == nullptr)  
-        SDL_Log("\n\tAA2_RefLinks::SetGame()\t<< Provided NULL for (AA2_Map *p_game) >\n\n");
+        SDL_Log("\n\tAA2_RefLinks::SetGame()\t<< Provided NULL for (AA2_Game *p_game) >\n\n");
     else
         game = p_game;
 }

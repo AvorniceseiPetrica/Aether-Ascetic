@@ -15,7 +15,7 @@ void AA2_PropManager::LoadProps(std::string props_config_path)
     f.open(props_config_path);
 
     if(!f.is_open())
-        SDL_Log("Could not open config path");
+        SDL_Log("\n\tAA2_PropManager::LoadProps()\t<< Could not open config file >>\n\n");
     else
         while(!f.eof())
         {   

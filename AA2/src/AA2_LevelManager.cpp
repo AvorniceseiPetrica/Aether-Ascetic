@@ -10,7 +10,7 @@ AA2_LevelManager::AA2_LevelManager(std::string levels_config_path) : player(0, 0
     f.open(levels_config_path);
 
     if(!f.is_open())
-        SDL_Log("Could not open levels_config_path");
+        SDL_Log("\n\tAA2_LevelManager::AA2_LevelManager()\t<< Could not open config file >>\n\n");
     else
         while(!f.eof())
         {
@@ -60,11 +60,10 @@ void AA2_LevelManager::ChangeLevel(long unsigned int level_id)
 {
     if(level_id >= levels.size())
     {
-        SDL_Log("Invalid level id\n");
+        SDL_Log("\n\tAA2_LevelManager::ChangeLevel()\t<< Invalid level id | level_id = %ld >>\n\n", level_id);
         return;
     }
 
     current_level = &levels[level_id];
-    //current_level->Init();
     player.ChangePosition(current_level->GetPlayerSpawn().x, current_level->GetPlayerSpawn().y);
 }

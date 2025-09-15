@@ -9,19 +9,19 @@
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
     if(!SDL_Init(SDL_INIT_VIDEO))
-        SDL_Log("\n\t<< Failed to initialize video subsystems >>\n\n");
+        SDL_Log("\n\tAA2_Game::InitSDL()\t<< Failed to initialize video subsystems >>\n\n");
     else
     {
         window = SDL_CreateWindow(window_name.c_str(), window_width, window_height, 0);
 
         if(window == nullptr)
-            SDL_Log("\n\t<< Could not create window >>\n\n");
+            SDL_Log("\n\tAA2_Game::InitSDL()\t<< Could not create window >>\n\n");
         else
         {
             renderer = SDL_CreateRenderer(window, nullptr);
 
             if(renderer == nullptr)
-                SDL_Log("\n\t<< Could not create renderer >>\n\n");
+                SDL_Log("\n\tAA2_Game::InitSDL()\t<< Could not create renderer >>\n\n");
         }
     }
 
@@ -105,7 +105,7 @@ void AA2_Game::Run()
 void AA2_Game::ChangeState(AA2_State *new_state)
 {
     if(new_state == nullptr)
-        SDL_Log("New state is null");
+        SDL_Log("\n\tAA2_Game::ChangeState()\t<< Providede NULL for (AA2_State *new_state) >>");
     else
     {
         if(current_state != nullptr)

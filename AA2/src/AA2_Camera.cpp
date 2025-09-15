@@ -4,8 +4,8 @@
 
 AA2_Camera::AA2_Camera()
 {
-    viewport.w = 1920;
-    viewport.h = 1080;
+    viewport.w = WINDOW_WIDTH;
+    viewport.h = WINDOW_HEIGHT;
 }
 
 void AA2_Camera::SetTarget(SDL_FRect *p_target)

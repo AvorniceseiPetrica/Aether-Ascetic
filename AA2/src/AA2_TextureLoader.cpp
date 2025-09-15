@@ -9,15 +9,18 @@ SDL_Texture* AA2_TextureLoader::LoadTexture(std::string texture_path)
     SDL_Surface *surface = IMG_Load(texture_path.c_str());
 
     if(surface == nullptr)
-        SDL_Log("\n\t<< Failed to load surface from file: %s >>", texture_path.c_str());
+    {
+        SDL_Log("\n\tAA2_TextureLoader::LoadTexture()\t<< Failed to load surface from file: %s >>\n", texture_path.c_str());
+        SDL_Log("\tSDL_GetError():\t%s\n\n", SDL_GetError());
+    }
     else
     {
         SDL_Texture *texture = SDL_CreateTextureFromSurface(AA2_RefLinks::GetRenderer(), surface);
 
         if(texture == nullptr)
         {
-            SDL_Log("\n\t<< Failed to create texture from surface: %s >>\n\n", texture_path.c_str());
-            SDL_Log("Error: %s", SDL_GetError());
+            SDL_Log("\n\tAA2_TextureLoader::LoadTexture()\t<< Failed to create texture from surface: %s >>\n", texture_path.c_str());
+            SDL_Log("\tSDL_GetError():\t%s\n\n", SDL_GetError());
         }
          
         else
