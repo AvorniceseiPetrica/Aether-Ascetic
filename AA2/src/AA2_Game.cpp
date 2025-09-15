@@ -2,10 +2,8 @@
 
 #include "AA2_RefLinks.h"
 #include "AA2_TextureLoader.h"
-#include "AA2_Map.h"
-#include "AA2_Player.h"
-#include "AA2_Camera.h"
-#include "AA2_LevelManager.h"
+
+#include "AA2_PlayState.h"
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
@@ -48,7 +46,7 @@ void AA2_Game::Init(std::string window_name, int window_width, int window_height
     AA2_RefLinks::SetWindow(window);
     AA2_RefLinks::SetRenderer(renderer);
 
-    world.Init();
+    ChangeState(new AA2_PlayState);
 
     SDL_Log("Initialized game...\n");
 }
@@ -69,14 +67,14 @@ void AA2_Game::HandleEvents()
 
 void AA2_Game::Update()
 {
-    world.Update();
+    current_state->Update();
 }
 
 void AA2_Game::Render()
 {
     SDL_RenderClear(renderer);
 
-    world.Render();
+    current_state->Render();
 
     SDL_RenderPresent(renderer);
 }
@@ -103,4 +101,18 @@ void AA2_Game::Run()
     }
 
     DestroySDL();
+}
+
+void AA2_Game::ChangeState(AA2_State *new_state)
+{
+    if(new_state == nullptr)
+        SDL_Log("New state is null");
+    else
+    {
+        if(current_state != nullptr)
+            delete current_state;
+        
+        current_state = new_state;
+        current_state->Init();
+    }
 }

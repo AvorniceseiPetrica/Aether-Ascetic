@@ -1,6 +1,16 @@
 #include "AA2_PlayState.h"
 
-AA2_PlayState::AA2_PlayState()
+void AA2_PlayState::Init()
 {
-    
+    world.Init();
+}
+
+void AA2_PlayState::Update()
+{
+    world.Update();
+}
+
+void AA2_PlayState::Render()
+{
+    world.Render();
 }

@@ -2,7 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include <iostream>
-#include "AA2_World.h"
+#include "AA2_State.h"
 
 class AA2_Game
 {
@@ -10,9 +10,10 @@ class AA2_Game
 
         SDL_Window *window = nullptr;
         SDL_Renderer *renderer = nullptr;
-        AA2_World world;
 
         bool is_running;
+        
+        AA2_State *current_state = nullptr;
 
     public:
 
@@ -25,4 +26,5 @@ class AA2_Game
         void Update();
         void Render();
         void Run();
+        void ChangeState(AA2_State *new_state);
 };
