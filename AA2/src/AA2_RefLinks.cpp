@@ -5,6 +5,7 @@ SDL_Renderer *AA2_RefLinks::renderer = nullptr;
 AA2_Camera *AA2_RefLinks::camera = nullptr;
 AA2_Player *AA2_RefLinks::player = nullptr;
 AA2_Map *AA2_RefLinks::map = nullptr;
+AA2_Game *AA2_RefLinks::game = nullptr;
 
 void AA2_RefLinks::SetWindow(SDL_Window *p_window)
 {
@@ -61,7 +62,7 @@ AA2_Player* AA2_RefLinks::GetPlayer()
 void AA2_RefLinks::SetMap(AA2_Map *p_map)
 {
     if(p_map == nullptr)  
-        SDL_Log("\n\tAA2_RefLinks::SetPlayer()\t<< Provided NULL for (AA2_Map *p_map) >\n\n");
+        SDL_Log("\n\tAA2_RefLinks::SetMap()\t<< Provided NULL for (AA2_Map *p_map) >\n\n");
     else
         map = p_map;
 }
@@ -69,4 +70,17 @@ void AA2_RefLinks::SetMap(AA2_Map *p_map)
 AA2_Map* AA2_RefLinks::GetMap()
 {
     return map;
+}
+
+void AA2_RefLinks::SetGame(AA2_Game *p_game)
+{
+    if(p_game == nullptr)  
+        SDL_Log("\n\tAA2_RefLinks::SetGame()\t<< Provided NULL for (AA2_Map *p_game) >\n\n");
+    else
+        game = p_game;
+}
+
+AA2_Game* AA2_RefLinks::GetGame()
+{
+    return game;
 }

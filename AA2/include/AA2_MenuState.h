@@ -1,7 +1,10 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include "AA2_Config.h"
 #include "AA2_State.h"
+
+#define BUTTON_WIDTH 400
 
 class AA2_MenuState : public AA2_State
 {
@@ -12,27 +15,32 @@ class AA2_MenuState : public AA2_State
         SDL_FRect background_rect = {
             .x = 0,
             .y = 0,
-            .w = 1920,
-            .h = 1080
+            .w = WINDOW_WIDTH,
+            .h = WINDOW_HEIGHT
         };
 
         SDL_FRect start_game_rect = {
-            .x = 1000,
-            .y = 400,
-            .w = 400,
+            .x = WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2,
+            .y = WINDOW_HEIGHT / 2 - 300,
+            .w = BUTTON_WIDTH,
             .h = 200
         };
         
-        SDL_Texture *start_game_button;
+        SDL_Texture *start_game_button_unpressed;
+        SDL_Texture *start_game_button_pressed;
 
         SDL_FRect quit_game_rect = {
-            .x = 1000,
-            .y = 800,
+            .x = WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2,
+            .y = WINDOW_HEIGHT / 2 + 100,
             .w = 400,
             .h = 200
         };
         
-        SDL_Texture *quit_game_button;
+        SDL_Texture *quit_game_button_unpressed;
+        SDL_Texture *quit_game_button_pressed;
+
+        bool start_game_pressed;
+        bool quit_game_pressed;
 
     public:
 

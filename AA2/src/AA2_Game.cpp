@@ -4,6 +4,7 @@
 #include "AA2_TextureLoader.h"
 
 #include "AA2_PlayState.h"
+#include "AA2_MenuState.h"
 
 void AA2_Game::InitSDL(std::string window_name, int window_width, int window_height)
 {
@@ -24,8 +25,6 @@ void AA2_Game::InitSDL(std::string window_name, int window_width, int window_hei
         }
     }
 
-    SDL_SetRenderScale(renderer, 0.85, 0.85);
-
     SDL_Log("Created window and renderer..\n");
 }
 
@@ -41,12 +40,12 @@ void AA2_Game::DestroySDL()
 void AA2_Game::Init(std::string window_name, int window_width, int window_height)
 {
     InitSDL(window_name, window_width, window_height);
-    SDL_SetRenderDrawColor(renderer, 0x21, 0x11, 0x55, 255);
     is_running = true;
     AA2_RefLinks::SetWindow(window);
     AA2_RefLinks::SetRenderer(renderer);
+    AA2_RefLinks::SetGame(this);
 
-    ChangeState(new AA2_PlayState);
+    ChangeState(new AA2_MenuState);
 
     SDL_Log("Initialized game...\n");
 }

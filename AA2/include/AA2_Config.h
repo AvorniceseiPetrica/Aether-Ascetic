@@ -1,5 +1,8 @@
 #pragma once
 
+#define WINDOW_WIDTH 1920
+#define WINDOW_HEIGHT 1080
+
 #define TILE_COUNT 17
 
 #define TILE_WIDTH 192

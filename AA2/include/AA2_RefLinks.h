@@ -4,6 +4,7 @@
 #include "AA2_Camera.h"
 #include "AA2_Player.h"
 #include "AA2_Map.h"
+#include "AA2_Game.h"
 
 class AA2_RefLinks
 {
@@ -14,6 +15,7 @@ class AA2_RefLinks
         static AA2_Camera *camera;
         static AA2_Player *player;
         static AA2_Map *map;
+        static AA2_Game *game;
 
     public:
 
@@ -27,4 +29,6 @@ class AA2_RefLinks
         static AA2_Player* GetPlayer();
         static void SetMap(AA2_Map *p_map);
         static AA2_Map* GetMap();
+        static void SetGame(AA2_Game *p_game);
+        static AA2_Game* GetGame();
 };
