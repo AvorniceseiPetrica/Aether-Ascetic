@@ -17,6 +17,7 @@ class AA2_Player : public AA2_Creature
         float velocity_y = 0;
         bool on_ground;
         bool in_air;
+        bool moving_right;
 
     public:
 
@@ -34,5 +35,6 @@ class AA2_Player : public AA2_Creature
         void RunningStateRender();
         void JumpingStateUpdate();
         void JumpingStateRender();
+        bool IsMovingRight();
 
 };

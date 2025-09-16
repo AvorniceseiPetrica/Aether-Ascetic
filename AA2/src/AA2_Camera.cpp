@@ -1,6 +1,7 @@
 #include "AA2_Camera.h"
 
 #include "AA2_Config.h"
+#include "AA2_RefLinks.h"
 
 AA2_Camera::AA2_Camera()
 {
@@ -16,7 +17,16 @@ void AA2_Camera::SetTarget(SDL_FRect *p_target)
 
 void AA2_Camera::Update()
 {
-    viewport.x = target->x - viewport.w / 2;
+    float desired_offset_x;
+
+    if(AA2_RefLinks::GetPlayer()->IsMovingRight())
+        desired_offset_x = target_offset_x;
+    else
+        desired_offset_x = -target_offset_x;
+
+    current_offset_x += (desired_offset_x - current_offset_x) * 0.05;
+
+    viewport.x = target->x - viewport.w / 2 + current_offset_x;
     viewport.y = target->y - viewport.h / 2;
 
     if(viewport.x < 0)

@@ -103,9 +103,15 @@ void AA2_Player::RunningStateUpdate()
     bool collision_bottom_right;
 
     if(keys[SDL_SCANCODE_A])
+    {
         new_x -= speed;
+        moving_right = false;
+    }
     if(keys[SDL_SCANCODE_D])
+    {
         new_x += speed;
+        moving_right = true;
+    }
 
     collision_top_left = CheckCollision(new_x, data.y);
     collision_top_right = CheckCollision(new_x + width, data.y);
@@ -164,6 +170,11 @@ void AA2_Player::JumpingStateUpdate()
 
     collision_bottom_left = CheckCollision(data.x, new_y + height);
     collision_bottom_right = CheckCollision(data.x + width, new_y + height);
+    collision_top_left = CheckCollision(data.x, new_y);
+    collision_top_right = CheckCollision(data.x + width, new_y);
+
+    if(collision_top_left || collision_top_right)
+        velocity_y = 0;
 
     if(collision_bottom_left || collision_bottom_right)
     {
@@ -175,9 +186,15 @@ void AA2_Player::JumpingStateUpdate()
         data.y = new_y;
 
     if(keys[SDL_SCANCODE_A])
+    {
         new_x -= speed;
+        moving_right = false;
+    }
     if(keys[SDL_SCANCODE_D])
+    {
         new_x += speed;
+        moving_right = true;
+    }
 
     collision_top_left = CheckCollision(new_x, data.y);
     collision_top_right = CheckCollision(new_x + width, data.y);
@@ -203,4 +220,9 @@ void AA2_Player::JumpingStateRender()
         .h = data.h
     };
     SDL_RenderTexture(AA2_RefLinks::GetRenderer(), texture, nullptr, &dst);
+}
+
+bool AA2_Player::IsMovingRight()
+{
+    return moving_right;
 }

@@ -9,7 +9,10 @@ class AA2_Camera
         SDL_FRect viewport;
         SDL_FRect *target;
 
-        float camera_zoom_factor = 0.5;
+        float target_offset_x = 400;
+        float current_offset_x;
+        bool changing_direction;
+        bool player_direction;
 
     public:
 
