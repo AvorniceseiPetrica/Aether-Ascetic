@@ -17,7 +17,7 @@ AA2_Player::AA2_Player(float x, float y) : AA2_Creature(x, y, 0, 0)
 
 void AA2_Player::Init()
 {
-    texture = AA2_TextureLoader::LoadTexture("assets/tiles/red.png");
+    texture = AA2_TextureLoader::LoadTexture("assets/sprites/player.png");
     data.w = width;
     data.h = height;
 
