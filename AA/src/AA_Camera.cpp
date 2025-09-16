@@ -24,7 +24,7 @@ void AA_Camera::Update()
     else
         desired_offset_x = -target_offset_x;
 
-    current_offset_x += (desired_offset_x - current_offset_x) * 0.05;
+    current_offset_x += (desired_offset_x - current_offset_x) * switch_direction_strength;
 
     viewport.x = target->x - viewport.w / 2 + current_offset_x;
     viewport.y = target->y - viewport.h / 2;

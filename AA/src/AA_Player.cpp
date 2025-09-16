@@ -7,7 +7,8 @@
 enum PLAYER_STATE {
     PLAYER_IDLE,
     PLAYER_RUNNING,
-    PLAYER_JUMPING
+    PLAYER_JUMPING,
+    PLAYER_FALLING
 };
 
 AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 0, 0)
@@ -37,6 +38,10 @@ void AA_Player::Update()
         break;
 
         case PLAYER_JUMPING: JumpingStateUpdate();
+        break;
+
+        case PLAYER_FALLING: FallingStateUpdate();
+        break;
     }
 }
 
@@ -51,6 +56,9 @@ void AA_Player::Render()
         break;
 
         case PLAYER_JUMPING: JumpingStateRender();
+        break;
+
+        case PLAYER_FALLING: FallingStateRender();
         break;
     }
 }
@@ -138,7 +146,7 @@ void AA_Player::RunningStateUpdate()
 
     if(!collision_bottom_left && !collision_bottom_right)
     {
-        current_state = PLAYER_JUMPING;
+        current_state = PLAYER_FALLING;
         on_ground = false;
     }
 }
@@ -159,22 +167,76 @@ void AA_Player::JumpingStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
     float new_x = data.x;
+    float new_y;
     bool collision_top_left;
     bool collision_top_right;
     bool collision_bottom_left;
     bool collision_bottom_right;
 
     velocity_y += gravity_strength;
+    new_y = data.y + velocity_y;
 
-    float new_y = data.y + velocity_y;
-
-    collision_bottom_left = CheckCollision(data.x, new_y + height);
-    collision_bottom_right = CheckCollision(data.x + width, new_y + height);
     collision_top_left = CheckCollision(data.x, new_y);
     collision_top_right = CheckCollision(data.x + width, new_y);
 
     if(collision_top_left || collision_top_right)
         velocity_y = 0;
+
+    if(velocity_y > 0)
+        current_state = PLAYER_FALLING;
+
+    if(keys[SDL_SCANCODE_A])
+    {
+        new_x -= speed;
+        moving_right = false;
+    }
+    if(keys[SDL_SCANCODE_D])
+    {
+        new_x += speed;
+        moving_right = true;
+    }
+
+    collision_top_left = CheckCollision(new_x, data.y);
+    collision_top_right = CheckCollision(new_x + width, data.y);
+    collision_bottom_left = CheckCollision(new_x, data.y + height);
+    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
+
+    if(
+        !collision_top_left &&
+        !collision_top_right &&
+        !collision_bottom_left &&
+        !collision_bottom_right    
+    )
+        data.x = new_x;
+}
+
+void AA_Player::JumpingStateRender()
+{
+    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), texture, nullptr, &dst);
+}
+
+void AA_Player::FallingStateUpdate()
+{
+    const bool *keys = SDL_GetKeyboardState(nullptr);
+    float new_x = data.x;
+    float new_y;
+    bool collision_top_left;
+    bool collision_top_right;
+    bool collision_bottom_left;
+    bool collision_bottom_right;
+
+    velocity_y += gravity_strength;
+    new_y = data.y + velocity_y;
+
+    collision_bottom_left = CheckCollision(data.x, new_y + height);
+    collision_bottom_right = CheckCollision(data.x + width, new_y + height);
 
     if(collision_bottom_left || collision_bottom_right)
     {
@@ -210,7 +272,7 @@ void AA_Player::JumpingStateUpdate()
         data.x = new_x;
 }
 
-void AA_Player::JumpingStateRender()
+void AA_Player::FallingStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {

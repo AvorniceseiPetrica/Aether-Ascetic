@@ -13,7 +13,7 @@ class AA_Player : public AA_Creature
         SDL_Texture *texture = nullptr;
         int current_state;
         float gravity_strength = 1;
-        float jump_strength = 30;
+        float jump_strength = 28.5;
         float velocity_y = 0;
         bool on_ground;
         bool in_air;
@@ -35,6 +35,8 @@ class AA_Player : public AA_Creature
         void RunningStateRender();
         void JumpingStateUpdate();
         void JumpingStateRender();
+        void FallingStateUpdate();
+        void FallingStateRender();
         bool IsMovingRight();
 
 };

@@ -11,6 +11,7 @@ class AA_Camera
 
         float target_offset_x = 600;
         float current_offset_x;
+        float switch_direction_strength = 0.05;
 
     public:
 
