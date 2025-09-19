@@ -19,6 +19,11 @@ class AA_Player : public AA_Creature
         bool in_air;
         bool moving_right;
 
+        SDL_Texture* walking[6];
+        int walk_txt_count;
+
+        SDL_Texture *red, *green, *blue;
+
     public:
 
         AA_Player(float x, float y);
