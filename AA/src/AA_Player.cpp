@@ -156,7 +156,11 @@ void AA_Player::IdleStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst);
+
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::WalkingStateUpdate()
@@ -230,7 +234,10 @@ void AA_Player::WalkingStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), walking[walking_frame_counter / 8], nullptr, &dst);
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), walking[walking_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), walking[walking_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::JumpingStateUpdate()
@@ -299,7 +306,11 @@ void AA_Player::JumpingStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), jumping[jumping_frame_counter / 8], nullptr, &dst);
+
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), jumping[jumping_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), jumping[jumping_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::FallingStateUpdate()
@@ -366,7 +377,11 @@ void AA_Player::FallingStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst);
+
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 bool AA_Player::IsMovingRight()
