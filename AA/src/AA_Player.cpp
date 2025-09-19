@@ -6,7 +6,7 @@
 
 enum PLAYER_STATE {
     PLAYER_IDLE,
-    PLAYER_RUNNING,
+    PLAYER_WALKING,
     PLAYER_JUMPING,
     PLAYER_FALLING
 };
@@ -30,6 +30,25 @@ void AA_Player::Init()
     walking[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk4.png");
     walking[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk5.png");
     walking[5] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk6.png");
+    
+    walking_frame_counter = -1;
+
+    jumping[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/jump/jump1.png");
+    jumping[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/jump/jump2.png");
+
+    jumping_frame_counter = -1;
+
+    falling[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/fall/fall1.png");
+    falling[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/fall/fall2.png");
+
+    falling_frame_counter = -1;
+
+    idle[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle1.png");
+    idle[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle2.png");
+    idle[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle3.png");
+    idle[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle4.png");
+
+    idle_frame_counter = -1;
 
     red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
@@ -45,20 +64,20 @@ void AA_Player::Update()
         case PLAYER_IDLE: IdleStateUpdate();
         break;
 
-        case PLAYER_RUNNING: {
-            SDL_Log("RUNNING STATE | vy = %f\n", velocity_y);
-            RunningStateUpdate();
+        case PLAYER_WALKING: {
+            //SDL_Log("RUNNING STATE | vy = %f\n", velocity_y);
+            WalkingStateUpdate();
         }
         break;
 
         case PLAYER_JUMPING: {
-            SDL_Log("JUMPING STATE | vy = %f\n", velocity_y);
+            //SDL_Log("JUMPING STATE | vy = %f\n", velocity_y);
             JumpingStateUpdate();
         }
         break;
 
         case PLAYER_FALLING: {
-            SDL_Log("FALLING STATE | vy = %f\n", velocity_y);
+            //SDL_Log("FALLING STATE | vy = %f\n", velocity_y);
             FallingStateUpdate();
         }
         break;
@@ -72,7 +91,7 @@ void AA_Player::Render()
         case PLAYER_IDLE: IdleStateRender();
         break;
 
-        case PLAYER_RUNNING: RunningStateRender();
+        case PLAYER_WALKING: WalkingStateRender();
         break;
 
         case PLAYER_JUMPING: JumpingStateRender();
@@ -106,7 +125,26 @@ bool AA_Player::CheckCollision(float x, float y)
 
 void AA_Player::IdleStateUpdate()
 {
-    current_state = PLAYER_RUNNING;
+    const bool *keys = SDL_GetKeyboardState(nullptr);
+
+    if(keys[SDL_SCANCODE_W])
+    {
+        current_state = PLAYER_JUMPING;
+        on_ground = false;
+        velocity_y -= jump_strength;
+        return;
+    }
+
+    if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
+    {
+        current_state = PLAYER_WALKING;
+        return;
+    }
+
+    idle_frame_counter++;
+
+    if(idle_frame_counter > 31)
+        idle_frame_counter = 0;
 }
 
 void AA_Player::IdleStateRender()
@@ -118,10 +156,10 @@ void AA_Player::IdleStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), texture, nullptr, &dst);
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst);
 }
 
-void AA_Player::RunningStateUpdate()
+void AA_Player::WalkingStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
     int new_x = data.x;
@@ -135,11 +173,15 @@ void AA_Player::RunningStateUpdate()
         new_x -= speed;
         moving_right = false;
     }
+
     if(keys[SDL_SCANCODE_D])
     {
         new_x += speed;
         moving_right = true;
     }
+
+    if(new_x == data.x)
+        current_state = PLAYER_IDLE;
 
     collision_top_left = CheckCollision(new_x, data.y);
     collision_top_right = CheckCollision(new_x + width, data.y);
@@ -172,13 +214,14 @@ void AA_Player::RunningStateUpdate()
         return;
     }
 
-    walk_txt_count++;
-
-    if(walk_txt_count > 36)
-        walk_txt_count = 0;
+    walking_frame_counter++;
+    
+    if(walking_frame_counter> 47)
+        walking_frame_counter = 0;
+    
 }
 
-void AA_Player::RunningStateRender()
+void AA_Player::WalkingStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -187,7 +230,7 @@ void AA_Player::RunningStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), red, nullptr, &dst);
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), walking[walking_frame_counter / 8], nullptr, &dst);
 }
 
 void AA_Player::JumpingStateUpdate()
@@ -240,6 +283,11 @@ void AA_Player::JumpingStateUpdate()
         !collision_bottom_right    
     )
         data.x = new_x;
+
+    jumping_frame_counter++;
+
+    if(jumping_frame_counter > 15)
+        jumping_frame_counter = 0;
 }
 
 void AA_Player::JumpingStateRender()
@@ -251,7 +299,7 @@ void AA_Player::JumpingStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), green, nullptr, &dst);
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), jumping[jumping_frame_counter / 8], nullptr, &dst);
 }
 
 void AA_Player::FallingStateUpdate()
@@ -274,8 +322,7 @@ void AA_Player::FallingStateUpdate()
     {
         on_ground = true;
         velocity_y = 0;
-        current_state = PLAYER_RUNNING;
-        walk_txt_count = 0;
+        current_state = PLAYER_IDLE;
     }
     else
         data.y = new_y;
@@ -303,6 +350,11 @@ void AA_Player::FallingStateUpdate()
         !collision_bottom_right    
     )
         data.x = new_x;
+
+    falling_frame_counter++;
+
+    if(falling_frame_counter > 15)
+        falling_frame_counter = 0;
 }
 
 void AA_Player::FallingStateRender()
@@ -314,7 +366,7 @@ void AA_Player::FallingStateRender()
         .w = data.w,
         .h = data.h
     };
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), blue, nullptr, &dst);
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst);
 }
 
 bool AA_Player::IsMovingRight()

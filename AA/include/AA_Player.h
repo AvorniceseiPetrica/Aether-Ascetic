@@ -15,12 +15,22 @@ class AA_Player : public AA_Creature
         float gravity_strength = 1;
         float jump_strength = 28.5;
         float velocity_y = 0;
+        float velocity_x = 0;
         bool on_ground;
         bool in_air;
         bool moving_right;
 
         SDL_Texture* walking[6];
-        int walk_txt_count;
+        int walking_frame_counter;
+
+        SDL_Texture* jumping[2];
+        int jumping_frame_counter;
+
+        SDL_Texture* falling[2];
+        int falling_frame_counter;
+
+        SDL_Texture* idle[4];
+        int idle_frame_counter;
 
         SDL_Texture *red, *green, *blue;
 
@@ -36,8 +46,8 @@ class AA_Player : public AA_Creature
         bool CheckCollision(float x, float y);
         void IdleStateUpdate();
         void IdleStateRender();
-        void RunningStateUpdate();
-        void RunningStateRender();
+        void WalkingStateUpdate();
+        void WalkingStateRender();
         void JumpingStateUpdate();
         void JumpingStateRender();
         void FallingStateUpdate();
