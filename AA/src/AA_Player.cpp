@@ -318,6 +318,7 @@ void AA_Player::FallingStateUpdate()
     const bool *keys = SDL_GetKeyboardState(nullptr);
     float new_x = data.x;
     float new_y;
+    int tile_y;
     bool collision_top_left;
     bool collision_top_right;
     bool collision_bottom_left;
@@ -331,6 +332,8 @@ void AA_Player::FallingStateUpdate()
 
     if(collision_bottom_left || collision_bottom_right)
     {
+        tile_y = (int)(new_y + height) / TILE_HEIGHT;
+        data.y = (tile_y) * TILE_HEIGHT - height - 1;
         on_ground = true;
         velocity_y = 0;
         current_state = PLAYER_IDLE;

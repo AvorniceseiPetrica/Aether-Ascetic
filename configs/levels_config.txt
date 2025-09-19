@@ -1,2 +1,2 @@
-configs/level0/map0.txt configs/level0/props0.txt 200 2000
+configs/level0/map0.txt configs/level0/props0.txt 200 1200
 configs/level0/map0.txt configs/level0/props0.txt 16000 1200
