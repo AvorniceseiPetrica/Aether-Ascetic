@@ -11,6 +11,8 @@ AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_
     midground1_path = "assets/backgrounds/midground.png";
     midground2_path = "assets/backgrounds/midground2.png";
     player_spawn = p_player_spawn;
+
+    ghoul = new AA_Ghoul(150, 2110, 192, 192);
 }
 
 AA_Level::~AA_Level()
@@ -31,6 +33,8 @@ void AA_Level::Init()
     props.Init();
 
     AA_RefLinks::SetMap(&map);
+
+    ghoul->Init();
     
     SDL_Log("Level initialized...\n");
 }
@@ -38,6 +42,8 @@ void AA_Level::Init()
 void AA_Level::Update()
 {
     props.Update();
+    
+    ghoul->Update();
 }
 
 void AA_Level::Render()
@@ -49,6 +55,8 @@ void AA_Level::Render()
     props.Render();
     
     map.Render();
+
+    ghoul->Render();
 }
 
 void AA_Level::RenderBackground()

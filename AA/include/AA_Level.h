@@ -4,6 +4,8 @@
 #include "AA_Player.h"
 #include "AA_PropManager.h"
 
+#include "AA_Ghoul.h"
+
 class AA_Level
 {
     private:
@@ -28,6 +30,8 @@ class AA_Level
         std::string props_config_path;
 
         SDL_Point player_spawn;
+
+        AA_Ghoul *ghoul;
 
     public:
 

@@ -22,7 +22,9 @@ SOURCES=$(AA_sources_path)/main.cpp \
 		$(AA_sources_path)/AA_PropManager.cpp \
 		$(AA_sources_path)/AA_World.cpp \
 		$(AA_sources_path)/AA_PlayState.cpp \
-		$(AA_sources_path)/AA_MenuState.cpp 
+		$(AA_sources_path)/AA_MenuState.cpp \
+		$(AA_sources_path)/AA_Enemy.cpp \
+		$(AA_sources_path)/AA_Ghoul.cpp
 
 HEADERS=$(AA_headers_path)/AA_Config.h \
 		$(AA_headers_path)/AA_Game.h \
@@ -43,7 +45,9 @@ HEADERS=$(AA_headers_path)/AA_Config.h \
 		$(AA_headers_path)/AA_World.h \
 		$(AA_headers_path)/AA_State.h \
 		$(AA_headers_path)/AA_PlayState.h \
-		$(AA_headers_path)/AA_MenuState.h
+		$(AA_headers_path)/AA_MenuState.h \
+		$(AA_headers_path)/AA_Enemy.h \
+		$(AA_headers_path)/AA_Ghoul.h
 
 $(exe): $(SOURCES) $(HEADERS)
 	g++ -Wall $(SOURCES) -o $(exe) -I$(AA_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image

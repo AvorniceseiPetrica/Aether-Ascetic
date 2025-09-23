@@ -16,7 +16,8 @@ enum TILES {
     BRICK_DARK3,
     BRICK_GRASSY1,
     BRICK_GRASSY2,
-    PILLAR,
+    PILLAR_DARK1,
+    PILLAR_DARK2,
     PILLAR_GRASSY
 };
 
@@ -53,8 +54,9 @@ void AA_TileManager::Init()
     tiles[BRICK_DARK3] = new AA_Tile(BRICK_DARK3, "assets/tiles/brick_dark3.png", SOLID);
     tiles[BRICK_GRASSY1] = new AA_Tile(BRICK_GRASSY1, "assets/tiles/brick_grassy1.png", SOLID);
     tiles[BRICK_GRASSY2] = new AA_Tile(BRICK_GRASSY2, "assets/tiles/brick_grassy2.png", SOLID);
-    tiles[PILLAR] = new AA_Tile(PILLAR, "assets/tiles/pillar.png", SOLID);
-    tiles[PILLAR_GRASSY] = new AA_Tile(PILLAR_GRASSY, "assets/tiles/pillar_grassy.png", SOLID);
+    tiles[PILLAR_DARK1] = new AA_Tile(PILLAR_DARK1, "assets/tiles/pillar_dark1.png", NOT_SOLID);
+    tiles[PILLAR_DARK2] = new AA_Tile(PILLAR_DARK2, "assets/tiles/pillar_dark2.png", NOT_SOLID);
+    tiles[PILLAR_GRASSY] = new AA_Tile(PILLAR_GRASSY, "assets/tiles/pillar_grassy.png", NOT_SOLID);
 
     SDL_Log("Initialized tile manager...\n");
 }
