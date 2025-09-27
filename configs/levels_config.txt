@@ -1,1 +1,1 @@
-configs/level1/map1.txt configs/level0/props0.txt 100 1500
+configs/level2/map2.txt configs/level1/props1.txt 1000 1500

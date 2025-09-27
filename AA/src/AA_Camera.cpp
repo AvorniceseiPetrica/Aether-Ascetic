@@ -29,8 +29,8 @@ void AA_Camera::Update()
     viewport.x = target->x - viewport.w / 2 + current_offset_x;
     viewport.y = target->y - viewport.h / 2;
 
-    if(viewport.x < 0)
-        viewport.x = 0;
+    if(viewport.x < 192)
+        viewport.x = 192;
 
     if(viewport.y < 0)
         viewport.y = 0;
