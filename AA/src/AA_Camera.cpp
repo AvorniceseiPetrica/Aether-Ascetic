@@ -35,8 +35,8 @@ void AA_Camera::Update()
     if(viewport.y < 0)
         viewport.y = 0;
 
-    if(viewport.x + viewport.w > MAP_WIDTH)
-        viewport.x = MAP_WIDTH - viewport.w;
+    if(viewport.x + viewport.w > MAP_WIDTH - TILE_WIDTH * 2 - TILE_WIDTH * 0.75)
+        viewport.x = MAP_WIDTH - viewport.w - TILE_WIDTH * 2 - TILE_WIDTH * 0.75;
 
     if(viewport.y + viewport.h > MAP_HEIGHT)
         viewport.y = MAP_HEIGHT - viewport.h;

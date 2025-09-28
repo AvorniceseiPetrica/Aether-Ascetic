@@ -30,9 +30,6 @@ void AA_LevelManager::Init()
     ChangeLevel(current_level_id);
     
     player.Init();
-
-    // for(auto &level : levels)
-    //     level.Init();
     
     AA_RefLinks::SetPlayer(&player);
     AA_RefLinks::GetCamera()->SetTarget(player.GetRect());
@@ -40,7 +37,7 @@ void AA_LevelManager::Init()
 
 void AA_LevelManager::Update()
 {
-    if(AA_RefLinks::GetPlayer()->GetRect()->x > MAP_WIDTH - TILE_WIDTH * 3)
+    if(AA_RefLinks::GetPlayer()->GetRect()->x > MAP_WIDTH - TILE_WIDTH)
     {
         ChangeLevel(++current_level_id);
         return;
