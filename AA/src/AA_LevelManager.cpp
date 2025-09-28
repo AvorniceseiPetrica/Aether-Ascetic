@@ -31,8 +31,8 @@ void AA_LevelManager::Init()
     
     player.Init();
 
-    for(auto &level : levels)
-        level.Init();
+    // for(auto &level : levels)
+    //     level.Init();
     
     AA_RefLinks::SetPlayer(&player);
     AA_RefLinks::GetCamera()->SetTarget(player.GetRect());
@@ -65,5 +65,6 @@ void AA_LevelManager::ChangeLevel(long unsigned int level_id)
     }
 
     current_level = &levels[level_id];
+    current_level->Init();
     player.ChangePosition(current_level->GetPlayerSpawn().x, current_level->GetPlayerSpawn().y);
 }

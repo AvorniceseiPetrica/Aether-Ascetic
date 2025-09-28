@@ -73,10 +73,10 @@ void AA_Map::PrintInfo()
 
 int AA_Map::GetTileId(int x, int y)
 {
-    if(x < 0 || x >= TILEMAP_WIDTH || y < 0 || y >= TILEMAP_WIDTH)
+    if(x < 0 || x >= TILEMAP_WIDTH || y < 0 || y >= TILEMAP_HEIGHT)
         SDL_Log("\n\tAA_Map::GetTileId()\t<< Invalid tile coords | x = %d | y = %d >>\n\n", x, y);
 
-    return tilemap[x][y];
+    return tilemap[y][x];
 }
 
 bool AA_Map::IsTileSolid(int id)

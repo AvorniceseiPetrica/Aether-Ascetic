@@ -3,7 +3,7 @@
 #define WINDOW_WIDTH 1920
 #define WINDOW_HEIGHT 1080
 
-#define TILE_COUNT 19
+#define TILE_COUNT 25
 
 #define TILE_WIDTH 192
 #define TILE_HEIGHT 192
