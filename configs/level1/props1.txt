@@ -1,0 +1,2 @@
+380 1820 48 48 assets/props/level1/floating_rocks.png
+380 1600 96 96 assets/props/level1/table.png

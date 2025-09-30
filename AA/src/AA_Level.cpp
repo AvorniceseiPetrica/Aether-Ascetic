@@ -3,16 +3,17 @@
 #include "AA_RefLinks.h"
 #include "AA_TextureLoader.h"
 
-AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn)
+AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn,
+                    std::string p_background_path, std::string p_midground1_path, std::string p_midground2_path)
 {
     map_path = p_map_path;
     props_config_path = p_props_config_path;
-    background_path = "assets/backgrounds/background.png";
-    midground1_path = "assets/backgrounds/midground.png";
-    midground2_path = "assets/backgrounds/midground2.png";
+    background_path = p_background_path;
+    midground1_path = p_midground1_path;
+    midground2_path = p_midground2_path;
     player_spawn = p_player_spawn;
 
-    ghoul = new AA_Ghoul(500, 1545, 192, 192);
+    ghoul = new AA_Ghoul(500, 1540, 192, 192);
 }
 
 AA_Level::~AA_Level()
@@ -41,7 +42,9 @@ void AA_Level::Init()
 
 void AA_Level::Update()
 {
-    props.Update();
+    // props don't have this functionality for now 
+
+    // props.Update();
     
     ghoul->Update();
 }
@@ -56,7 +59,7 @@ void AA_Level::Render()
     
     map.Render();
 
-    ghoul->Render();
+    //ghoul->Render();
 }
 
 void AA_Level::RenderBackground()

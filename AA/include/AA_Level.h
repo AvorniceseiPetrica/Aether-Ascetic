@@ -35,7 +35,8 @@ class AA_Level
 
     public:
 
-        AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn);
+        AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn,
+                std::string p_background_path, std::string p_midground1_path, std::string p_midground2_path);
         ~AA_Level();
         void Init();
         void Update();
