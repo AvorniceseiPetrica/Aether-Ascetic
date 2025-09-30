@@ -12,7 +12,7 @@ AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_
     midground2_path = "assets/backgrounds/midground2.png";
     player_spawn = p_player_spawn;
 
-    ghoul = new AA_Ghoul(150, 2110, 192, 192);
+    ghoul = new AA_Ghoul(500, 1545, 192, 192);
 }
 
 AA_Level::~AA_Level()

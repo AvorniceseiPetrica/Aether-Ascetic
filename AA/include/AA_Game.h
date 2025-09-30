@@ -14,6 +14,7 @@ class AA_Game
         bool is_running;
         
         AA_State *current_state = nullptr;
+        AA_State *next_state = nullptr;
 
     public:
 

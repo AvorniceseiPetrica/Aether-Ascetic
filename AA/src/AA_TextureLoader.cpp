@@ -17,6 +17,8 @@ SDL_Texture* AA_TextureLoader::LoadTexture(std::string texture_path)
     {
         SDL_Texture *texture = SDL_CreateTextureFromSurface(AA_RefLinks::GetRenderer(), surface);
 
+        SDL_DestroySurface(surface);
+
         if(texture == nullptr)
         {
             SDL_Log("\n\tAA_TextureLoader::LoadTexture()\t<< Failed to create texture from surface: %s >>\n", texture_path.c_str());

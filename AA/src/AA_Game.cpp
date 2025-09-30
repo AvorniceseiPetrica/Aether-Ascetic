@@ -66,7 +66,18 @@ void AA_Game::HandleEvents()
 
 void AA_Game::Update()
 {
-    current_state->Update();
+    if(current_state != nullptr)
+        current_state->Update();
+    
+    if(next_state != nullptr)
+    {
+        if(current_state != nullptr)
+            delete current_state;
+
+        current_state = next_state;
+        current_state->Init();
+        next_state = nullptr;
+    }
 }
 
 void AA_Game::Render()
@@ -107,11 +118,5 @@ void AA_Game::ChangeState(AA_State *new_state)
     if(new_state == nullptr)
         SDL_Log("\n\tAA_Game::ChangeState()\t<< Providede NULL for (AA_State *new_state) >>");
     else
-    {
-        if(current_state != nullptr)
-            delete current_state;
-        
-        current_state = new_state;
-        current_state->Init();
-    }
+        next_state = new_state;
 }

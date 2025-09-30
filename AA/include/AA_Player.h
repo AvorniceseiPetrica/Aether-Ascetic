@@ -16,9 +16,9 @@ class AA_Player : public AA_Creature
         float jump_strength = 28.5;
         float velocity_y = 0;
         float velocity_x = 0;
-        bool on_ground;
-        bool in_air;
-        bool moving_right;
+        bool on_ground = false;
+        bool in_air = true;
+        bool moving_right = true;
 
         SDL_Texture* walking[6];
         int walking_frame_counter;
