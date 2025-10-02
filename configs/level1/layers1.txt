@@ -2,5 +2,3 @@ assets/backgrounds/level1/level1_layer1.png 0.1
 assets/backgrounds/level1/level1_layer2.png 0.2
 assets/backgrounds/level1/level1_layer3.png 0.3
 assets/backgrounds/level1/level1_layer4.png 0.4
-assets/backgrounds/level1/level1_layer5.png 0.5
-assets/backgrounds/level1/level1_layer6.png 0.6

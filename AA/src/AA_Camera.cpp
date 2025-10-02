@@ -38,8 +38,8 @@ void AA_Camera::Update()
     if(viewport.x + viewport.w > MAP_WIDTH - TILE_WIDTH * 2 - TILE_WIDTH * 0.80)
         viewport.x = MAP_WIDTH - viewport.w - TILE_WIDTH * 2 - TILE_WIDTH * 0.80;
 
-    if(viewport.y + viewport.h > MAP_HEIGHT)
-        viewport.y = MAP_HEIGHT - viewport.h;
+    if(viewport.y + viewport.h > MAP_HEIGHT - TILEMAP_HEIGHT)
+        viewport.y = MAP_HEIGHT - viewport.h - TILE_HEIGHT;
 }
 
 SDL_FRect AA_Camera::GetViewPort()

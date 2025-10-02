@@ -1,0 +1,6 @@
+assets/backgrounds/level0/level0_layer1.png 0.1
+assets/backgrounds/level0/level0_layer2.png 0.2
+assets/backgrounds/level0/level0_layer3.png 0.3
+assets/backgrounds/level0/level0_layer4.png 0.4
+assets/backgrounds/level0/level0_layer6.png 0.4
+assets/backgrounds/level0/level0_layer6.png 0.4

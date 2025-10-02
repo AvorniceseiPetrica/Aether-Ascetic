@@ -85,7 +85,7 @@ void AA_Level::RenderLayers()
     {
         SDL_GetTextureSize(layers[i], &layer_width, &layer_height);
         dst.x = -camera.x * layers_parallaxes[i];
-        dst.y = -camera.y * layers_parallaxes[i];
+        dst.y = -camera.y * layers_parallaxes[i] / 1.25;
         dst.w = layer_width;
         dst.h = layer_height;
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), layers[i], nullptr, &dst);
