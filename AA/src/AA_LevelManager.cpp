@@ -16,12 +16,12 @@ AA_LevelManager::AA_LevelManager(std::string levels_config_path) : player(0, 0)
         {
             std::string map_path;
             std::string props_config_path;
-            std::string background_path, midground1_path, midground2_path;
+            std::string layers_config_path;
             int player_spawn_x, player_spawn_y;
 
-            f>>map_path>>props_config_path>>player_spawn_x>>player_spawn_y>>background_path>>midground1_path>>midground2_path;
+            f>>map_path>>props_config_path>>player_spawn_x>>player_spawn_y>>layers_config_path;
 
-            levels.push_back(AA_Level(map_path, props_config_path, {.x = player_spawn_x, .y = player_spawn_y}, background_path, midground1_path, midground2_path));
+            levels.push_back(AA_Level(map_path, props_config_path, {.x = player_spawn_x, .y = player_spawn_y}, layers_config_path));
         }
 }
 

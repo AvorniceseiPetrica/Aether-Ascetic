@@ -5,6 +5,7 @@
 #include "AA_PropManager.h"
 
 #include "AA_Ghoul.h"
+#include <vector>
 
 class AA_Level
 {
@@ -13,18 +14,9 @@ class AA_Level
         AA_Map map;
         std::string map_path;
 
-        SDL_Texture *background = nullptr;
-        std::string background_path;
-
-        SDL_Texture *midground1 = nullptr;
-        std::string midground1_path;
-
-        SDL_Texture *midground2 = nullptr;
-        std::string midground2_path;
-
-        float background_parallax = 0.2;
-        float midground1_parallax = 0.35;
-        float midground2_parallax = 0.45;
+        std::vector <SDL_Texture*> layers;
+        std::string layers_config;
+        std::vector <float> layers_parallaxes;
 
         AA_PropManager props;
         std::string props_config_path;
@@ -35,14 +27,11 @@ class AA_Level
 
     public:
 
-        AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn,
-                std::string p_background_path, std::string p_midground1_path, std::string p_midground2_path);
+        AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn, std::string p_layers_config);
         ~AA_Level();
         void Init();
         void Update();
         void Render();
-        void RenderBackground();
-        void RenderMidground1();
-        void RenderMidground2();
+        void RenderLayers();
         SDL_Point GetPlayerSpawn();
 };

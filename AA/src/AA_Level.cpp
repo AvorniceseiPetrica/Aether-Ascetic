@@ -2,15 +2,13 @@
 
 #include "AA_RefLinks.h"
 #include "AA_TextureLoader.h"
+#include <fstream>
 
-AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn,
-                    std::string p_background_path, std::string p_midground1_path, std::string p_midground2_path)
+AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn, std::string p_layers_config)
 {
     map_path = p_map_path;
     props_config_path = p_props_config_path;
-    background_path = p_background_path;
-    midground1_path = p_midground1_path;
-    midground2_path = p_midground2_path;
+    layers_config = p_layers_config;
     player_spawn = p_player_spawn;
 
     ghoul = new AA_Ghoul(500, 1540, 192, 192);
@@ -26,9 +24,26 @@ void AA_Level::Init()
     map.Init();
     map.LoadMap(map_path);
 
-    background = AA_TextureLoader::LoadTexture(background_path);
-    midground1 = AA_TextureLoader::LoadTexture(midground1_path);
-    midground2 = AA_TextureLoader::LoadTexture(midground2_path);
+    std::fstream f;
+
+    f.open(layers_config);
+
+    if(!f.is_open())
+        SDL_Log("\n\tAA_Level::Init()\t<< Cannot open config file: %s >>\n\n", layers_config.c_str());
+    else
+    {
+        while(!f.eof())
+        {
+            std::string layer_texture_path;
+            float layer_parallax;
+            f>>layer_texture_path>>layer_parallax;
+
+            layers.push_back(AA_TextureLoader::LoadTexture(layer_texture_path));
+            layers_parallaxes.push_back(layer_parallax);
+
+            SDL_Log("Read layer: %s | Parallax: %f", layer_texture_path.c_str(), layer_parallax);
+        }
+    }
 
     props.LoadProps(props_config_path);
     props.Init();
@@ -51,10 +66,8 @@ void AA_Level::Update()
 
 void AA_Level::Render()
 {
-    RenderBackground();
-    RenderMidground1();
-    RenderMidground2();
-        
+    RenderLayers();
+
     props.Render();
     
     map.Render();
@@ -62,55 +75,21 @@ void AA_Level::Render()
     //ghoul->Render();
 }
 
-void AA_Level::RenderBackground()
+void AA_Level::RenderLayers()
 {
-    float background_width, background_height;
-
-    SDL_GetTextureSize(background, &background_width, &background_height);
-
+    float layer_width, layer_height;
+    SDL_FRect dst;
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect background_rect = {
-        .x = -camera.x * background_parallax,
-        .y = -camera.y * background_parallax,
-        .w = background_width,
-        .h = background_height
-    };
 
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), background, nullptr, &background_rect);
-}
-
-void AA_Level::RenderMidground1()
-{
-    float midground_width, midground_height;
-
-    SDL_GetTextureSize(midground1, &midground_width, &midground_height);
-
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect midground_rect = {
-        .x = -camera.x * midground1_parallax,
-        .y = -camera.y * midground1_parallax,
-        .w = midground_width,
-        .h = midground_height
-    };
-
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), midground1, nullptr, &midground_rect);
-}
-
-void AA_Level::RenderMidground2()
-{
-    float midground_width, midground_height;
-
-    SDL_GetTextureSize(midground2, &midground_width, &midground_height);
-
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect midground_rect = {
-        .x = -camera.x * midground2_parallax,
-        .y = -camera.y * midground2_parallax,
-        .w = midground_width,
-        .h = midground_height
-    };
-
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), midground2, nullptr, &midground_rect);
+    for(int i = 0; i < layers.size(); i++)
+    {
+        SDL_GetTextureSize(layers[i], &layer_width, &layer_height);
+        dst.x = -camera.x * layers_parallaxes[i];
+        dst.y = -camera.y * layers_parallaxes[i];
+        dst.w = layer_width;
+        dst.h = layer_height;
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), layers[i], nullptr, &dst);
+    }
 }
 
 SDL_Point AA_Level::GetPlayerSpawn()
