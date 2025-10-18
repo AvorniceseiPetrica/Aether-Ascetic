@@ -1,0 +1,1 @@
+600 800 72 72 assets/props/level2/grass1.png

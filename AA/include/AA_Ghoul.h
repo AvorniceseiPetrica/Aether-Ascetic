@@ -11,7 +11,8 @@ class AA_Ghoul : public AA_Enemy
         int frame_counter;
         int current_state;
         float velocity_y;
-        int speed = 7;
+        int speed = 5;
+        float gravity = .1;
         bool moving_right;
 
     public:

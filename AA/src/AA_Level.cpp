@@ -11,7 +11,7 @@ AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_
     layers_config = p_layers_config;
     player_spawn = p_player_spawn;
 
-    ghoul = new AA_Ghoul(500, 1540, 192, 192);
+    ghoul = new AA_Ghoul(1800, 800, 192, 192);
 }
 
 AA_Level::~AA_Level()
@@ -72,7 +72,7 @@ void AA_Level::Render()
     
     map.Render();
 
-    //ghoul->Render();
+    ghoul->Render();
 }
 
 void AA_Level::RenderLayers()

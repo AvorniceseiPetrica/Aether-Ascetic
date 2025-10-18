@@ -30,7 +30,7 @@ void AA_Ghoul::Init()
 
     moving_right = true;
 
-    current_state = GHOUL_RUNNING;
+    current_state = GHOUL_FALLING;
 }
 
 void AA_Ghoul::Update()
@@ -38,7 +38,7 @@ void AA_Ghoul::Update()
     switch(current_state)
     {
         case GHOUL_FALLING : {
-
+            FallingStateUpdate();
         };
         break;
 
@@ -64,7 +64,7 @@ void AA_Ghoul::Render()
     switch(current_state)
     {
         case GHOUL_FALLING : {
-
+            FallingStateRender();
         };
         break;
 
@@ -87,14 +87,37 @@ void AA_Ghoul::Render()
 
 void AA_Ghoul::FallingStateUpdate()
 {
-    float new_y;
+    bool collision_bottom_left;
+    bool collision_bottom_right;
+
+    velocity_y += gravity;
+
+    float new_y = data.y + velocity_y;
 
     
+    collision_bottom_left = CheckCollision(data.x, new_y + data.h);
+    collision_bottom_right = CheckCollision(data.x + data.w, new_y + data.h);
+
+    if(collision_bottom_left || collision_bottom_right)
+    {
+        velocity_y = 0;
+        current_state = GHOUL_RUNNING;
+    }
+    else
+        data.y = new_y;
 }
 
 void AA_Ghoul::FallingStateRender()
 {
+    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
 
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), frames[0], nullptr, &dst);
 }
 
 void AA_Ghoul::RunningStateUpdate()
@@ -107,14 +130,14 @@ void AA_Ghoul::RunningStateUpdate()
         new_x += speed;
     else
         new_x -= speed;
-        
-    collision_bottom_left = CheckCollision(new_x , data.y + data.h + 10);
-    collision_bottom_right = CheckCollision(new_x + data.w, data.y + data.h + 10);
+
+    collision_bottom_left = CheckCollision(new_x, data.y + data.h + 1);
+    collision_bottom_right = CheckCollision(new_x + data.w, data.y + data.h + 1);
 
     if(!collision_bottom_left || !collision_bottom_right)
         moving_right = !moving_right;
-
-    data.x = new_x;
+    else
+        data.x = new_x;
 
     frame_counter++;
 
