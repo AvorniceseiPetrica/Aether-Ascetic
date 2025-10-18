@@ -61,7 +61,7 @@ void AA_Level::Update()
 
     // props.Update();
     
-    ghoul->Update();
+    //ghoul->Update();
 }
 
 void AA_Level::Render()
@@ -81,7 +81,7 @@ void AA_Level::RenderLayers()
     SDL_FRect dst;
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
 
-    for(int i = 0; i < layers.size(); i++)
+    for(long unsigned int i = 0; i < layers.size(); i++)
     {
         SDL_GetTextureSize(layers[i], &layer_width, &layer_height);
         dst.x = -camera.x * layers_parallaxes[i];
