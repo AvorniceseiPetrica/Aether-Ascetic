@@ -8,7 +8,8 @@ enum PLAYER_STATE {
     PLAYER_IDLE,
     PLAYER_WALKING,
     PLAYER_JUMPING,
-    PLAYER_FALLING
+    PLAYER_FALLING,
+    PLAYER_PUNCHING
 };
 
 AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 0, 0)
@@ -50,6 +51,15 @@ void AA_Player::Init()
 
     idle_frame_counter = -1;
 
+    punching[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch1.png");
+    punching[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch2.png");
+    punching[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch3.png");
+    punching[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch4.png");
+    punching[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch5.png");
+    punching[5] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch6.png");
+
+    punching_frame_counter = -1;
+
     red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
     blue = AA_TextureLoader::LoadTexture("assets/sprites/blue.png");
@@ -81,6 +91,9 @@ void AA_Player::Update()
             FallingStateUpdate();
         }
         break;
+
+        case PLAYER_PUNCHING: PunchingStateUpdate();
+        break;
     }
 }
 
@@ -98,6 +111,9 @@ void AA_Player::Render()
         break;
 
         case PLAYER_FALLING: FallingStateRender();
+        break;
+
+        case PLAYER_PUNCHING: PunchingStateRender();
         break;
     }
 }
@@ -138,6 +154,12 @@ void AA_Player::IdleStateUpdate()
     if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
     {
         current_state = PLAYER_WALKING;
+        return;
+    }
+
+    if(keys[SDL_SCANCODE_F])
+    {
+        current_state = PLAYER_PUNCHING;
         return;
     }
 
@@ -385,6 +407,34 @@ void AA_Player::FallingStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+}
+
+void AA_Player::PunchingStateUpdate()
+{
+    punching_frame_counter++;
+
+    if(punching_frame_counter > 47)
+    {
+        punching_frame_counter = -1;
+        current_state = PLAYER_IDLE;
+        return;
+    }
+}
+
+void AA_Player::PunchingStateRender()
+{
+    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
+
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), punching[punching_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punching[punching_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 bool AA_Player::IsMovingRight()

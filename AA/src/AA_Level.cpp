@@ -61,7 +61,7 @@ void AA_Level::Update()
 
     // props.Update();
     
-    //ghoul->Update();
+    ghoul->Update();
 }
 
 void AA_Level::Render()

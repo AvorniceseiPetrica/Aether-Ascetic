@@ -1,6 +1,7 @@
 #include "AA_PropManager.h"
 
 #include <fstream>
+#include "AA_Config.h"
 
 void AA_PropManager::Init()
 {
@@ -19,13 +20,13 @@ void AA_PropManager::LoadProps(std::string props_config_path)
     else
         while(!f.eof())
         {   
-            float x, y, width, height;
+            float tile_x, tile_y, width, height;
             std::string prop_texture_path;
 
-            f>>x>>y>>width>>height>>prop_texture_path;
+            f>>tile_x>>tile_y>>width>>height>>prop_texture_path;
 
-            props.push_back(AA_Prop(x, y, width, height, prop_texture_path));
-            SDL_Log("Loaded prop: %s, %f, %f\n", prop_texture_path.c_str(), x, y);
+            props.push_back(AA_Prop(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height, prop_texture_path));
+            SDL_Log("Loaded prop: %s, %f, %f\n", prop_texture_path.c_str(), tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT);
         }
 
     SDL_Log("Loaded props: %s...", props_config_path.c_str());
