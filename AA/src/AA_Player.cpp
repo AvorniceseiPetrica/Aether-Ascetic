@@ -9,7 +9,8 @@ enum PLAYER_STATE {
     PLAYER_WALKING,
     PLAYER_JUMPING,
     PLAYER_FALLING,
-    PLAYER_PUNCHING
+    PLAYER_PUNCHING,
+    PLAYER_KICKING
 };
 
 AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 0, 0)
@@ -60,6 +61,14 @@ void AA_Player::Init()
 
     punching_frame_counter = -1;
 
+    kicking[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick1.png");
+    kicking[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick2.png");
+    kicking[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick3.png");
+    kicking[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick4.png");
+    kicking[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick5.png");
+
+    kicking_frame_counter = -1;
+
     red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
     blue = AA_TextureLoader::LoadTexture("assets/sprites/blue.png");
@@ -94,6 +103,9 @@ void AA_Player::Update()
 
         case PLAYER_PUNCHING: PunchingStateUpdate();
         break;
+
+        case PLAYER_KICKING: KickingStateUpdate();
+        break;
     }
 }
 
@@ -114,6 +126,9 @@ void AA_Player::Render()
         break;
 
         case PLAYER_PUNCHING: PunchingStateRender();
+        break;
+
+        case PLAYER_KICKING: KickingStateRender();
         break;
     }
 }
@@ -160,6 +175,12 @@ void AA_Player::IdleStateUpdate()
     if(keys[SDL_SCANCODE_F])
     {
         current_state = PLAYER_PUNCHING;
+        return;
+    }
+
+    if(keys[SDL_SCANCODE_LSHIFT])
+    {
+        current_state = PLAYER_KICKING;
         return;
     }
 
@@ -435,6 +456,34 @@ void AA_Player::PunchingStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), punching[punching_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punching[punching_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+}
+
+void AA_Player::KickingStateUpdate()
+{
+    kicking_frame_counter++;
+
+    if(kicking_frame_counter > 39)
+    {
+        kicking_frame_counter = -1;
+        current_state = PLAYER_IDLE;
+        return;
+    }
+}
+
+void AA_Player::KickingStateRender()
+{
+    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
+
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), kicking[kicking_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), kicking[kicking_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 bool AA_Player::IsMovingRight()

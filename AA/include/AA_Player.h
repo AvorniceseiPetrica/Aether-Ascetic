@@ -35,6 +35,9 @@ class AA_Player : public AA_Creature
         SDL_Texture* punching[6];
         int punching_frame_counter;
 
+        SDL_Texture* kicking[5];
+        int kicking_frame_counter;
+
         SDL_Texture *red, *green, *blue;
 
     public:
@@ -57,6 +60,8 @@ class AA_Player : public AA_Creature
         void FallingStateRender();
         void PunchingStateUpdate();
         void PunchingStateRender();
+        void KickingStateUpdate();
+        void KickingStateRender();
         bool IsMovingRight();
 
 };
