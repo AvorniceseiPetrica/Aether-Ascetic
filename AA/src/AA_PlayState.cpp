@@ -7,6 +7,8 @@ void AA_PlayState::Init()
 {
     SDL_SetRenderScale(AA_RefLinks::GetRenderer(), 0.85, 0.85);
     world.Init();
+
+    SDL_Log("Playstate initialized...\n");
 }
 
 void AA_PlayState::Update()

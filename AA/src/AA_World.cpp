@@ -14,6 +14,8 @@ void AA_World::Init()
     level_manager = new AA_LevelManager("configs/levels_config.txt");
     level_manager->Init();
     camera.SetTarget(AA_RefLinks::GetPlayer()->GetRect());
+
+    SDL_Log("World initialized...\n");
 }
 
 void AA_World::Update()

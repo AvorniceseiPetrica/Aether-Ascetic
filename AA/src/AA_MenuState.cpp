@@ -16,6 +16,8 @@ void AA_MenuState::Init()
     quit_game_pressed = false;
     
     SDL_SetRenderScale(AA_RefLinks::GetRenderer(), 1, 1);
+
+    SDL_Log("Menustate initialized...\n");
 }
 
 void AA_MenuState::Update()

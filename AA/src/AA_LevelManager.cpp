@@ -17,11 +17,12 @@ AA_LevelManager::AA_LevelManager(std::string levels_config_path) : player(0, 0)
             std::string map_path;
             std::string props_config_path;
             std::string layers_config_path;
+            std::string enemies_config_path;
             int player_spawn_x, player_spawn_y;
 
-            f>>map_path>>props_config_path>>player_spawn_x>>player_spawn_y>>layers_config_path;
+            f>>map_path>>props_config_path>>player_spawn_x>>player_spawn_y>>layers_config_path>>enemies_config_path;
 
-            levels.push_back(AA_Level(map_path, props_config_path, {.x = player_spawn_x, .y = player_spawn_y}, layers_config_path));
+            levels.push_back(AA_Level(map_path, props_config_path, {.x = player_spawn_x, .y = player_spawn_y}, layers_config_path, enemies_config_path));
         }
 }
 
@@ -34,6 +35,8 @@ void AA_LevelManager::Init()
     
     AA_RefLinks::SetPlayer(&player);
     AA_RefLinks::GetCamera()->SetTarget(player.GetRect());
+
+    SDL_Log("Level manager initialized...\n");
 }
 
 void AA_LevelManager::Update()

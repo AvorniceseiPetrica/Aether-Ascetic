@@ -4,14 +4,13 @@
 #include "AA_TextureLoader.h"
 #include <fstream>
 
-AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn, std::string p_layers_config)
+AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn, std::string p_layers_config, std::string p_enemies_config_path)
 {
     map_path = p_map_path;
     props_config_path = p_props_config_path;
     layers_config = p_layers_config;
     player_spawn = p_player_spawn;
-
-    ghoul = new AA_Ghoul(1800, 800, 192, 192);
+    enemies_config_path = p_enemies_config_path;
 }
 
 AA_Level::~AA_Level()
@@ -50,7 +49,8 @@ void AA_Level::Init()
 
     AA_RefLinks::SetMap(&map);
 
-    ghoul->Init();
+    enemy_manager.LoadEnemies(enemies_config_path);
+    enemy_manager.InitEnemies();
     
     SDL_Log("Level initialized...\n");
 }
@@ -60,8 +60,8 @@ void AA_Level::Update()
     // props don't have this functionality for now 
 
     // props.Update();
-    
-    ghoul->Update();
+
+    enemy_manager.UpdateEnemies();
 }
 
 void AA_Level::Render()
@@ -72,7 +72,7 @@ void AA_Level::Render()
     
     map.Render();
 
-    ghoul->Render();
+    enemy_manager.RenderEnemies();
 }
 
 void AA_Level::RenderLayers()
