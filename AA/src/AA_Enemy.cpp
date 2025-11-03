@@ -17,3 +17,8 @@ bool AA_Enemy::CheckCollision(float x, float y)
 
     return AA_RefLinks::GetMap()->IsTileSolid(tile_id);
 }
+
+SDL_FRect AA_Enemy::GetData()
+{
+    return data;
+}

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "AA_Ghoul.h"
+#include "AA_Config.h"
 
 AA_EnemyManager::AA_EnemyManager()
 {
@@ -26,15 +27,15 @@ void AA_EnemyManager::LoadEnemies(std::string enemies_config_path)
     else
     {
         int enemy_type;
-        float x, y, width, height;
+        float tile_x, tile_y, width, height;
 
         while(!f.eof())
         {
-            f>>enemy_type>>x>>y>>width>>height;
+            f>>enemy_type>>tile_x>>tile_y>>width>>height;
 
             switch(enemy_type)
             {
-                case ENEMY_GHOUL: enemies.push_back(new AA_Ghoul(x, y, width, height));
+                case ENEMY_GHOUL: enemies.push_back(new AA_Ghoul(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
                 break;
 
             }
@@ -56,6 +57,19 @@ void AA_EnemyManager::UpdateEnemies()
 {
     for(auto &enemy : enemies)
         enemy->Update();
+
+    SDL_FRect enemy_data;
+    int i = 0;
+
+    for(auto &enemy : enemies)
+    {
+        enemy_data = enemy->GetData();
+
+        if(enemy_data.x < 0 || enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH || enemy_data.y < 0 || enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT)
+            enemies.erase(enemies.begin() + i);
+
+        i++;
+    }
 }
 
 void AA_EnemyManager::RenderEnemies()

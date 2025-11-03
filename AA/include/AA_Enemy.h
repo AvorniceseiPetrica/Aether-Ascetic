@@ -18,4 +18,5 @@ class AA_Enemy : public AA_Creature
         AA_Enemy(float x, float y, float width, float height);
         virtual ~AA_Enemy() = default;
         virtual bool CheckCollision(float x, float y);
+        SDL_FRect GetData();
 };
