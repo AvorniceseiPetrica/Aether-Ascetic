@@ -58,17 +58,22 @@ void AA_EnemyManager::UpdateEnemies()
     for(auto &enemy : enemies)
         enemy->Update();
 
-    SDL_FRect enemy_data;
-    int i = 0;
-
-    for(auto &enemy : enemies)
+    for (auto it = enemies.begin(); it != enemies.end();)
     {
-        enemy_data = enemy->GetData();
+        SDL_FRect enemy_data = (*it)->GetData();
 
-        if(enemy_data.x < 0 || enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH - TILE_WIDTH || enemy_data.y < 0 || enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT)
-            enemies.erase(enemies.begin() + i);
-
-        i++;
+        if (enemy_data.x < 0 ||
+            enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH - TILE_WIDTH ||
+            enemy_data.y < 0 ||
+            enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT)
+        {
+            delete *it;
+            it = enemies.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
 }
 

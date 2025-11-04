@@ -31,10 +31,12 @@ void AA_Ghoul::Init()
     moving_right = true;
 
     current_state = GHOUL_FALLING;
+    velocity_y = 0;
 }
 
 void AA_Ghoul::Update()
 {
+
     switch(current_state)
     {
         case GHOUL_FALLING : {
@@ -92,11 +94,14 @@ void AA_Ghoul::FallingStateUpdate()
 
     velocity_y += gravity;
 
+    if(velocity_y > 30)
+        velocity_y = 30;
+
     float new_y = data.y + velocity_y;
 
     
-    collision_bottom_left = CheckCollision(data.x, new_y + data.h);
-    collision_bottom_right = CheckCollision(data.x + data.w, new_y + data.h);
+    collision_bottom_left = CheckCollision(data.x, new_y + data.h - 1);
+    collision_bottom_right = CheckCollision(data.x + data.w, new_y + data.h - 1);
 
     if(collision_bottom_left || collision_bottom_right)
     {
