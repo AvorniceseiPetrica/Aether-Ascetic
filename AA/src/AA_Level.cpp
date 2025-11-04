@@ -15,7 +15,7 @@ AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_
 
 AA_Level::~AA_Level()
 {
-
+    
 }
 
 void AA_Level::Init()

@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include "AA_Ghoul.h"
+#include "AA_Wizard.h"
 #include "AA_Config.h"
 
 AA_EnemyManager::AA_EnemyManager()
@@ -35,9 +36,11 @@ void AA_EnemyManager::LoadEnemies(std::string enemies_config_path)
 
             switch(enemy_type)
             {
-                case ENEMY_GHOUL: enemies.push_back(new AA_Ghoul(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
+                case ENEMY_GHOUL : enemies.push_back(new AA_Ghoul(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
                 break;
 
+                case ENEMY_WIZARD : enemies.push_back(new AA_Wizard(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
+                break;
             }
         }
     }

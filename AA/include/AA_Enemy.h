@@ -3,7 +3,8 @@
 #include "AA_Creature.h"
 
 enum ENEMY_TYPE {
-    ENEMY_GHOUL
+    ENEMY_GHOUL,
+    ENEMY_WIZARD
 };
 
 class AA_Enemy : public AA_Creature
