@@ -65,7 +65,7 @@ void AA_EnemyManager::UpdateEnemies()
     {
         enemy_data = enemy->GetData();
 
-        if(enemy_data.x < 0 || enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH || enemy_data.y < 0 || enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT)
+        if(enemy_data.x < 0 || enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH - TILE_WIDTH || enemy_data.y < 0 || enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT)
             enemies.erase(enemies.begin() + i);
 
         i++;

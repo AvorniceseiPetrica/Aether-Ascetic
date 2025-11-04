@@ -57,3 +57,6 @@ $(exe): $(SOURCES) $(HEADERS)
 .PHONY:
 clean:
 	rm -f $(exe)
+
+debug:
+	g++ -std=c++20 -Wall -g3 -O0 -fsanitize=address -fno-omit-frame-pointer $(SOURCES) -o $(exe) -I$(AA_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image -fsanitize=address
