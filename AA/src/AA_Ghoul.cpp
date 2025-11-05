@@ -3,10 +3,10 @@
 #include "AA_TextureLoader.h"
 #include "AA_RefLinks.h"
 
-enum GHOUL_STATE {
-    GHOUL_FALLING,
-    GHOUL_RUNNING,
-    GHOUL_ATTACKING,
+enum GHOUL_STATES {
+    GHOUL_FALL,
+    GHOUL_RUN,
+    GHOUL_ATTACK,
     GHOUL_HURT
 };
 
@@ -30,7 +30,7 @@ void AA_Ghoul::Init()
 
     moving_right = true;
 
-    current_state = GHOUL_FALLING;
+    current_state = GHOUL_FALL;
     velocity_y = 0;
 }
 
@@ -39,22 +39,22 @@ void AA_Ghoul::Update()
 
     switch(current_state)
     {
-        case GHOUL_FALLING : {
-            FallingStateUpdate();
+        case GHOUL_FALL: {
+            FallStateUpdate();
         };
         break;
 
-        case GHOUL_RUNNING : {
-            RunningStateUpdate();
+        case GHOUL_RUN: {
+            RunStateUpdate();
         };
         break;
 
-        case GHOUL_ATTACKING : {
+        case GHOUL_ATTACK: {
 
         };
         break;
 
-        case GHOUL_HURT : {
+        case GHOUL_HURT: {
 
         };
         break;
@@ -65,29 +65,29 @@ void AA_Ghoul::Render()
 {
     switch(current_state)
     {
-        case GHOUL_FALLING : {
-            FallingStateRender();
+        case GHOUL_FALL: {
+            FallStateRender();
         };
         break;
 
-        case GHOUL_RUNNING : {
-            RunningStateRender();
+        case GHOUL_RUN: {
+            RunStateRender();
         };
         break;
 
-        case GHOUL_ATTACKING : {
+        case GHOUL_ATTACK: {
 
         };
         break;
 
-        case GHOUL_HURT : {
+        case GHOUL_HURT: {
 
         };
         break;
     }
 }
 
-void AA_Ghoul::FallingStateUpdate()
+void AA_Ghoul::FallStateUpdate()
 {
     bool collision_bottom_left;
     bool collision_bottom_right;
@@ -106,13 +106,13 @@ void AA_Ghoul::FallingStateUpdate()
     if(collision_bottom_left || collision_bottom_right)
     {
         velocity_y = 0;
-        current_state = GHOUL_RUNNING;
+        current_state = GHOUL_RUN;
     }
     else
         data.y = new_y;
 }
 
-void AA_Ghoul::FallingStateRender()
+void AA_Ghoul::FallStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -125,7 +125,7 @@ void AA_Ghoul::FallingStateRender()
     SDL_RenderTexture(AA_RefLinks::GetRenderer(), frames[0], nullptr, &dst);
 }
 
-void AA_Ghoul::RunningStateUpdate()
+void AA_Ghoul::RunStateUpdate()
 {
     float new_x = data.x;
     bool collision_bottom_left;
@@ -150,7 +150,7 @@ void AA_Ghoul::RunningStateUpdate()
         frame_counter = 0;
 }
 
-void AA_Ghoul::RunningStateRender()
+void AA_Ghoul::RunStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {

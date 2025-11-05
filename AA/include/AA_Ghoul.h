@@ -22,8 +22,8 @@ class AA_Ghoul : public AA_Enemy
         void Init() override;
         void Update() override;
         void Render() override;
-        void FallingStateUpdate();
-        void FallingStateRender();
-        void RunningStateUpdate();
-        void RunningStateRender();
+        void FallStateUpdate();
+        void FallStateRender();
+        void RunStateUpdate();
+        void RunStateRender();
 };

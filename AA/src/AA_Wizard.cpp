@@ -2,7 +2,7 @@
 #include "AA_TextureLoader.h"
 #include "AA_RefLinks.h"
 
-enum WIZARD_STATE {
+enum WIZARD_STATES {
     WIZARD_IDLE_STATE
 };
 

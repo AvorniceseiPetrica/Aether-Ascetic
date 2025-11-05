@@ -4,13 +4,16 @@
 #include "AA_RefLinks.h"
 #include "AA_Config.h"
 
-enum PLAYER_STATE {
+enum PLAYER_STATES {
     PLAYER_IDLE,
-    PLAYER_WALKING,
-    PLAYER_JUMPING,
-    PLAYER_FALLING,
-    PLAYER_PUNCHING,
-    PLAYER_KICKING
+    PLAYER_WALK,
+    PLAYER_JUMP,
+    PLAYER_FALL,
+    PLAYER_CROUCH,
+    PLAYER_PUNCH,
+    PLAYER_KICK,
+    PLAYER_CROUCH_KICK,
+    PLAYER_FLYING_KICK
 };
 
 AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 0, 0)
@@ -24,7 +27,7 @@ void AA_Player::Init()
     data.w = width;
     data.h = height;
 
-    current_state = PLAYER_FALLING;
+    current_state = PLAYER_FALL;
 
     walking[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk1.png");
     walking[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk2.png");
@@ -83,29 +86,26 @@ void AA_Player::Update()
         case PLAYER_IDLE: IdleStateUpdate();
         break;
 
-        case PLAYER_WALKING: {
-            //SDL_Log("RUNNING STATE | vy = %f\n", velocity_y);
-            WalkingStateUpdate();
-        }
+        case PLAYER_WALK: WalkStateUpdate();
         break;
 
-        case PLAYER_JUMPING: {
-            //SDL_Log("JUMPING STATE | vy = %f\n", velocity_y);
-            JumpingStateUpdate();
-        }
+        case PLAYER_JUMP: JumpStateUpdate();
         break;
 
-        case PLAYER_FALLING: {
-            //SDL_Log("FALLING STATE | vy = %f\n", velocity_y);
-            FallingStateUpdate();
-        }
+        case PLAYER_FALL: FallStateUpdate();
         break;
 
-        case PLAYER_PUNCHING: PunchingStateUpdate();
+        case PLAYER_CROUCH: break;
+
+        case PLAYER_PUNCH: PunchStateUpdate();
         break;
 
-        case PLAYER_KICKING: KickingStateUpdate();
+        case PLAYER_KICK: KickStateUpdate();
         break;
+
+        case PLAYER_CROUCH_KICK: break;
+
+        case PLAYER_FLYING_KICK: break;
     }
 }
 
@@ -116,19 +116,19 @@ void AA_Player::Render()
         case PLAYER_IDLE: IdleStateRender();
         break;
 
-        case PLAYER_WALKING: WalkingStateRender();
+        case PLAYER_WALK: WalkStateRender();
         break;
 
-        case PLAYER_JUMPING: JumpingStateRender();
+        case PLAYER_JUMP: JumpStateRender();
         break;
 
-        case PLAYER_FALLING: FallingStateRender();
+        case PLAYER_FALL: FallStateRender();
         break;
 
-        case PLAYER_PUNCHING: PunchingStateRender();
+        case PLAYER_PUNCH: PunchStateRender();
         break;
 
-        case PLAYER_KICKING: KickingStateRender();
+        case PLAYER_KICK: KickStateRender();
         break;
     }
 }
@@ -160,7 +160,7 @@ void AA_Player::IdleStateUpdate()
 
     if(keys[SDL_SCANCODE_W])
     {
-        current_state = PLAYER_JUMPING;
+        current_state = PLAYER_JUMP;
         on_ground = false;
         velocity_y -= jump_strength;
         return;
@@ -168,19 +168,19 @@ void AA_Player::IdleStateUpdate()
 
     if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
     {
-        current_state = PLAYER_WALKING;
+        current_state = PLAYER_WALK;
         return;
     }
 
     if(keys[SDL_SCANCODE_F])
     {
-        current_state = PLAYER_PUNCHING;
+        current_state = PLAYER_PUNCH;
         return;
     }
 
     if(keys[SDL_SCANCODE_LSHIFT])
     {
-        current_state = PLAYER_KICKING;
+        current_state = PLAYER_KICK;
         return;
     }
 
@@ -206,7 +206,7 @@ void AA_Player::IdleStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
-void AA_Player::WalkingStateUpdate()
+void AA_Player::WalkStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
     int new_x = data.x;
@@ -245,7 +245,7 @@ void AA_Player::WalkingStateUpdate()
 
     if(keys[SDL_SCANCODE_W])
     {
-        current_state = PLAYER_JUMPING;
+        current_state = PLAYER_JUMP;
         on_ground = false;
         velocity_y -= jump_strength;
         return;
@@ -256,7 +256,7 @@ void AA_Player::WalkingStateUpdate()
 
     if(!collision_bottom_left && !collision_bottom_right)
     {
-        current_state = PLAYER_FALLING;
+        current_state = PLAYER_FALL;
         on_ground = false;
         return;
     }
@@ -268,7 +268,7 @@ void AA_Player::WalkingStateUpdate()
     
 }
 
-void AA_Player::WalkingStateRender()
+void AA_Player::WalkStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -283,7 +283,7 @@ void AA_Player::WalkingStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), walking[walking_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
-void AA_Player::JumpingStateUpdate()
+void AA_Player::JumpStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
     float new_x = data.x;
@@ -306,7 +306,7 @@ void AA_Player::JumpingStateUpdate()
 
     if(velocity_y > 0)
     {
-        current_state = PLAYER_FALLING;
+        current_state = PLAYER_FALL;
         return;
     }
 
@@ -340,7 +340,7 @@ void AA_Player::JumpingStateUpdate()
         jumping_frame_counter = 0;
 }
 
-void AA_Player::JumpingStateRender()
+void AA_Player::JumpStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -356,7 +356,7 @@ void AA_Player::JumpingStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), jumping[jumping_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
-void AA_Player::FallingStateUpdate()
+void AA_Player::FallStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
     float new_x = data.x;
@@ -414,7 +414,7 @@ void AA_Player::FallingStateUpdate()
         falling_frame_counter = 0;
 }
 
-void AA_Player::FallingStateRender()
+void AA_Player::FallStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -430,7 +430,7 @@ void AA_Player::FallingStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), falling[falling_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
-void AA_Player::PunchingStateUpdate()
+void AA_Player::PunchStateUpdate()
 {
     punching_frame_counter++;
 
@@ -442,7 +442,7 @@ void AA_Player::PunchingStateUpdate()
     }
 }
 
-void AA_Player::PunchingStateRender()
+void AA_Player::PunchStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -458,7 +458,7 @@ void AA_Player::PunchingStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punching[punching_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
-void AA_Player::KickingStateUpdate()
+void AA_Player::KickStateUpdate()
 {
     kicking_frame_counter++;
 
@@ -470,7 +470,7 @@ void AA_Player::KickingStateUpdate()
     }
 }
 
-void AA_Player::KickingStateRender()
+void AA_Player::KickStateRender()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {

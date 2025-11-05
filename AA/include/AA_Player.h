@@ -52,16 +52,16 @@ class AA_Player : public AA_Creature
         bool CheckCollision(float x, float y);
         void IdleStateUpdate();
         void IdleStateRender();
-        void WalkingStateUpdate();
-        void WalkingStateRender();
-        void JumpingStateUpdate();
-        void JumpingStateRender();
-        void FallingStateUpdate();
-        void FallingStateRender();
-        void PunchingStateUpdate();
-        void PunchingStateRender();
-        void KickingStateUpdate();
-        void KickingStateRender();
+        void WalkStateUpdate();
+        void WalkStateRender();
+        void JumpStateUpdate();
+        void JumpStateRender();
+        void FallStateUpdate();
+        void FallStateRender();
+        void PunchStateUpdate();
+        void PunchStateRender();
+        void KickStateUpdate();
+        void KickStateRender();
         bool IsMovingRight();
 
 };

@@ -24,7 +24,7 @@ void AA_EnemyManager::LoadEnemies(std::string enemies_config_path)
     f.open(enemies_config_path);
 
     if(!f.is_open())
-        SDL_Log("\n\tAA_EnemyManager::LoadEnemies()\t<< Could not open config file %s >>\n\n", enemies_config_path);
+        SDL_Log("\n\tAA_EnemyManager::LoadEnemies()\t<< Could not open config file %s >>\n\n", enemies_config_path.c_str());
     else
     {
         int enemy_type;
@@ -36,10 +36,10 @@ void AA_EnemyManager::LoadEnemies(std::string enemies_config_path)
 
             switch(enemy_type)
             {
-                case ENEMY_GHOUL : enemies.push_back(new AA_Ghoul(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
+                case ENEMY_GHOUL: enemies.push_back(new AA_Ghoul(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
                 break;
 
-                case ENEMY_WIZARD : enemies.push_back(new AA_Wizard(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
+                case ENEMY_WIZARD: enemies.push_back(new AA_Wizard(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height));
                 break;
             }
         }
