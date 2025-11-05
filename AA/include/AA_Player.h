@@ -20,23 +20,26 @@ class AA_Player : public AA_Creature
         bool in_air = true;
         bool moving_right = true;
 
-        SDL_Texture* walking[6];
-        int walking_frame_counter;
+        SDL_Texture* walk[6];
+        int walk_frame_counter;
 
-        SDL_Texture* jumping[2];
-        int jumping_frame_counter;
+        SDL_Texture* jump[2];
+        int jump_frame_counter;
 
-        SDL_Texture* falling[2];
-        int falling_frame_counter;
+        SDL_Texture* fall[2];
+        int fall_frame_counter;
 
         SDL_Texture* idle[4];
         int idle_frame_counter;
 
-        SDL_Texture* punching[6];
-        int punching_frame_counter;
+        SDL_Texture* punch[6];
+        int punch_frame_counter;
 
-        SDL_Texture* kicking[5];
-        int kicking_frame_counter;
+        SDL_Texture* kick[5];
+        int kick_frame_counter;
+
+        SDL_Texture* crouch[2];
+        int crouch_frame_counter;
 
         SDL_Texture *red, *green, *blue;
 
@@ -58,10 +61,16 @@ class AA_Player : public AA_Creature
         void JumpStateRender();
         void FallStateUpdate();
         void FallStateRender();
+        void CrouchStateUpdate();
+        void CrouchStateRender();
         void PunchStateUpdate();
         void PunchStateRender();
         void KickStateUpdate();
         void KickStateRender();
+        void CrouchKickStateUpdate();
+        void CrouchKickStateRender();
+        void FlyingKickStateUpdate();
+        void FlyingKickStateRender();
         bool IsMovingRight();
 
 };
