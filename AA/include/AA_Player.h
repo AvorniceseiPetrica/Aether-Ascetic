@@ -44,7 +44,12 @@ class AA_Player : public AA_Creature
         SDL_Texture* crouch_kick[5];
         int crouch_kick_frame_counter;
 
+        SDL_Texture* flying_kick[2];
+        int flying_kick_frame_counter;
+
         SDL_Texture *red, *green, *blue;
+
+        bool kicked_mid_air;
 
     public:
 

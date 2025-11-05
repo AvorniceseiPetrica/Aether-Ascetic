@@ -28,6 +28,7 @@ void AA_Player::Init()
     data.h = height;
 
     current_state = PLAYER_FALL;
+    kicked_mid_air = false;
 
     walk[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk1.png");
     walk[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk2.png");
@@ -84,6 +85,11 @@ void AA_Player::Init()
     crouch_kick[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick5.png");
 
     crouch_kick_frame_counter = -1;
+
+    flying_kick[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/flying_kick/flying_kick1.png");
+    flying_kick[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/flying_kick/flying_kick2.png");
+
+    flying_kick_frame_counter = -1;
 
     red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
@@ -341,6 +347,13 @@ void AA_Player::JumpStateUpdate()
         return;
     }
 
+    if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
+    {
+        current_state = PLAYER_FLYING_KICK;
+        kicked_mid_air = true;
+        return;
+    }
+
     if(keys[SDL_SCANCODE_A])
     {
         new_x -= speed;
@@ -409,11 +422,19 @@ void AA_Player::FallStateUpdate()
         tile_y = (int)(new_y + height) / TILE_HEIGHT;
         data.y = (tile_y) * TILE_HEIGHT - height - 1;
         on_ground = true;
+        kicked_mid_air = false;
         velocity_y = 0;
         current_state = PLAYER_IDLE;
     }
     else
         data.y = new_y;
+
+    if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
+    {
+        current_state = PLAYER_FLYING_KICK;
+        kicked_mid_air = true;
+        return;
+    }
 
     if(keys[SDL_SCANCODE_A])
     {
@@ -584,12 +605,76 @@ void AA_Player::CrouchKickStateRender()
 
 void AA_Player::FlyingKickStateUpdate()
 {
+    const bool *keys = SDL_GetKeyboardState(nullptr);
+    float new_x = data.x;
+    float new_y;
+    bool collision_top_left;
+    bool collision_top_right;
+    bool collision_bottom_left;
+    bool collision_bottom_right;
 
+    velocity_y += gravity_strength;
+    new_y = data.y + velocity_y;
+
+    collision_bottom_left = CheckCollision(data.x, new_y + height);
+    collision_bottom_right = CheckCollision(data.x + width, new_y + height);
+
+    if(collision_bottom_left || collision_bottom_right)
+    {
+        on_ground = true;
+        velocity_y = 0;
+        current_state = PLAYER_IDLE;
+    }
+    else
+        data.y = new_y;
+    
+    if(keys[SDL_SCANCODE_A])
+    {
+        new_x -= speed;
+        moving_right = false;
+    }
+    if(keys[SDL_SCANCODE_D])
+    {
+        new_x += speed;
+        moving_right = true;
+    }
+    
+    collision_top_left = CheckCollision(new_x, data.y);
+    collision_top_right = CheckCollision(new_x + width, data.y);
+    collision_bottom_left = CheckCollision(new_x, data.y + height);
+    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
+    
+    if(
+        !collision_top_left &&
+        !collision_top_right &&
+        !collision_bottom_left &&
+        !collision_bottom_right    
+    )
+    data.x = new_x;
+
+    flying_kick_frame_counter++;
+    
+    if(flying_kick_frame_counter > 15)
+    {
+        current_state = PLAYER_FALL;
+        flying_kick_frame_counter = -1;
+    }
 }
 
 void AA_Player::FlyingKickStateRender()
 {
+    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
 
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 bool AA_Player::IsMovingRight()
