@@ -77,6 +77,14 @@ void AA_Player::Init()
 
     crouch_frame_counter = -1;
 
+    crouch_kick[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick1.png");
+    crouch_kick[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick2.png");
+    crouch_kick[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick3.png");
+    crouch_kick[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick4.png");
+    crouch_kick[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick5.png");
+
+    crouch_kick_frame_counter = -1;
+
     red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
     blue = AA_TextureLoader::LoadTexture("assets/sprites/blue.png");
@@ -457,6 +465,12 @@ void AA_Player::CrouchStateUpdate()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
 
+    if(keys[SDL_SCANCODE_LALT])
+    {
+        current_state = PLAYER_CROUCH_KICK;
+        return;
+    }
+
     if(!keys[SDL_SCANCODE_LCTRL])
     {
         current_state = PLAYER_IDLE;
@@ -543,12 +557,29 @@ void AA_Player::KickStateRender()
 
 void AA_Player::CrouchKickStateUpdate()
 {
+    crouch_kick_frame_counter++;
 
+    if(crouch_kick_frame_counter > 39)
+    {
+        current_state = PLAYER_CROUCH;
+        crouch_kick_frame_counter = -1;
+    }
 }
 
 void AA_Player::CrouchKickStateRender()
 {
+    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
+    SDL_FRect dst = {
+        .x = data.x - camera.x,
+        .y = data.y - camera.y,
+        .w = data.w,
+        .h = data.h
+    };
 
+    if(moving_right)
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst);
+    else
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::FlyingKickStateUpdate()

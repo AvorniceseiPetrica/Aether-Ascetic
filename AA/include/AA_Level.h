@@ -24,7 +24,6 @@ class AA_Level
 
         SDL_Point player_spawn;
 
-        AA_Ghoul *ghoul;
         AA_EnemyManager enemy_manager;
         std::string enemies_config_path;
 

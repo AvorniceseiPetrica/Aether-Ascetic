@@ -6,7 +6,7 @@ class AA_Wizard : public AA_Enemy
 
         int current_state;
         int idle_frame_counter;
-        SDL_Texture *idle_frames[5];
+        SDL_Texture* idle_frames[5];
 
     public:
 
