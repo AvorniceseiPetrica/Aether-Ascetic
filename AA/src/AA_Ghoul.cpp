@@ -12,7 +12,7 @@ enum GHOUL_STATES {
 
 AA_Ghoul::AA_Ghoul(float x, float y, float width, float height) : AA_Enemy(x, y, width, height)
 {
-    
+
 }
 
 void AA_Ghoul::Init()
@@ -32,10 +32,21 @@ void AA_Ghoul::Init()
 
     current_state = GHOUL_FALL;
     velocity_y = 0;
+
+    hitbox.w = 128;
+    hitbox.h = 128;
+    hitbot_offset_y = 64;
 }
 
 void AA_Ghoul::Update()
 {
+    if(moving_right)
+        hitbox_offset_x = 48;
+    else
+        hitbox_offset_x = 15;
+
+    hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + hitbox_offset_x;
+    hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y + hitbot_offset_y;
 
     switch(current_state)
     {
@@ -164,4 +175,6 @@ void AA_Ghoul::RunStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
 }

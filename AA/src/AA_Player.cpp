@@ -95,6 +95,15 @@ void AA_Player::Init()
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
     blue = AA_TextureLoader::LoadTexture("assets/sprites/blue.png");
 
+    punch_hitbox.w = 80. / 192 * 150;
+    punch_hitbox.h = height;
+
+    kick_hitbox.w = 96. / 192 * 150;
+    kick_hitbox.h = height;
+
+    crouch_kick_hitbox.w = 96. / 192 * 150;
+    kick_hitbox.h = height;
+
     SDL_Log("Player initialized...\n");
 }
 
@@ -347,12 +356,12 @@ void AA_Player::JumpStateUpdate()
         return;
     }
 
-    if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
-    {
-        current_state = PLAYER_FLYING_KICK;
-        kicked_mid_air = true;
-        return;
-    }
+    // if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
+    // {
+    //     current_state = PLAYER_FLYING_KICK;
+    //     kicked_mid_air = true;
+    //     return;
+    // }
 
     if(keys[SDL_SCANCODE_A])
     {
@@ -429,12 +438,12 @@ void AA_Player::FallStateUpdate()
     else
         data.y = new_y;
 
-    if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
-    {
-        current_state = PLAYER_FLYING_KICK;
-        kicked_mid_air = true;
-        return;
-    }
+    // if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
+    // {
+    //     current_state = PLAYER_FLYING_KICK;
+    //     kicked_mid_air = true;
+    //     return;
+    // }
 
     if(keys[SDL_SCANCODE_A])
     {
@@ -522,6 +531,14 @@ void AA_Player::CrouchStateRender()
 
 void AA_Player::PunchStateUpdate()
 {
+    if(moving_right)
+        punch_hitbox_offset_x = 112. / 192 * 150;
+    else
+        punch_hitbox_offset_x = 16. / 192 * 150;
+
+    punch_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + punch_hitbox_offset_x;
+    punch_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
+
     punch_frame_counter++;
 
     if(punch_frame_counter > 47)
@@ -546,10 +563,20 @@ void AA_Player::PunchStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &punch_hitbox);
 }
 
 void AA_Player::KickStateUpdate()
 {
+    if(moving_right)
+        kick_hitbox_offset_x = 96. / 192 * 150;
+    else
+        kick_hitbox_offset_x = 0;
+
+    kick_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + kick_hitbox_offset_x;
+    kick_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
+
     kick_frame_counter++;
 
     if(kick_frame_counter > 39)
@@ -574,10 +601,21 @@ void AA_Player::KickStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &kick_hitbox);
 }
 
 void AA_Player::CrouchKickStateUpdate()
 {
+    if(moving_right)
+        crouch_kick_hitbox_offset_x = 96. / 192 * 150;
+    else
+        crouch_kick_hitbox_offset_x = 0;
+
+    crouch_kick_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + crouch_kick_hitbox_offset_x;
+    crouch_kick_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
+
+
     crouch_kick_frame_counter++;
 
     if(crouch_kick_frame_counter > 39)
@@ -601,6 +639,8 @@ void AA_Player::CrouchKickStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &crouch_kick_hitbox);
 }
 
 void AA_Player::FlyingKickStateUpdate()

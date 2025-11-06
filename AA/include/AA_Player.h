@@ -51,6 +51,18 @@ class AA_Player : public AA_Creature
 
         bool kicked_mid_air;
 
+        SDL_FRect punch_hitbox;
+        int punch_hitbox_offset_x;
+        int punch_hitbox_offset_y;
+        
+        SDL_FRect kick_hitbox;
+        int kick_hitbox_offset_x;
+        int kick_hitbox_offset_y;
+
+        SDL_FRect crouch_kick_hitbox;
+        int crouch_kick_hitbox_offset_x;
+        int crouch_kick_hitbox_offset_y;
+
     public:
 
         AA_Player(float x, float y);
