@@ -54,7 +54,7 @@ HEADERS=$(AA_headers_path)/AA_Config.h \
 		$(AA_headers_path)/AA_Wizard.h
 
 $(exe): $(SOURCES) $(HEADERS)
-	g++ -std=c++20 -Wall $(SOURCES) -o $(exe) -I$(AA_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image
+	g++ -std=c++20 -Wall $(SOURCES) -o $(exe) -I$(AA_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image -Wl,-rpath,'$$ORIGIN/SDL/lib'
 
 .PHONY:
 clean:
