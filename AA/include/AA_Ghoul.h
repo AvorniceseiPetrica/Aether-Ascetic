@@ -22,7 +22,7 @@ class AA_Ghoul : public AA_Enemy
 
     public:
 
-        AA_Ghoul(float x, float y, float width, float height);
+        AA_Ghoul(float x, float y, float width, float height, int health);
         virtual ~AA_Ghoul() = default;
         void Init() override;
         void Update() override;

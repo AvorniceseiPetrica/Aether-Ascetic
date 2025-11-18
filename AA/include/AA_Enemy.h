@@ -20,4 +20,6 @@ class AA_Enemy : public AA_Creature
         virtual ~AA_Enemy() = default;
         virtual bool CheckCollision(float x, float y);
         SDL_FRect GetData();
+        void SetHealth(int health);
+        int GetHealth();
 };

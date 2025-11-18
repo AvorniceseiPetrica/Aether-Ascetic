@@ -10,9 +10,9 @@ enum GHOUL_STATES {
     GHOUL_HURT
 };
 
-AA_Ghoul::AA_Ghoul(float x, float y, float width, float height) : AA_Enemy(x, y, width, height)
+AA_Ghoul::AA_Ghoul(float x, float y, float width, float height, int health) : AA_Enemy(x, y, width, height)
 {
-
+    this->health = health;
 }
 
 void AA_Ghoul::Init()

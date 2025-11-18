@@ -6,9 +6,9 @@ enum WIZARD_STATES {
     WIZARD_IDLE_STATE
 };
 
-AA_Wizard::AA_Wizard(float x, float y, float width, float height) : AA_Enemy(x, y, width, height)
+AA_Wizard::AA_Wizard(float x, float y, float width, float height, int health) : AA_Enemy(x, y, width, height)
 {
-
+    this->health = health;
 }
 
 void AA_Wizard::Init()

@@ -22,3 +22,13 @@ SDL_FRect AA_Enemy::GetData()
 {
     return data;
 }
+
+void AA_Enemy::SetHealth(int health)
+{
+    this->health = health;
+}
+
+int AA_Enemy::GetHealth()
+{
+    return health;
+}

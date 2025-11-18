@@ -3,6 +3,18 @@
 #include <SDL3/SDL.h>
 #include "AA_Creature.h"
 
+enum PLAYER_STATES {
+    PLAYER_IDLE,
+    PLAYER_WALK,
+    PLAYER_JUMP,
+    PLAYER_FALL,
+    PLAYER_CROUCH,
+    PLAYER_PUNCH,
+    PLAYER_KICK,
+    PLAYER_CROUCH_KICK,
+    PLAYER_FLYING_KICK
+};
+
 class AA_Player : public AA_Creature
 {
     private:
@@ -92,5 +104,6 @@ class AA_Player : public AA_Creature
         void FlyingKickStateUpdate();
         void FlyingKickStateRender();
         bool IsMovingRight();
-
+        int GetCurrentState();
+        SDL_FRect GetPunchHitbox();
 };

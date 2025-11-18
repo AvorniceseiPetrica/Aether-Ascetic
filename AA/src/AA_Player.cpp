@@ -4,18 +4,6 @@
 #include "AA_RefLinks.h"
 #include "AA_Config.h"
 
-enum PLAYER_STATES {
-    PLAYER_IDLE,
-    PLAYER_WALK,
-    PLAYER_JUMP,
-    PLAYER_FALL,
-    PLAYER_CROUCH,
-    PLAYER_PUNCH,
-    PLAYER_KICK,
-    PLAYER_CROUCH_KICK,
-    PLAYER_FLYING_KICK
-};
-
 AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 0, 0)
 {
     
@@ -536,8 +524,8 @@ void AA_Player::PunchStateUpdate()
     else
         punch_hitbox_offset_x = 16. / 192 * 150;
 
-    punch_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + punch_hitbox_offset_x;
-    punch_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
+    punch_hitbox.x = data.x + punch_hitbox_offset_x;
+    punch_hitbox.y = data.y;
 
     punch_frame_counter++;
 
@@ -558,13 +546,19 @@ void AA_Player::PunchStateRender()
         .w = data.w,
         .h = data.h
     };
+    SDL_FRect punch_dst = {
+        .x = punch_hitbox.x - camera.x,
+        .y = punch_hitbox.y - camera.y,
+        .w = punch_hitbox.w,
+        .h = punch_hitbox.h
+    };
 
     if(moving_right)
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &punch_hitbox);
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &punch_dst);
 }
 
 void AA_Player::KickStateUpdate()
@@ -720,4 +714,14 @@ void AA_Player::FlyingKickStateRender()
 bool AA_Player::IsMovingRight()
 {
     return moving_right;
+}
+
+int AA_Player::GetCurrentState()
+{
+    return current_state;
+}
+
+SDL_FRect AA_Player::GetPunchHitbox()
+{
+    return punch_hitbox;
 }

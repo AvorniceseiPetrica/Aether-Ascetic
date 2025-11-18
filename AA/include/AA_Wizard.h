@@ -10,7 +10,7 @@ class AA_Wizard : public AA_Enemy
 
     public:
 
-        AA_Wizard(float x, float y, float width, float height);
+        AA_Wizard(float x, float y, float width, float height, int health);
         ~AA_Wizard() = default;
         void Init() override;
         void Update() override;
