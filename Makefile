@@ -1,64 +1,39 @@
-AA_headers_path=AA/include
-AA_sources_path=AA/src
-SDL_headers_path=SDL/include
-SDL_libraries_path=SDL/lib
+SDL_HEADERS_PATH=SDL/include
+SDL_LIBRARIES_PATH=SDL/lib
 
-exe=aa
-SOURCES=$(AA_sources_path)/main.cpp \
-		$(AA_sources_path)/AA_Game.cpp \
-		$(AA_sources_path)/AA_RefLinks.cpp \
-		$(AA_sources_path)/AA_TextureLoader.cpp \
-		$(AA_sources_path)/AA_Map.cpp \
-		$(AA_sources_path)/AA_Tile.cpp \
-		$(AA_sources_path)/AA_TileManager.cpp \
-		$(AA_sources_path)/AA_Player.cpp \
-		$(AA_sources_path)/AA_Camera.cpp \
-		$(AA_sources_path)/AA_Level.cpp \
-		$(AA_sources_path)/AA_Entity.cpp \
-		$(AA_sources_path)/AA_DrawableEntity.cpp \
-		$(AA_sources_path)/AA_Creature.cpp \
-		$(AA_sources_path)/AA_LevelManager.cpp \
-		$(AA_sources_path)/AA_Prop.cpp \
-		$(AA_sources_path)/AA_PropManager.cpp \
-		$(AA_sources_path)/AA_World.cpp \
-		$(AA_sources_path)/AA_PlayState.cpp \
-		$(AA_sources_path)/AA_MenuState.cpp \
-		$(AA_sources_path)/AA_Enemy.cpp \
-		$(AA_sources_path)/AA_Ghoul.cpp \
-		$(AA_sources_path)/AA_EnemyManager.cpp \
-		$(AA_sources_path)/AA_Wizard.cpp
+BUILD_DIR := ./build
+SOURCES_DIR := ./AA/src
+HEADERS_DIR := ./AA/include
 
-HEADERS=$(AA_headers_path)/AA_Config.h \
-		$(AA_headers_path)/AA_Game.h \
-		$(AA_headers_path)/AA_RefLinks.h \
-		$(AA_headers_path)/AA_TextureLoader.h \
-		$(AA_headers_path)/AA_Map.h \
-		$(AA_headers_path)/AA_Tile.h \
-		$(AA_headers_path)/AA_TileManager.h \
-		$(AA_headers_path)/AA_Player.h \
-		$(AA_headers_path)/AA_Camera.h \
-		$(AA_headers_path)/AA_Level.h \
-		$(AA_headers_path)/AA_Entity.h \
-		$(AA_headers_path)/AA_DrawableEntity.h \
-		$(AA_headers_path)/AA_Creature.h \
-		$(AA_headers_path)/AA_LevelManager.h \
-		$(AA_headers_path)/AA_Prop.h \
-		$(AA_headers_path)/AA_PropManager.h \
-		$(AA_headers_path)/AA_World.h \
-		$(AA_headers_path)/AA_State.h \
-		$(AA_headers_path)/AA_PlayState.h \
-		$(AA_headers_path)/AA_MenuState.h \
-		$(AA_headers_path)/AA_Enemy.h \
-		$(AA_headers_path)/AA_Ghoul.h \
-		$(AA_headers_path)/AA_EnemyManager.h \
-		$(AA_headers_path)/AA_Wizard.h
+HEADERS := $(wildcard $(HEADERS_DIR)/*.h)
+SOURCES := $(wildcard $(SOURCES_DIR)/*.cpp)
+OBJECTS := $(patsubst $(SOURCES_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
 
-$(exe): $(SOURCES) $(HEADERS)
-	g++ -std=c++20 -Wall $(SOURCES) -o $(exe) -I$(AA_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image -Wl,-rpath,'$$ORIGIN/SDL/lib'
+EXE=aa
+
+
+exe: $(OBJECTS)
+	@echo "Building @(exe)..."
+	g++ -std=c++20 -Wall $(OBJECTS) -o $(exe) -I$(HEADERS_DIR) -I$(SDL_HEADERS_PATH) -L$(SDL_LIBRARIES_PATH) -lSDL3 -lSDL3_image -Wl,-rpath,SDL/lib
+
+$(BUILD_DIR):
+	mkdir $@
+
+$(BUILD_DIR)/%.o: $(SOURCES_DIR)/%.cpp $(HEADERS) | $(BUILD_DIR)
+	@echo "Building $@..." 
+	g++ -std=c++20 -Wall -c $< -o $@ -I$(HEADERS_DIR) -I$(SDL_HEADERS_PATH) -L$(SDL_LIBRARIES_PATH) -lSDL3 -lSDL3_image -Wl,-rpath,SDL/lib
+
+
+info:
+	@echo $(HEADERS)
+	@echo ""
+	@echo $(SOURCES)
+	@echo ""
+	@echo $(OBJECTS)
+	@echo ""
+	@echo $(DEPENDENCIES)
 
 .PHONY:
-clean:
-	rm -f $(exe)
 
-debug:
-	g++ -std=c++20 -Wall -g $(SOURCES) -o $(exe) -I$(AA_headers_path) -I$(SDL_headers_path) -L$(SDL_libraries_path) -lSDL3 -lSDL3_image
+clean:
+	rm -rf $(BUILD_DIR) $(EXE)
