@@ -11,10 +11,9 @@ OBJECTS := $(patsubst $(SOURCES_DIR)/%.cpp,$(BUILD_DIR)/%.o,$(SOURCES))
 
 EXE=aa
 
-
-exe: $(OBJECTS)
+$(EXE): $(OBJECTS)
 	@echo "Building @(exe)..."
-	g++ -std=c++20 -Wall $(OBJECTS) -o $(exe) -I$(HEADERS_DIR) -I$(SDL_HEADERS_PATH) -L$(SDL_LIBRARIES_PATH) -lSDL3 -lSDL3_image -Wl,-rpath,SDL/lib
+	g++ -std=c++20 -Wall $(OBJECTS) -o $@ -L$(SDL_LIBRARIES_PATH) -lSDL3 -lSDL3_image -Wl,-rpath,SDL/lib
 
 $(BUILD_DIR):
 	mkdir $@
