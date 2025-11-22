@@ -65,32 +65,12 @@ void AA_EnemyManager::UpdateEnemies()
     for (auto it = enemies.begin(); it != enemies.end();)
     {
         SDL_FRect enemy_data = (*it)->GetData();
-        bool dead_enemy = false;
-         int current_player_state = AA_RefLinks::GetPlayer()->GetCurrentState();
-
-        if(current_player_state == PLAYER_PUNCH)
-        {
-            SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetPunchHitbox();
-
-            SDL_Log("punch hitbox: %f, %f, %f, %f\n", punch_hitbox.x, punch_hitbox.y, punch_hitbox.w, punch_hitbox.h);
-            SDL_Log("enemy data: %f, %f, %f, %f\n", enemy_data.x, enemy_data.y, enemy_data.w, enemy_data.h);
-            SDL_Log("intersection: %d\n", SDL_HasRectIntersectionFloat(&punch_hitbox, &enemy_data));
-
-            if(SDL_HasRectIntersectionFloat(&punch_hitbox, &enemy_data))
-            {
-                dead_enemy = true;
-                
-                SDL_Log("Player punched smth at: %f, %f\n", punch_hitbox.x, punch_hitbox.y);
-            }
-        }
-
+        
         if (
             enemy_data.x < 0 ||
             enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH - TILE_WIDTH ||
             enemy_data.y < 0 ||
-            enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT ||
-            (*it)->GetHealth() == 0 ||
-            dead_enemy == true
+            enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT
             )
         {
             delete *it;

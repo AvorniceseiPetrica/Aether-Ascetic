@@ -13,6 +13,8 @@ void AA_Camera::SetTarget(SDL_FRect *p_target)
 {
     if(p_target != nullptr)
         target = p_target;
+
+    current_offset_x = target->x;
 }
 
 void AA_Camera::Update()

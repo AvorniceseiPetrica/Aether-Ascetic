@@ -12,13 +12,16 @@ class AA_Ghoul : public AA_Enemy
         int current_state;
         float velocity_y;
         int speed = 5;
-        float gravity = .1;
+        float gravity = 0.5;
         bool moving_right;
 
         SDL_FRect hitbox;
         float hitbox_offset_x;
         float hitbot_offset_y;
         int hitpoints = 3;
+        int time_since_last_hit;
+        float knockback_direction = 1.0;
+        float knockback_velocity;
 
     public:
 
@@ -31,4 +34,6 @@ class AA_Ghoul : public AA_Enemy
         void FallStateRender();
         void RunStateUpdate();
         void RunStateRender();
+        void HurtStateUpdate();
+        void HurtStateRender();
 };
