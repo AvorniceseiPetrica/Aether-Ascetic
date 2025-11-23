@@ -17,4 +17,5 @@ class AA_Wizard : public AA_Enemy
         void Render() override;
         void IdleStateUpdate();
         void IdleStateRender();
+        void TakeDamage(bool to_right) override;
 };

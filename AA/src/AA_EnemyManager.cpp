@@ -65,13 +65,29 @@ void AA_EnemyManager::UpdateEnemies()
     for (auto it = enemies.begin(); it != enemies.end();)
     {
         SDL_FRect enemy_data = (*it)->GetData();
+     
         
+        if(AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_PUNCH)
+        {
+           SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetPunchHitbox();
+
+           if(SDL_HasRectIntersectionFloat(&punch_hitbox, &enemy_data))
+           {
+                if(AA_RefLinks::GetPlayer()->GetRect()->x < enemy_data.x)
+                    (*it)->TakeDamage(true);
+                else
+                    (*it)->TakeDamage(false);
+           }
+        }
+
+
         if (
             enemy_data.x < 0 ||
             enemy_data.x > TILEMAP_WIDTH * TILE_WIDTH - TILE_WIDTH ||
             enemy_data.y < 0 ||
-            enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT
-            )
+            enemy_data.y > TILEMAP_HEIGHT * TILE_HEIGHT ||
+            (*it)->IsDead()    
+        )
         {
             delete *it;
             it = enemies.erase(it);

@@ -32,3 +32,8 @@ int AA_Enemy::GetHealth()
 {
     return health;
 }
+
+bool AA_Enemy::IsDead()
+{
+    return is_dead;
+}

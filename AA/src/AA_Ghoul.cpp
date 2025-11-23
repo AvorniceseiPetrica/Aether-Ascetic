@@ -38,10 +38,14 @@ void AA_Ghoul::Init()
     hitbot_offset_y = 64;
     
     time_since_last_hit = 0;
+    is_dead = false;
 }
 
 void AA_Ghoul::Update()
 {
+    if(health <= 0)
+        is_dead = true;
+
     if(moving_right)
         hitbox_offset_x = 48;
     else
@@ -49,6 +53,8 @@ void AA_Ghoul::Update()
 
     hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + hitbox_offset_x;
     hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y + hitbot_offset_y;
+
+    time_since_last_hit++;
 
     switch(current_state)
     {
@@ -133,26 +139,6 @@ void AA_Ghoul::RunStateUpdate()
     bool collision_middle_left;
     bool collision_middle_right;
 
-    if(AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_PUNCH)
-    {
-        SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetPunchHitbox();
-
-        if(SDL_HasRectIntersectionFloat(&punch_hitbox, &data))
-        {
-            current_state = GHOUL_HURT;
-            health--;
-
-            if(AA_RefLinks::GetPlayer()->IsMovingRight())
-                knockback_direction = 1.0;
-            else
-                knockback_direction = -1.0;
-
-            knockback_velocity = 50;
-
-            return;
-        }
-    }
-
     if(moving_right)
         new_x += speed;
     else
@@ -194,26 +180,34 @@ void AA_Ghoul::RunStateRender()
 
 void AA_Ghoul::HurtStateUpdate()
 {
-    float new_x;
+    frame_counter = 0;
+    
+    float new_x = data.x;
     bool collision_left;
     bool collision_right;
-
-    printf("Health: %d\n", health);
-
-    if(health == 0)
-        exit(0);
+    bool collision_bottom_left;
+    bool collision_bottom_right;
     
-    data.x += knockback_velocity * knockback_direction;
+    new_x += knockback_velocity * knockback_direction;
     knockback_velocity *= 0.9;
 
     collision_left = CheckCollision(new_x, data.y + data.h / 2);
     collision_right = CheckCollision(new_x + data.w, data.y + data.h / 2);
+    collision_bottom_left = CheckCollision(new_x, data.y + data.h);
+    collision_bottom_right = CheckCollision(new_x + data.w, data.y + data.h);
 
     if(!collision_left && !collision_right)
         data.x = new_x;
+    else
+        knockback_velocity = 0;
+
+    time_since_last_hit++;
 
     if(knockback_velocity < 1)
+    {
+        health--;
         current_state = GHOUL_RUN;
+    }
 }
 
 void AA_Ghoul::HurtStateRender()
@@ -232,4 +226,22 @@ void AA_Ghoul::HurtStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
+}
+
+void AA_Ghoul::TakeDamage(bool to_right)
+{
+    if(current_state == GHOUL_HURT)
+        return;
+
+    if(to_right)
+        knockback_direction = 1.0;
+    else
+        knockback_direction = -1.0;
+
+    if(time_since_last_hit < 100 && time_since_last_hit > 0)
+        return;
+
+    time_since_last_hit = 0;
+    knockback_velocity = 50;
+    current_state = GHOUL_HURT;
 }

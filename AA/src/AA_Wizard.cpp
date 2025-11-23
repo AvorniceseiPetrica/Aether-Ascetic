@@ -60,3 +60,8 @@ void AA_Wizard::IdleStateRender()
 
     SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle_frames[idle_frame_counter / 8], nullptr, &dst);
 }
+
+void AA_Wizard::TakeDamage(bool to_right)
+{
+    
+}

@@ -13,6 +13,7 @@ class AA_Enemy : public AA_Creature
 
         int damage;
         int type;
+        bool is_dead;
 
     public:
 
@@ -22,4 +23,6 @@ class AA_Enemy : public AA_Creature
         SDL_FRect GetData();
         void SetHealth(int health);
         int GetHealth();
+        bool IsDead();
+        virtual void TakeDamage(bool to_right) = 0;
 };
