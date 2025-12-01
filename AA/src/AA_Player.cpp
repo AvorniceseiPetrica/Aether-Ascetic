@@ -92,11 +92,20 @@ void AA_Player::Init()
     crouch_kick_hitbox.w = 96. / 192 * 150;
     kick_hitbox.h = height;
 
+    body_hitbox = data;
+    body_hitbox.w -= 70;
+
+    time_since_last_hit = 0;
+
     SDL_Log("Player initialized...\n");
 }
 
 void AA_Player::Update()
 {
+    time_since_last_hit++;
+    body_hitbox.x = data.x + 30;
+    body_hitbox.y = data.y;
+
     switch (current_state)
     {
         case PLAYER_IDLE: IdleStateUpdate();
@@ -234,10 +243,19 @@ void AA_Player::IdleStateRender()
         .h = data.h
     };
 
+    SDL_FRect hitbox = {
+        .x = body_hitbox.x - camera.x,
+        .y = body_hitbox.y - camera.y,
+        .w = body_hitbox.w,
+        .h = body_hitbox.h
+    };
+
     if(moving_right)
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
 }
 
 void AA_Player::WalkStateUpdate()
@@ -315,6 +333,8 @@ void AA_Player::WalkStateRender()
         SDL_RenderTexture(AA_RefLinks::GetRenderer(), walk[walk_frame_counter / 8], nullptr, &dst);
     else
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), walk[walk_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+
+    // SDL_RenderRect(AA_RefLinks::GetRenderer(), &dst);
 }
 
 void AA_Player::JumpStateUpdate()
@@ -724,4 +744,19 @@ int AA_Player::GetCurrentState()
 SDL_FRect AA_Player::GetPunchHitbox()
 {
     return punch_hitbox;
+}
+
+void AA_Player::TakeDamage()
+{
+    if(time_since_last_hit < 100)
+        return;
+
+    time_since_last_hit = 0;
+    data.y -= 250;
+    current_state = PLAYER_FALL;
+}
+
+SDL_FRect AA_Player::GetBodyHitbox()
+{
+    return body_hitbox;
 }

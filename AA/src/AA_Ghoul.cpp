@@ -64,7 +64,7 @@ void AA_Ghoul::Update()
         case GHOUL_RUN: RunStateUpdate();
         break;
 
-        case GHOUL_ATTACK:
+        case GHOUL_ATTACK: AttackStateUpdate();
         break;
 
         case GHOUL_HURT: HurtStateUpdate();
@@ -82,7 +82,7 @@ void AA_Ghoul::Render()
         case GHOUL_RUN:  RunStateRender();
         break;
 
-        case GHOUL_ATTACK: 
+        case GHOUL_ATTACK: AttackStateRender();
         break;
 
         case GHOUL_HURT: HurtStateRender();
@@ -138,6 +138,10 @@ void AA_Ghoul::RunStateUpdate()
     bool collision_bottom_right;
     bool collision_middle_left;
     bool collision_middle_right;
+    SDL_FRect player_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+
+    if(SDL_HasRectIntersectionFloat(&player_hitbox, &data))
+        AA_RefLinks::GetPlayer()->TakeDamage();   
 
     if(moving_right)
         new_x += speed;
@@ -226,6 +230,16 @@ void AA_Ghoul::HurtStateRender()
         SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
+}
+
+void AA_Ghoul::AttackStateUpdate()
+{
+    
+}
+
+void AA_Ghoul::AttackStateRender()
+{
+
 }
 
 void AA_Ghoul::TakeDamage(bool to_right)

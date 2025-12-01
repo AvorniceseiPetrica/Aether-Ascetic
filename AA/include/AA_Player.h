@@ -75,6 +75,12 @@ class AA_Player : public AA_Creature
         int crouch_kick_hitbox_offset_x;
         int crouch_kick_hitbox_offset_y;
 
+        int time_since_last_hit;
+
+        SDL_FRect body_hitbox;
+        int body_hitbox_offset_x;
+        int body_hitbox_offset_y;
+
     public:
 
         AA_Player(float x, float y);
@@ -106,4 +112,6 @@ class AA_Player : public AA_Creature
         bool IsMovingRight();
         int GetCurrentState();
         SDL_FRect GetPunchHitbox();
+        void TakeDamage();
+        SDL_FRect GetBodyHitbox();
 };
