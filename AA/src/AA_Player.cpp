@@ -18,67 +18,6 @@ void AA_Player::Init()
     current_state = PLAYER_FALL;
     kicked_mid_air = false;
 
-    walk[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk1.png");
-    walk[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk2.png");
-    walk[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk3.png");
-    walk[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk4.png");
-    walk[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk5.png");
-    walk[5] = AA_TextureLoader::LoadTexture("assets/sprites/player/walk/walk6.png");
-    
-    walk_frame_counter = -1;
-
-    jump[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/jump/jump1.png");
-    jump[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/jump/jump2.png");
-
-    jump_frame_counter = -1;
-
-    fall[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/fall/fall1.png");
-    fall[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/fall/fall2.png");
-
-    fall_frame_counter = -1;
-
-    idle[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle1.png");
-    idle[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle2.png");
-    idle[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle3.png");
-    idle[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/idle/idle4.png");
-
-    idle_frame_counter = -1;
-
-    punch[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch1.png");
-    punch[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch2.png");
-    punch[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch3.png");
-    punch[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch4.png");
-    punch[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch5.png");
-    punch[5] = AA_TextureLoader::LoadTexture("assets/sprites/player/punch/punch6.png");
-
-    punch_frame_counter = -1;
-
-    kick[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick1.png");
-    kick[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick2.png");
-    kick[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick3.png");
-    kick[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick4.png");
-    kick[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/kick/kick5.png");
-
-    kick_frame_counter = -1;
-
-    crouch[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch/crouch1.png");
-    crouch[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch/crouch2.png");
-
-    crouch_frame_counter = -1;
-
-    crouch_kick[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick1.png");
-    crouch_kick[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick2.png");
-    crouch_kick[2] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick3.png");
-    crouch_kick[3] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick4.png");
-    crouch_kick[4] = AA_TextureLoader::LoadTexture("assets/sprites/player/crouch_kick/crouch_kick5.png");
-
-    crouch_kick_frame_counter = -1;
-
-    flying_kick[0] = AA_TextureLoader::LoadTexture("assets/sprites/player/flying_kick/flying_kick1.png");
-    flying_kick[1] = AA_TextureLoader::LoadTexture("assets/sprites/player/flying_kick/flying_kick2.png");
-
-    flying_kick_frame_counter = -1;
-
     red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
     green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
     blue = AA_TextureLoader::LoadTexture("assets/sprites/blue.png");
@@ -96,6 +35,69 @@ void AA_Player::Init()
     body_hitbox.w -= 70;
 
     time_since_last_hit = 0;
+
+    std::vector<std::string> idle_frames_paths = {
+            "assets/sprites/player/idle/idle1.png",
+            "assets/sprites/player/idle/idle2.png",
+            "assets/sprites/player/idle/idle3.png",
+            "assets/sprites/player/idle/idle4.png"
+    };
+
+    idle_animation = new AA_Animation(idle_frames_paths, 8);
+
+    std::vector<std::string> walk_frames_paths = {
+        "assets/sprites/player/walk/walk1.png",
+        "assets/sprites/player/walk/walk2.png",
+        "assets/sprites/player/walk/walk3.png",
+        "assets/sprites/player/walk/walk4.png",
+        "assets/sprites/player/walk/walk5.png",
+        "assets/sprites/player/walk/walk6.png"
+    };
+
+    walk_animation = new AA_Animation(walk_frames_paths, 8);
+
+    std::vector<std::string> jump_frames_paths = {
+        "assets/sprites/player/jump/jump1.png",
+        "assets/sprites/player/jump/jump2.png"
+    };
+
+    jump_animation = new AA_Animation(jump_frames_paths, 8);
+
+    std::vector<std::string> fall_frames_paths = {
+        "assets/sprites/player/fall/fall1.png",
+        "assets/sprites/player/fall/fall2.png"
+    };
+
+    fall_animation = new AA_Animation(fall_frames_paths, 8);
+
+    std::vector<std::string> crouch_frames_paths = {
+        "assets/sprites/player/crouch/crouch1.png",
+        "assets/sprites/player/crouch/crouch2.png"
+    };
+
+    crouch_animation = new AA_Animation(crouch_frames_paths, 8);
+
+    std::vector<std::string> punch_frames_paths = {
+        "assets/sprites/player/punch/punch1.png",
+        "assets/sprites/player/punch/punch2.png",
+        "assets/sprites/player/punch/punch3.png",
+        "assets/sprites/player/punch/punch4.png",
+        "assets/sprites/player/punch/punch5.png",
+        "assets/sprites/player/punch/punch6.png"
+    };
+
+    punch_animation = new AA_Animation(punch_frames_paths, 8);
+
+    std::vector<std::string> kick_frames_paths = {
+        "assets/sprites/player/kick/kick1.png",
+        "assets/sprites/player/kick/kick2.png",
+        "assets/sprites/player/kick/kick3.png",
+        "assets/sprites/player/kick/kick4.png",
+        "assets/sprites/player/kick/kick5.png"
+    };
+
+    kick_animation = new AA_Animation(kick_frames_paths, 8);
+
 
     SDL_Log("Player initialized...\n");
 }
@@ -211,26 +213,23 @@ void AA_Player::IdleStateUpdate()
 
     if(keys[SDL_SCANCODE_LCTRL])
     {
-        current_state = PLAYER_CROUCH;
+        //current_state = PLAYER_CROUCH;
         return;
     }
 
     if(keys[SDL_SCANCODE_F])
     {
-        current_state = PLAYER_PUNCH;
+        //current_state = PLAYER_PUNCH;
         return;
     }
 
     if(keys[SDL_SCANCODE_LSHIFT])
     {
-        current_state = PLAYER_KICK;
+        //current_state = PLAYER_KICK;
         return;
     }
 
-    idle_frame_counter++;
-
-    if(idle_frame_counter > 31)
-        idle_frame_counter = 0;
+    idle_animation->Update();
 }
 
 void AA_Player::IdleStateRender()
@@ -251,9 +250,9 @@ void AA_Player::IdleStateRender()
     };
 
     if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst);
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle_animation->GetFrame(), nullptr, &dst);
     else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), idle[idle_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), idle_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
 }
@@ -313,11 +312,7 @@ void AA_Player::WalkStateUpdate()
         return;
     }
 
-    walk_frame_counter++;
-    
-    if(walk_frame_counter> 47)
-        walk_frame_counter = 0;
-    
+    walk_animation->Update();
 }
 
 void AA_Player::WalkStateRender()
@@ -330,9 +325,9 @@ void AA_Player::WalkStateRender()
         .h = data.h
     };
     if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), walk[walk_frame_counter / 8], nullptr, &dst);
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), walk_animation->GetFrame(), nullptr, &dst);
     else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), walk[walk_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), walk_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     // SDL_RenderRect(AA_RefLinks::GetRenderer(), &dst);
 }
@@ -395,10 +390,7 @@ void AA_Player::JumpStateUpdate()
     )
         data.x = new_x;
 
-    jump_frame_counter++;
-
-    if(jump_frame_counter > 15)
-        jump_frame_counter = 0;
+    jump_animation->Update();
 }
 
 void AA_Player::JumpStateRender()
@@ -412,9 +404,9 @@ void AA_Player::JumpStateRender()
     };
 
     if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), jump[jump_frame_counter / 8], nullptr, &dst);
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), jump_animation->GetFrame(), nullptr, &dst);
     else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), jump[jump_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), jump_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::FallStateUpdate()
@@ -477,10 +469,7 @@ void AA_Player::FallStateUpdate()
     )
         data.x = new_x;
 
-    fall_frame_counter++;
-
-    if(fall_frame_counter > 15)
-        fall_frame_counter = 0;
+    fall_animation->Update();
 }
 
 void AA_Player::FallStateRender()
@@ -494,9 +483,9 @@ void AA_Player::FallStateRender()
     };
 
     if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), fall[fall_frame_counter / 8], nullptr, &dst);
+        SDL_RenderTexture(AA_RefLinks::GetRenderer(), fall_animation->GetFrame(), nullptr, &dst);
     else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), fall[fall_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), fall_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::CrouchStateUpdate()
@@ -515,10 +504,10 @@ void AA_Player::CrouchStateUpdate()
         return;
     }
 
-    crouch_frame_counter++;
+    // crouch_frame_counter++;
 
-    if(crouch_frame_counter > 15)
-        crouch_frame_counter = 0;
+    // if(crouch_frame_counter > 15)
+    //     crouch_frame_counter = 0;
 }
 
 void AA_Player::CrouchStateRender()
@@ -531,10 +520,10 @@ void AA_Player::CrouchStateRender()
         .h = data.h
     };
 
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch[crouch_frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch[crouch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    // if(moving_right)
+    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch[crouch_frame_counter / 8], nullptr, &dst);
+    // else
+    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch[crouch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 void AA_Player::PunchStateUpdate()
@@ -547,14 +536,14 @@ void AA_Player::PunchStateUpdate()
     punch_hitbox.x = data.x + punch_hitbox_offset_x;
     punch_hitbox.y = data.y;
 
-    punch_frame_counter++;
+    // punch_frame_counter++;
 
-    if(punch_frame_counter > 47)
-    {
-        punch_frame_counter = -1;
-        current_state = PLAYER_IDLE;
-        return;
-    }
+    // if(punch_frame_counter > 47)
+    // {
+    //     punch_frame_counter = -1;
+    //     current_state = PLAYER_IDLE;
+    //     return;
+    // }
 }
 
 void AA_Player::PunchStateRender()
@@ -573,10 +562,10 @@ void AA_Player::PunchStateRender()
         .h = punch_hitbox.h
     };
 
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    // if(moving_right)
+    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst);
+    // else
+    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &punch_dst);
 }
@@ -591,14 +580,14 @@ void AA_Player::KickStateUpdate()
     kick_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + kick_hitbox_offset_x;
     kick_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
 
-    kick_frame_counter++;
+    // kick_frame_counter++;
 
-    if(kick_frame_counter > 39)
-    {
-        kick_frame_counter = -1;
-        current_state = PLAYER_IDLE;
-        return;
-    }
+    // if(kick_frame_counter > 39)
+    // {
+    //     kick_frame_counter = -1;
+    //     current_state = PLAYER_IDLE;
+    //     return;
+    // }
 }
 
 void AA_Player::KickStateRender()
@@ -611,10 +600,10 @@ void AA_Player::KickStateRender()
         .h = data.h
     };
 
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    // if(moving_right)
+    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst);
+    // else
+    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &kick_hitbox);
 }
@@ -630,13 +619,13 @@ void AA_Player::CrouchKickStateUpdate()
     crouch_kick_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
 
 
-    crouch_kick_frame_counter++;
+    // crouch_kick_frame_counter++;
 
-    if(crouch_kick_frame_counter > 39)
-    {
-        current_state = PLAYER_CROUCH;
-        crouch_kick_frame_counter = -1;
-    }
+    // if(crouch_kick_frame_counter > 39)
+    // {
+    //     current_state = PLAYER_CROUCH;
+    //     crouch_kick_frame_counter = -1;
+    // }
 }
 
 void AA_Player::CrouchKickStateRender()
@@ -649,10 +638,10 @@ void AA_Player::CrouchKickStateRender()
         .h = data.h
     };
 
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    //if(moving_right)
+    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst);
+    // else
+    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &crouch_kick_hitbox);
 }
@@ -706,13 +695,13 @@ void AA_Player::FlyingKickStateUpdate()
     )
     data.x = new_x;
 
-    flying_kick_frame_counter++;
+    // flying_kick_frame_counter++;
     
-    if(flying_kick_frame_counter > 15)
-    {
-        current_state = PLAYER_FALL;
-        flying_kick_frame_counter = -1;
-    }
+    // if(flying_kick_frame_counter > 15)
+    // {
+    //     current_state = PLAYER_FALL;
+    //     flying_kick_frame_counter = -1;
+    // }
 }
 
 void AA_Player::FlyingKickStateRender()
@@ -725,10 +714,10 @@ void AA_Player::FlyingKickStateRender()
         .h = data.h
     };
 
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    // if(moving_right)
+    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst);
+    // else
+    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 bool AA_Player::IsMovingRight()

@@ -2,6 +2,7 @@
 
 #include <SDL3/SDL.h>
 #include "AA_Creature.h"
+#include "AA_Animation.h"
 
 enum PLAYER_STATES {
     PLAYER_IDLE,
@@ -32,33 +33,6 @@ class AA_Player : public AA_Creature
         bool in_air = true;
         bool moving_right = true;
 
-        SDL_Texture* walk[6];
-        int walk_frame_counter;
-
-        SDL_Texture* jump[2];
-        int jump_frame_counter;
-
-        SDL_Texture* fall[2];
-        int fall_frame_counter;
-
-        SDL_Texture* idle[4];
-        int idle_frame_counter;
-
-        SDL_Texture* punch[6];
-        int punch_frame_counter;
-
-        SDL_Texture* kick[5];
-        int kick_frame_counter;
-
-        SDL_Texture* crouch[2];
-        int crouch_frame_counter;
-
-        SDL_Texture* crouch_kick[5];
-        int crouch_kick_frame_counter;
-
-        SDL_Texture* flying_kick[2];
-        int flying_kick_frame_counter;
-
         SDL_Texture *red, *green, *blue;
 
         bool kicked_mid_air;
@@ -80,6 +54,14 @@ class AA_Player : public AA_Creature
         SDL_FRect body_hitbox;
         int body_hitbox_offset_x;
         int body_hitbox_offset_y;
+
+        AA_Animation *idle_animation;
+        AA_Animation *walk_animation;
+        AA_Animation *jump_animation;
+        AA_Animation *fall_animation;
+        AA_Animation *punch_animation;
+        AA_Animation *kick_animation;
+        AA_Animation *crouch_animation;
 
     public:
 
