@@ -34,14 +34,17 @@ void AA_LevelManager::Init()
     player.Init();
     
     AA_RefLinks::SetPlayer(&player);
-    AA_RefLinks::GetCamera()->SetTarget(player.GetRect());
+
+    SDL_FRect *player_hitbox = player.GetBodyHitbox();
+    
+    SDL_Log("%f, %f", player_hitbox->x, player_hitbox->y);
 
     SDL_Log("Level manager initialized...\n");
 }
 
 void AA_LevelManager::Update()
 {
-    if(AA_RefLinks::GetPlayer()->GetRect()->x > MAP_WIDTH - TILE_WIDTH)
+    if(AA_RefLinks::GetPlayer()->GetBodyHitbox()->x > MAP_WIDTH - TILE_WIDTH)
     {
         ChangeLevel(++current_level_id);
         return;

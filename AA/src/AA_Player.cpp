@@ -1,723 +1,178 @@
 #include "AA_Player.h"
-
-#include "AA_TextureLoader.h"
 #include "AA_RefLinks.h"
-#include "AA_Config.h"
 
-AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 0, 0)
+AA_Player::AA_Player(float x, float y) : AA_Creature(x, y, 150, 150)
 {
     
 }
 
-void AA_Player::Init()
+void AA_Player::SetState(PLAYER_STATES new_state)
 {
-    texture = AA_TextureLoader::LoadTexture("assets/sprites/player.png");
-    data.w = width;
-    data.h = height;
+    if(current_state == new_state)
+        return;
 
-    current_state = PLAYER_FALL;
-    kicked_mid_air = false;
-
-    red = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
-    green = AA_TextureLoader::LoadTexture("assets/sprites/green.png");
-    blue = AA_TextureLoader::LoadTexture("assets/sprites/blue.png");
-
-    punch_hitbox.w = 80. / 192 * 150;
-    punch_hitbox.h = height;
-
-    kick_hitbox.w = 96. / 192 * 150;
-    kick_hitbox.h = height;
-
-    crouch_kick_hitbox.w = 96. / 192 * 150;
-    kick_hitbox.h = height;
-
-    body_hitbox = data;
-    body_hitbox.w -= 70;
-
-    time_since_last_hit = 0;
-
-    std::vector<std::string> idle_frames_paths = {
-            "assets/sprites/player/idle/idle1.png",
-            "assets/sprites/player/idle/idle2.png",
-            "assets/sprites/player/idle/idle3.png",
-            "assets/sprites/player/idle/idle4.png"
-    };
-
-    idle_animation = new AA_Animation(idle_frames_paths, 8);
-
-    std::vector<std::string> walk_frames_paths = {
-        "assets/sprites/player/walk/walk1.png",
-        "assets/sprites/player/walk/walk2.png",
-        "assets/sprites/player/walk/walk3.png",
-        "assets/sprites/player/walk/walk4.png",
-        "assets/sprites/player/walk/walk5.png",
-        "assets/sprites/player/walk/walk6.png"
-    };
-
-    walk_animation = new AA_Animation(walk_frames_paths, 8);
-
-    std::vector<std::string> jump_frames_paths = {
-        "assets/sprites/player/jump/jump1.png",
-        "assets/sprites/player/jump/jump2.png"
-    };
-
-    jump_animation = new AA_Animation(jump_frames_paths, 8);
-
-    std::vector<std::string> fall_frames_paths = {
-        "assets/sprites/player/fall/fall1.png",
-        "assets/sprites/player/fall/fall2.png"
-    };
-
-    fall_animation = new AA_Animation(fall_frames_paths, 8);
-
-    std::vector<std::string> crouch_frames_paths = {
-        "assets/sprites/player/crouch/crouch1.png",
-        "assets/sprites/player/crouch/crouch2.png"
-    };
-
-    crouch_animation = new AA_Animation(crouch_frames_paths, 8);
-
-    std::vector<std::string> punch_frames_paths = {
-        "assets/sprites/player/punch/punch1.png",
-        "assets/sprites/player/punch/punch2.png",
-        "assets/sprites/player/punch/punch3.png",
-        "assets/sprites/player/punch/punch4.png",
-        "assets/sprites/player/punch/punch5.png",
-        "assets/sprites/player/punch/punch6.png"
-    };
-
-    punch_animation = new AA_Animation(punch_frames_paths, 8);
-
-    std::vector<std::string> kick_frames_paths = {
-        "assets/sprites/player/kick/kick1.png",
-        "assets/sprites/player/kick/kick2.png",
-        "assets/sprites/player/kick/kick3.png",
-        "assets/sprites/player/kick/kick4.png",
-        "assets/sprites/player/kick/kick5.png"
-    };
-
-    kick_animation = new AA_Animation(kick_frames_paths, 8);
-
-
-    SDL_Log("Player initialized...\n");
+    current_state = new_state;
+    current_animation = animations[current_state];
 }
 
-void AA_Player::Update()
+void AA_Player::HandleHorizontalMovement()
 {
-    time_since_last_hit++;
-    body_hitbox.x = data.x + 30;
-    body_hitbox.y = data.y;
+    const bool *keys = SDL_GetKeyboardState(nullptr);
+    float new_x = data.x;
 
-    switch (current_state)
+    if(keys[SDL_SCANCODE_D])
     {
-        case PLAYER_IDLE: IdleStateUpdate();
-        break;
-
-        case PLAYER_WALK: WalkStateUpdate();
-        break;
-
-        case PLAYER_JUMP: JumpStateUpdate();
-        break;
-
-        case PLAYER_FALL: FallStateUpdate();
-        break;
-
-        case PLAYER_CROUCH: CrouchStateUpdate();
-        break;
-
-        case PLAYER_PUNCH: PunchStateUpdate();
-        break;
-
-        case PLAYER_KICK: KickStateUpdate();
-        break;
-
-        case PLAYER_CROUCH_KICK: CrouchKickStateUpdate();
-        break;
-
-        case PLAYER_FLYING_KICK: FlyingKickStateUpdate();
-        break;
+        new_x += speed;
+        moving_right = true;
     }
-}
 
-void AA_Player::Render()
-{
-    switch(current_state)
+    if(keys[SDL_SCANCODE_A])
     {
-        case PLAYER_IDLE: IdleStateRender();
-        break;
-
-        case PLAYER_WALK: WalkStateRender();
-        break;
-
-        case PLAYER_JUMP: JumpStateRender();
-        break;
-
-        case PLAYER_FALL: FallStateRender();
-        break;
-
-        case PLAYER_CROUCH: CrouchStateRender();
-        break;
-
-        case PLAYER_PUNCH: PunchStateRender();
-        break;
-
-        case PLAYER_KICK: KickStateRender();
-        break;
-
-        case PLAYER_CROUCH_KICK: CrouchKickStateRender();
-        break;
-
-        case PLAYER_FLYING_KICK: FlyingKickStateRender();
-        break;
+        new_x -= speed;
+        moving_right = false;
     }
+
+    if(!HandleCollisions(new_x, data.y))
+        data.x = new_x;
 }
 
-SDL_FRect* AA_Player::GetRect()
+void AA_Player::ApplyGravity()
 {
-    return &data;
-}
+    float new_y = data.y;
 
-void AA_Player::ChangePosition(float x, float y)
-{
-    data.x = x;
-    data.y = y;
+    velocity_y += gravity;
+    new_y += velocity_y;
+
+    if(!HandleCollisions(data.x, new_y))
+        data.y = new_y;
+    else
+    {
+        current_state = PLAYER_IDLE;   
+        velocity_y = 0;
+    }
 }
 
 bool AA_Player::CheckCollision(float x, float y)
 {
     int tile_x = (int)(x / TILE_WIDTH);
     int tile_y = (int)(y / TILE_HEIGHT);
-        
+
     int tile_id = AA_RefLinks::GetMap()->GetTileId(tile_x, tile_y);
 
     return AA_RefLinks::GetMap()->IsTileSolid(tile_id);
 }
 
-void AA_Player::IdleStateUpdate()
+bool AA_Player::HandleCollisions(float new_x, float new_y)
 {
+    return (CheckCollision(new_x + 30, new_y) || 
+            CheckCollision(new_x + data.w - 30, new_y) || 
+            CheckCollision(new_x + 30, new_y + data.h) || 
+            CheckCollision(new_x + data.w - 30, new_y + data.h)
+        );
+}
+
+void AA_Player::CalculateHitbox(float offset_x, float offset_y)
+{
+    body_hitbox.x = data.x;
+    body_hitbox.y = data.y;
+}
+
+void AA_Player::Init()
+{
+    moving_right = true;
+    velocity_y = 0;
+    time_since_last_hit = 0;
+
+    animations[PLAYER_IDLE] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/idle/idle1.png",
+            "assets/sprites/player/idle/idle2.png",
+            "assets/sprites/player/idle/idle3.png",
+            "assets/sprites/player/idle/idle4.png"
+        },
+        8
+    );
+    animations[PLAYER_WALK] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/walk/walk1.png",
+            "assets/sprites/player/walk/walk2.png",
+            "assets/sprites/player/walk/walk3.png",
+            "assets/sprites/player/walk/walk4.png",
+            "assets/sprites/player/walk/walk5.png",
+            "assets/sprites/player/walk/walk6.png"
+        },
+        8
+    );
+    animations[PLAYER_FALL] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/fall/fall1.png",
+            "assets/sprites/player/fall/fall2.png"
+        },
+        8
+    );
+
+    body_hitbox.w = 150;
+    body_hitbox.h = 150;
+    CalculateHitbox(0, 0);
+
+    SetState(PLAYER_FALL);
+}
+
+void AA_Player::Update()
+{
+    CalculateHitbox(0, 0);
+
     const bool *keys = SDL_GetKeyboardState(nullptr);
 
-    if(keys[SDL_SCANCODE_W])
+    time_since_last_hit++;
+
+    if(current_state == PLAYER_IDLE || current_state == PLAYER_WALK)
     {
-        current_state = PLAYER_JUMP;
-        on_ground = false;
-        velocity_y -= jump_strength;
-        return;
+        if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
+            SetState(PLAYER_WALK);
+        else
+            SetState(PLAYER_IDLE);
     }
 
-    if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
-    {
-        current_state = PLAYER_WALK;
-        return;
-    }
+    HandleHorizontalMovement();
+    ApplyGravity();
 
-    if(keys[SDL_SCANCODE_LCTRL])
-    {
-        //current_state = PLAYER_CROUCH;
-        return;
-    }
-
-    if(keys[SDL_SCANCODE_F])
-    {
-        //current_state = PLAYER_PUNCH;
-        return;
-    }
-
-    if(keys[SDL_SCANCODE_LSHIFT])
-    {
-        //current_state = PLAYER_KICK;
-        return;
-    }
-
-    idle_animation->Update();
+    current_animation->Update();
 }
 
-void AA_Player::IdleStateRender()
+void AA_Player::Render()
 {
-     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
+        .x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x,
+        .y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y,
+        .w = width,
+        .h = height
     };
 
-    SDL_FRect hitbox = {
-        .x = body_hitbox.x - camera.x,
-        .y = body_hitbox.y - camera.y,
-        .w = body_hitbox.w,
-        .h = body_hitbox.h
-    };
-
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), idle_animation->GetFrame(), nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), idle_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst);
 }
 
-void AA_Player::WalkStateUpdate()
+SDL_FRect* AA_Player::GetBodyHitbox()
 {
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-    int new_x = data.x;
-    bool collision_top_left;
-    bool collision_top_right;
-    bool collision_bottom_left;
-    bool collision_bottom_right;
-
-    if(keys[SDL_SCANCODE_A])
-    {
-        new_x -= speed;
-        moving_right = false;
-    }
-
-    if(keys[SDL_SCANCODE_D])
-    {
-        new_x += speed;
-        moving_right = true;
-    }
-
-    if(new_x == data.x)
-        current_state = PLAYER_IDLE;
-
-    collision_top_left = CheckCollision(new_x, data.y);
-    collision_top_right = CheckCollision(new_x + width, data.y);
-    collision_bottom_left = CheckCollision(new_x, data.y + height);
-    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
-
-    if(
-        !collision_top_left &&
-        !collision_top_right &&
-        !collision_bottom_left &&
-        !collision_bottom_right
-    )
-        data.x = new_x;
-
-    if(keys[SDL_SCANCODE_W])
-    {
-        current_state = PLAYER_JUMP;
-        on_ground = false;
-        velocity_y -= jump_strength;
-        return;
-    }
-
-    collision_bottom_left = CheckCollision(data.x, data.y + height + 1);
-    collision_bottom_right = CheckCollision(data.x + width, data.y + height + 1);
-
-    if(!collision_bottom_left && !collision_bottom_right)
-    {
-        current_state = PLAYER_FALL;
-        on_ground = false;
-        return;
-    }
-
-    walk_animation->Update();
+    return &body_hitbox;
 }
 
-void AA_Player::WalkStateRender()
+SDL_FRect AA_Player::GetActionHitbox()
 {
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), walk_animation->GetFrame(), nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), walk_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-
-    // SDL_RenderRect(AA_RefLinks::GetRenderer(), &dst);
+    return body_hitbox;
 }
 
-void AA_Player::JumpStateUpdate()
+PLAYER_STATES AA_Player::GetCurrentState()
 {
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-    float new_x = data.x;
-    float new_y;
-    bool collision_top_left;
-    bool collision_top_right;
-    bool collision_bottom_left;
-    bool collision_bottom_right;
-
-    velocity_y += gravity_strength;
-    new_y = data.y + velocity_y;
-
-    collision_top_left = CheckCollision(data.x, new_y);
-    collision_top_right = CheckCollision(data.x + width, new_y);
-
-    if(collision_top_left || collision_top_right)
-        velocity_y = 0;
-    else
-        data.y = new_y;
-
-    if(velocity_y > 0)
-    {
-        current_state = PLAYER_FALL;
-        return;
-    }
-
-    // if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
-    // {
-    //     current_state = PLAYER_FLYING_KICK;
-    //     kicked_mid_air = true;
-    //     return;
-    // }
-
-    if(keys[SDL_SCANCODE_A])
-    {
-        new_x -= speed;
-        moving_right = false;
-    }
-    if(keys[SDL_SCANCODE_D])
-    {
-        new_x += speed;
-        moving_right = true;
-    }
-
-    collision_top_left = CheckCollision(new_x, data.y);
-    collision_top_right = CheckCollision(new_x + width, data.y);
-    collision_bottom_left = CheckCollision(new_x, data.y + height);
-    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
-
-    if(
-        !collision_top_left &&
-        !collision_top_right &&
-        !collision_bottom_left &&
-        !collision_bottom_right    
-    )
-        data.x = new_x;
-
-    jump_animation->Update();
+    return current_state;
 }
 
-void AA_Player::JumpStateRender()
+void AA_Player::TakeDamage()
 {
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), jump_animation->GetFrame(), nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), jump_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-}
-
-void AA_Player::FallStateUpdate()
-{
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-    float new_x = data.x;
-    float new_y;
-    int tile_y;
-    bool collision_top_left;
-    bool collision_top_right;
-    bool collision_bottom_left;
-    bool collision_bottom_right;
-
-    velocity_y += gravity_strength;
-    new_y = data.y + velocity_y;
-
-    collision_bottom_left = CheckCollision(data.x, new_y + height);
-    collision_bottom_right = CheckCollision(data.x + width, new_y + height);
-
-    if(collision_bottom_left || collision_bottom_right)
-    {
-        tile_y = (int)(new_y + height) / TILE_HEIGHT;
-        data.y = (tile_y) * TILE_HEIGHT - height - 1;
-        on_ground = true;
-        kicked_mid_air = false;
-        velocity_y = 0;
-        current_state = PLAYER_IDLE;
-    }
-    else
-        data.y = new_y;
-
-    // if(keys[SDL_SCANCODE_LSHIFT] && kicked_mid_air == false)
-    // {
-    //     current_state = PLAYER_FLYING_KICK;
-    //     kicked_mid_air = true;
-    //     return;
-    // }
-
-    if(keys[SDL_SCANCODE_A])
-    {
-        new_x -= speed;
-        moving_right = false;
-    }
-    if(keys[SDL_SCANCODE_D])
-    {
-        new_x += speed;
-        moving_right = true;
-    }
-
-    collision_top_left = CheckCollision(new_x, data.y);
-    collision_top_right = CheckCollision(new_x + width, data.y);
-    collision_bottom_left = CheckCollision(new_x, data.y + height);
-    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
-
-    if(
-        !collision_top_left &&
-        !collision_top_right &&
-        !collision_bottom_left &&
-        !collision_bottom_right    
-    )
-        data.x = new_x;
-
-    fall_animation->Update();
-}
-
-void AA_Player::FallStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    if(moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), fall_animation->GetFrame(), nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), fall_animation->GetFrame(), nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-}
-
-void AA_Player::CrouchStateUpdate()
-{
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-
-    if(keys[SDL_SCANCODE_LALT])
-    {
-        current_state = PLAYER_CROUCH_KICK;
-        return;
-    }
-
-    if(!keys[SDL_SCANCODE_LCTRL])
-    {
-        current_state = PLAYER_IDLE;
-        return;
-    }
-
-    // crouch_frame_counter++;
-
-    // if(crouch_frame_counter > 15)
-    //     crouch_frame_counter = 0;
-}
-
-void AA_Player::CrouchStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    // if(moving_right)
-    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch[crouch_frame_counter / 8], nullptr, &dst);
-    // else
-    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch[crouch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-}
-
-void AA_Player::PunchStateUpdate()
-{
-    if(moving_right)
-        punch_hitbox_offset_x = 112. / 192 * 150;
-    else
-        punch_hitbox_offset_x = 16. / 192 * 150;
-
-    punch_hitbox.x = data.x + punch_hitbox_offset_x;
-    punch_hitbox.y = data.y;
-
-    // punch_frame_counter++;
-
-    // if(punch_frame_counter > 47)
-    // {
-    //     punch_frame_counter = -1;
-    //     current_state = PLAYER_IDLE;
-    //     return;
-    // }
-}
-
-void AA_Player::PunchStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-    SDL_FRect punch_dst = {
-        .x = punch_hitbox.x - camera.x,
-        .y = punch_hitbox.y - camera.y,
-        .w = punch_hitbox.w,
-        .h = punch_hitbox.h
-    };
-
-    // if(moving_right)
-    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst);
-    // else
-    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), punch[punch_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &punch_dst);
-}
-
-void AA_Player::KickStateUpdate()
-{
-    if(moving_right)
-        kick_hitbox_offset_x = 96. / 192 * 150;
-    else
-        kick_hitbox_offset_x = 0;
-
-    kick_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + kick_hitbox_offset_x;
-    kick_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
-
-    // kick_frame_counter++;
-
-    // if(kick_frame_counter > 39)
-    // {
-    //     kick_frame_counter = -1;
-    //     current_state = PLAYER_IDLE;
-    //     return;
-    // }
-}
-
-void AA_Player::KickStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    // if(moving_right)
-    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst);
-    // else
-    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), kick[kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &kick_hitbox);
-}
-
-void AA_Player::CrouchKickStateUpdate()
-{
-    if(moving_right)
-        crouch_kick_hitbox_offset_x = 96. / 192 * 150;
-    else
-        crouch_kick_hitbox_offset_x = 0;
-
-    crouch_kick_hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + crouch_kick_hitbox_offset_x;
-    crouch_kick_hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y;
-
-
-    // crouch_kick_frame_counter++;
-
-    // if(crouch_kick_frame_counter > 39)
-    // {
-    //     current_state = PLAYER_CROUCH;
-    //     crouch_kick_frame_counter = -1;
-    // }
-}
-
-void AA_Player::CrouchKickStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    //if(moving_right)
-    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst);
-    // else
-    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), crouch_kick[crouch_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &crouch_kick_hitbox);
-}
-
-void AA_Player::FlyingKickStateUpdate()
-{
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-    float new_x = data.x;
-    float new_y;
-    bool collision_top_left;
-    bool collision_top_right;
-    bool collision_bottom_left;
-    bool collision_bottom_right;
-
-    velocity_y += gravity_strength;
-    new_y = data.y + velocity_y;
-
-    collision_bottom_left = CheckCollision(data.x, new_y + height);
-    collision_bottom_right = CheckCollision(data.x + width, new_y + height);
-
-    if(collision_bottom_left || collision_bottom_right)
-    {
-        on_ground = true;
-        velocity_y = 0;
-        current_state = PLAYER_IDLE;
-    }
-    else
-        data.y = new_y;
     
-    if(keys[SDL_SCANCODE_A])
-    {
-        new_x -= speed;
-        moving_right = false;
-    }
-    if(keys[SDL_SCANCODE_D])
-    {
-        new_x += speed;
-        moving_right = true;
-    }
-    
-    collision_top_left = CheckCollision(new_x, data.y);
-    collision_top_right = CheckCollision(new_x + width, data.y);
-    collision_bottom_left = CheckCollision(new_x, data.y + height);
-    collision_bottom_right = CheckCollision(new_x + width, data.y + height);
-    
-    if(
-        !collision_top_left &&
-        !collision_top_right &&
-        !collision_bottom_left &&
-        !collision_bottom_right    
-    )
-    data.x = new_x;
-
-    // flying_kick_frame_counter++;
-    
-    // if(flying_kick_frame_counter > 15)
-    // {
-    //     current_state = PLAYER_FALL;
-    //     flying_kick_frame_counter = -1;
-    // }
-}
-
-void AA_Player::FlyingKickStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    // if(moving_right)
-    //     SDL_RenderTexture(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst);
-    // else
-    //     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), flying_kick[flying_kick_frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
 }
 
 bool AA_Player::IsMovingRight()
@@ -725,27 +180,8 @@ bool AA_Player::IsMovingRight()
     return moving_right;
 }
 
-int AA_Player::GetCurrentState()
+void AA_Player::ChangePosition(float x, float y)
 {
-    return current_state;
-}
-
-SDL_FRect AA_Player::GetPunchHitbox()
-{
-    return punch_hitbox;
-}
-
-void AA_Player::TakeDamage()
-{
-    if(time_since_last_hit < 100)
-        return;
-
-    time_since_last_hit = 0;
-    data.y -= 250;
-    current_state = PLAYER_FALL;
-}
-
-SDL_FRect AA_Player::GetBodyHitbox()
-{
-    return body_hitbox;
+    data.x = x;
+    data.y = y;
 }

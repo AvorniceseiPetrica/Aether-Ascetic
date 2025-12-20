@@ -8,7 +8,7 @@ class AA_Animation
     
         std::vector<SDL_Texture*> frames;
         int frame_speed;
-        int frame_counter = -1;
+        long unsigned int frame_counter = -1;
 
     public:
 

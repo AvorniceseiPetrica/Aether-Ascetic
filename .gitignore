@@ -1,3 +1,5 @@
 aa
 build/
 .vscode/
+configs/test.ini
+requirements.txt

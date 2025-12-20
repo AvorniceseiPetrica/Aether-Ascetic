@@ -69,11 +69,11 @@ void AA_EnemyManager::UpdateEnemies()
         
         if(AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_PUNCH)
         {
-           SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetPunchHitbox();
+           SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetActionHitbox();
 
            if(SDL_HasRectIntersectionFloat(&punch_hitbox, &enemy_data))
            {
-                if(AA_RefLinks::GetPlayer()->GetRect()->x < enemy_data.x)
+                if(AA_RefLinks::GetPlayer()->GetBodyHitbox()->x < enemy_data.x)
                     (*it)->TakeDamage(true);
                 else
                     (*it)->TakeDamage(false);

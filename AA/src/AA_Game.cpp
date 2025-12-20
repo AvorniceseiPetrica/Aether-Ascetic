@@ -27,9 +27,6 @@ void AA_Game::InitSDL(std::string window_name, int window_width, int window_heig
     }
 
     SDL_Log("Created window and renderer..\n");
-
-    AA_ConfigLoader a;
-    a.SetConfigFile("configs/test.ini");
 }
 
 void AA_Game::DestroySDL()

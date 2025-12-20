@@ -1,15 +1,15 @@
-#include <string>
+// #include <string>
 
-class AA_ConfigLoader
-{
-    private:
+// class AA_ConfigLoader
+// {
+//     private:
 
-        std::string config_data = "";
+//         std::string config_data = "";
 
-    public:
+//     public:
 
-        AA_ConfigLoader() = default;
-        ~AA_ConfigLoader() = default;
-        void SetConfigFile(std::string p_config_file_path);
-        std::string GetField(std::string field);
-};
+//         AA_ConfigLoader() = default;
+//         ~AA_ConfigLoader() = default;
+//         void SetConfigFile(std::string p_config_file_path);
+//         std::string GetField(std::string field);
+// };

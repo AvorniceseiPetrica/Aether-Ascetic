@@ -3,7 +3,7 @@
 
 AA_Animation::AA_Animation(std::vector<std::string> frame_paths, int p_frame_speed)
 {
-    if(p_frame_speed < 0)
+    if(p_frame_speed <= 0)
     {
         SDL_Log("\n\tAA_Animation::AA_Animation()\t<< Invalid frame_speed >>\n\n");
         frame_speed = 1;

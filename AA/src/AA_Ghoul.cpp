@@ -138,9 +138,9 @@ void AA_Ghoul::RunStateUpdate()
     bool collision_bottom_right;
     bool collision_middle_left;
     bool collision_middle_right;
-    SDL_FRect player_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+    SDL_FRect *player_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
 
-    if(SDL_HasRectIntersectionFloat(&player_hitbox, &data))
+    if(SDL_HasRectIntersectionFloat(player_hitbox, &data))
         AA_RefLinks::GetPlayer()->TakeDamage();   
 
     if(moving_right)

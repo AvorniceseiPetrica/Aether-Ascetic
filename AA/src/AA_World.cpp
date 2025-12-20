@@ -13,7 +13,10 @@ void AA_World::Init()
     AA_RefLinks::SetCamera(&camera);
     level_manager = new AA_LevelManager("configs/levels_config.txt");
     level_manager->Init();
-    camera.SetTarget(AA_RefLinks::GetPlayer()->GetRect());
+
+    SDL_FRect *player_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+
+    camera.SetTarget(player_hitbox);
 
     SDL_Log("World initialized...\n");
 }
