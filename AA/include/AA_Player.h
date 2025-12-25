@@ -25,7 +25,7 @@ class AA_Player : public AA_Creature
         int height = 150;
         const float speed = 10;
         const float gravity = 1;
-        const float jump_strength = 12;
+        const float jump_strength = 30;
 
         PLAYER_STATES current_state;
         bool moving_right;

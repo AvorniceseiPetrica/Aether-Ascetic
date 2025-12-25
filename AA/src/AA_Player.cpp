@@ -12,6 +12,10 @@ void AA_Player::SetState(PLAYER_STATES new_state)
         return;
 
     current_state = new_state;
+
+    if(new_state == PLAYER_JUMP)
+        velocity_y -= jump_strength;
+
     current_animation = animations[current_state];
 }
 
@@ -34,6 +38,9 @@ void AA_Player::HandleHorizontalMovement()
 
     if(!HandleCollisions(new_x, data.y))
         data.x = new_x;
+
+    if(!HandleCollisions(new_x, data.y + data.h + 1) && current_state != PLAYER_JUMP)
+        SetState(PLAYER_FALL);
 }
 
 void AA_Player::ApplyGravity()
@@ -47,7 +54,10 @@ void AA_Player::ApplyGravity()
         data.y = new_y;
     else
     {
-        current_state = PLAYER_IDLE;   
+        int tile_y = data.y / TILE_HEIGHT;
+
+        this->ChangePosition(data.x, tile_y * TILE_HEIGHT + (TILE_HEIGHT - height - 1));
+        SetState(PLAYER_IDLE);   
         velocity_y = 0;
     }
 }
@@ -113,6 +123,14 @@ void AA_Player::Init()
         },
         8
     );
+    animations[PLAYER_JUMP] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/jump/jump1.png",
+            "assets/sprites/player/jump/jump2.png"
+        },
+        8
+    );
 
     body_hitbox.w = 150;
     body_hitbox.h = 150;
@@ -129,16 +147,67 @@ void AA_Player::Update()
 
     time_since_last_hit++;
 
-    if(current_state == PLAYER_IDLE || current_state == PLAYER_WALK)
+    switch(current_state)
     {
-        if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
-            SetState(PLAYER_WALK);
-        else
-            SetState(PLAYER_IDLE);
-    }
+        case PLAYER_FALL:
+        {
+            ApplyGravity();
+            HandleHorizontalMovement();
+        }
+        break;
 
-    HandleHorizontalMovement();
-    ApplyGravity();
+        case PLAYER_IDLE:
+        {
+            if(keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_D])
+            {
+                SetState(PLAYER_WALK);
+                return;
+            }
+
+            if(keys[SDL_SCANCODE_SPACE])
+            {
+                SetState(PLAYER_JUMP);
+                return;
+            }
+
+            HandleHorizontalMovement();
+        }
+        break;
+
+        case PLAYER_WALK:
+        {
+            if(!keys[SDL_SCANCODE_A] && !keys[SDL_SCANCODE_D] && !keys[SDL_SCANCODE_SPACE])
+            {
+                SetState(PLAYER_IDLE);
+                return;
+            }
+
+            if(keys[SDL_SCANCODE_SPACE])
+            {
+                SetState(PLAYER_JUMP);
+                return;
+            }
+
+            HandleHorizontalMovement();
+        }
+        break;
+
+        case PLAYER_JUMP:
+        {
+            velocity_y += gravity;
+            
+            if(velocity_y > 0)
+            {
+                SetState(PLAYER_FALL);
+                velocity_y = 0;
+                return;
+            }
+
+            data.y += velocity_y;
+            HandleHorizontalMovement();
+        }
+        break;
+    }
 
     current_animation->Update();
 }
@@ -152,7 +221,9 @@ void AA_Player::Render()
         .h = height
     };
 
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst);
+    SDL_FlipMode flip_mode = moving_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
+
+    SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, flip_mode);
 }
 
 SDL_FRect* AA_Player::GetBodyHitbox()

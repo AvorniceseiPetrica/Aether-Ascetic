@@ -19,7 +19,6 @@ void AA_Camera::SetTarget(SDL_FRect *p_target)
 
 void AA_Camera::Update()
 {
-    SDL_Log("%f, %f", target->x, target->y);
     float desired_offset_x;
 
     if(AA_RefLinks::GetPlayer()->IsMovingRight())

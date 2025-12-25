@@ -36,8 +36,6 @@ void AA_LevelManager::Init()
     AA_RefLinks::SetPlayer(&player);
 
     SDL_FRect *player_hitbox = player.GetBodyHitbox();
-    
-    SDL_Log("%f, %f", player_hitbox->x, player_hitbox->y);
 
     SDL_Log("Level manager initialized...\n");
 }
