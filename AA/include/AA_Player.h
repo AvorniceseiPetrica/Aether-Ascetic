@@ -36,13 +36,15 @@ class AA_Player : public AA_Creature
         AA_Animation *current_animation;
 
         SDL_FRect body_hitbox;
+        SDL_FRect attack_hitbox;
 
         void SetState(PLAYER_STATES new_state);
         void HandleHorizontalMovement();
         void ApplyGravity();
         bool CheckCollision(float x, float y);
         bool HandleCollisions(float new_x, float new_y);
-        void CalculateHitbox(float offset_X, float offset_y);
+        void UpdateBodyHitbox();
+        void UpdateAttackHitbox();
 
     public:
 

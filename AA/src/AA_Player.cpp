@@ -81,10 +81,63 @@ bool AA_Player::HandleCollisions(float new_x, float new_y)
         );
 }
 
-void AA_Player::CalculateHitbox(float offset_x, float offset_y)
+void AA_Player::UpdateBodyHitbox()
 {
-    body_hitbox.x = data.x;
-    body_hitbox.y = data.y;
+    switch(current_state)
+    {
+        case PLAYER_IDLE:
+        {
+            body_hitbox.x = data.x + 40;
+            body_hitbox.y = data.y + 30;
+            body_hitbox.w = 70;
+            body_hitbox.h = 150;
+        }
+        break;
+
+        case PLAYER_WALK:
+        {
+            if(moving_right)
+                body_hitbox.x = data.x + 40;
+            else
+                body_hitbox.x = data.x + 25;
+
+            body_hitbox.y = data.y + 25;
+            body_hitbox.w = 80;
+            body_hitbox.h = 150;
+        }
+        break;
+
+        case PLAYER_JUMP:
+        {
+            if(moving_right)
+                body_hitbox.x = data.x + 40;
+            else
+                body_hitbox.x = data.x + 25;
+            body_hitbox.y = data.y + 25;
+            body_hitbox.w = 80;
+            body_hitbox.h = 100;
+        }
+        break;
+
+        case PLAYER_FALL:
+        {
+            if(moving_right)
+                body_hitbox.x = data.x + 40;
+            else
+                body_hitbox.x = data.x + 25;
+            body_hitbox.y = data.y + 40;
+            body_hitbox.w = 80;
+            body_hitbox.h = 100;
+        }
+        break;
+
+        default: body_hitbox = data;
+    }
+}
+
+void AA_Player::UpdateAttackHitbox()
+{
+
 }
 
 void AA_Player::Init()
@@ -132,16 +185,13 @@ void AA_Player::Init()
         8
     );
 
-    body_hitbox.w = 150;
-    body_hitbox.h = 150;
-    CalculateHitbox(0, 0);
-
+    UpdateBodyHitbox();
     SetState(PLAYER_FALL);
 }
 
 void AA_Player::Update()
 {
-    CalculateHitbox(0, 0);
+    UpdateBodyHitbox();
 
     const bool *keys = SDL_GetKeyboardState(nullptr);
 
@@ -221,9 +271,15 @@ void AA_Player::Render()
         .h = height
     };
 
+    SDL_FRect hitbox = *GetBodyHitbox();
+
+    hitbox.x -= AA_RefLinks::GetCamera()->GetViewPort().x;
+    hitbox.y -= AA_RefLinks::GetCamera()->GetViewPort().y;
+
     SDL_FlipMode flip_mode = moving_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
 
     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, flip_mode);
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
 }
 
 SDL_FRect* AA_Player::GetBodyHitbox()
