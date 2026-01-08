@@ -16,4 +16,7 @@ class AA_Animation
         ~AA_Animation() = default;
         void Update();
         SDL_Texture* GetFrame();
+        long unsigned int GetFrameCounterValue();
+        int GetFrameSpeed();
+        void Reset();
 };

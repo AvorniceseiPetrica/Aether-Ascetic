@@ -31,3 +31,18 @@ SDL_Texture* AA_Animation::GetFrame()
 {
     return frames[frame_counter / frame_speed];
 }
+
+long unsigned int AA_Animation::GetFrameCounterValue()
+{
+    return frame_counter;
+}
+
+int AA_Animation::GetFrameSpeed()
+{
+    return frame_speed;
+}
+
+void AA_Animation::Reset()
+{
+    frame_counter = -1;
+}

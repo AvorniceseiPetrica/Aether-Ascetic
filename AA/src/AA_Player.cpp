@@ -16,6 +16,9 @@ void AA_Player::SetState(PLAYER_STATES new_state)
     if(new_state == PLAYER_JUMP)
         velocity_y -= jump_strength;
 
+    if(current_animation)
+        current_animation->Reset();
+    
     current_animation = animations[current_state];
 }
 
@@ -90,7 +93,7 @@ void AA_Player::UpdateBodyHitbox()
             body_hitbox.x = data.x + 40;
             body_hitbox.y = data.y + 30;
             body_hitbox.w = 70;
-            body_hitbox.h = 150;
+            body_hitbox.h = 120;
         }
         break;
 
@@ -103,7 +106,7 @@ void AA_Player::UpdateBodyHitbox()
 
             body_hitbox.y = data.y + 25;
             body_hitbox.w = 80;
-            body_hitbox.h = 150;
+            body_hitbox.h = 125;
         }
         break;
 
@@ -131,13 +134,57 @@ void AA_Player::UpdateBodyHitbox()
         }
         break;
 
+        case PLAYER_PUNCH:
+        {
+            if(moving_right)
+            {
+                body_hitbox.x = data.x;
+                body_hitbox.y = data.y + 40;
+                body_hitbox.w = 80;
+                body_hitbox.h = 110;
+            }
+            else
+            {
+                body_hitbox.x = data.x + 70;
+                body_hitbox.y = data.y + 40;
+                body_hitbox.w = 80;
+                body_hitbox.h = 110;
+            }
+        };
+        break;
+
         default: body_hitbox = data;
     }
 }
 
 void AA_Player::UpdateAttackHitbox()
 {
+    switch(current_state)
+    {
+        case PLAYER_PUNCH:
+        {
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() > 0)
+            {
+                if(moving_right)
+                {
+                    attack_hitbox.x = data.x + 80;
+                    attack_hitbox.y = data.y;
+                    attack_hitbox.w = 30;
+                    attack_hitbox.h = 150;
+                }
+                else
+                {
+                    attack_hitbox.x = data.x + 10;
+                    attack_hitbox.y = data.y;
+                    attack_hitbox.w = 30;
+                    attack_hitbox.h = 150;
+                }
+            }
+        }
+        break;
 
+        default: attack_hitbox = data;
+    }
 }
 
 void AA_Player::Init()
@@ -184,6 +231,18 @@ void AA_Player::Init()
         },
         8
     );
+    animations[PLAYER_PUNCH] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/punch/punch1.png",
+            "assets/sprites/player/punch/punch2.png",
+            "assets/sprites/player/punch/punch3.png",
+            "assets/sprites/player/punch/punch4.png",
+            "assets/sprites/player/punch/punch5.png",
+            "assets/sprites/player/punch/punch6.png"
+        },
+        8
+    );
 
     UpdateBodyHitbox();
     SetState(PLAYER_FALL);
@@ -192,6 +251,7 @@ void AA_Player::Init()
 void AA_Player::Update()
 {
     UpdateBodyHitbox();
+    UpdateAttackHitbox();
 
     const bool *keys = SDL_GetKeyboardState(nullptr);
 
@@ -217,6 +277,12 @@ void AA_Player::Update()
             if(keys[SDL_SCANCODE_SPACE])
             {
                 SetState(PLAYER_JUMP);
+                return;
+            }
+
+            if(keys[SDL_SCANCODE_F])
+            {
+                SetState(PLAYER_PUNCH);
                 return;
             }
 
@@ -257,6 +323,16 @@ void AA_Player::Update()
             HandleHorizontalMovement();
         }
         break;
+
+        case PLAYER_PUNCH:
+        {
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 5)
+            {
+                SetState(PLAYER_IDLE);
+                return;
+            }
+        }
+        break;
     }
 
     current_animation->Update();
@@ -267,19 +343,33 @@ void AA_Player::Render()
     SDL_FRect dst = {
         .x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x,
         .y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y,
-        .w = width,
-        .h = height
+        .w = (float)width,
+        .h = (float)height
     };
 
-    SDL_FRect hitbox = *GetBodyHitbox();
+    SDL_FRect body_hitbox = *GetBodyHitbox();
+    SDL_FRect attack_hitbox = GetAttackHitbox();
 
-    hitbox.x -= AA_RefLinks::GetCamera()->GetViewPort().x;
-    hitbox.y -= AA_RefLinks::GetCamera()->GetViewPort().y;
+    body_hitbox.x -= AA_RefLinks::GetCamera()->GetViewPort().x;
+    body_hitbox.y -= AA_RefLinks::GetCamera()->GetViewPort().y;
+
+    attack_hitbox.x -= AA_RefLinks::GetCamera()->GetViewPort().x;
+    attack_hitbox.y -= AA_RefLinks::GetCamera()->GetViewPort().y;
 
     SDL_FlipMode flip_mode = moving_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
 
     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, flip_mode);
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
+    
+    SDL_SetRenderDrawColor(AA_RefLinks::GetRenderer(), 0xFF, 0x00, 0x00, 0x00);
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &body_hitbox);
+
+    SDL_SetRenderDrawColor(AA_RefLinks::GetRenderer(), 0x55, 0xFF, 0x55, 0x00);
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &attack_hitbox);
+}
+
+SDL_FRect* AA_Player::GetData()
+{
+    return &data;
 }
 
 SDL_FRect* AA_Player::GetBodyHitbox()
@@ -287,9 +377,9 @@ SDL_FRect* AA_Player::GetBodyHitbox()
     return &body_hitbox;
 }
 
-SDL_FRect AA_Player::GetActionHitbox()
+SDL_FRect AA_Player::GetAttackHitbox()
 {
-    return body_hitbox;
+    return attack_hitbox;
 }
 
 PLAYER_STATES AA_Player::GetCurrentState()

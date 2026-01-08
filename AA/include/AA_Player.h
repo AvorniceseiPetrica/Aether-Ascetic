@@ -53,8 +53,9 @@ class AA_Player : public AA_Creature
         void Init() override;
         void Update() override;
         void Render() override;
+        SDL_FRect* GetData();
         SDL_FRect* GetBodyHitbox();
-        SDL_FRect GetActionHitbox();
+        SDL_FRect GetAttackHitbox();
         PLAYER_STATES GetCurrentState();
         void TakeDamage();
 

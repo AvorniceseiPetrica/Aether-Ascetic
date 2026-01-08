@@ -14,9 +14,9 @@ void AA_World::Init()
     level_manager = new AA_LevelManager("configs/levels_config.txt");
     level_manager->Init();
 
-    SDL_FRect *player_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+    SDL_FRect *player_rect = AA_RefLinks::GetPlayer()->GetData();
 
-    camera.SetTarget(player_hitbox);
+    camera.SetTarget(player_rect);
 
     SDL_Log("World initialized...\n");
 }
