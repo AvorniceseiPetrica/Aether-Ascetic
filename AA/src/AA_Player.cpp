@@ -116,6 +116,7 @@ void AA_Player::UpdateBodyHitbox()
                 body_hitbox.x = data.x + 40;
             else
                 body_hitbox.x = data.x + 25;
+
             body_hitbox.y = data.y + 25;
             body_hitbox.w = 80;
             body_hitbox.h = 100;
@@ -128,6 +129,7 @@ void AA_Player::UpdateBodyHitbox()
                 body_hitbox.x = data.x + 40;
             else
                 body_hitbox.x = data.x + 25;
+
             body_hitbox.y = data.y + 40;
             body_hitbox.w = 80;
             body_hitbox.h = 100;
@@ -137,20 +139,27 @@ void AA_Player::UpdateBodyHitbox()
         case PLAYER_PUNCH:
         {
             if(moving_right)
-            {
                 body_hitbox.x = data.x;
-                body_hitbox.y = data.y + 40;
-                body_hitbox.w = 80;
-                body_hitbox.h = 110;
-            }
             else
-            {
                 body_hitbox.x = data.x + 70;
-                body_hitbox.y = data.y + 40;
-                body_hitbox.w = 80;
-                body_hitbox.h = 110;
-            }
+
+            body_hitbox.y = data.y + 40;
+            body_hitbox.w = 80;
+            body_hitbox.h = 110;
         };
+        break;
+
+        case PLAYER_KICK:
+        {
+            if(moving_right)
+                body_hitbox.x = data.x;
+            else
+                body_hitbox.x = data.x + 80;
+
+            body_hitbox.y = data.y + 20;
+            body_hitbox.w = 70;
+            body_hitbox.h = 130;
+        }
         break;
 
         default: body_hitbox = data;
@@ -166,24 +175,48 @@ void AA_Player::UpdateAttackHitbox()
             if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() > 0)
             {
                 if(moving_right)
-                {
                     attack_hitbox.x = data.x + 80;
-                    attack_hitbox.y = data.y;
-                    attack_hitbox.w = 30;
-                    attack_hitbox.h = 150;
-                }
                 else
-                {
                     attack_hitbox.x = data.x + 10;
-                    attack_hitbox.y = data.y;
-                    attack_hitbox.w = 30;
-                    attack_hitbox.h = 150;
-                }
+
+                attack_hitbox.y = data.y;
+                attack_hitbox.w = 30;
+                attack_hitbox.h = 150;
+            }
+            else
+            {
+                attack_hitbox.w = 0;
+                attack_hitbox.h = 0;
             }
         }
         break;
 
-        default: attack_hitbox = data;
+        case PLAYER_KICK:
+        {
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() > 1)
+            {
+                if(moving_right)
+                    attack_hitbox.x = data.x + 70;
+                else
+                    attack_hitbox.x = data.x + 50;
+
+                attack_hitbox.y = data.y;
+                attack_hitbox.w = 30;
+                attack_hitbox.h = 150;
+            }
+            else
+            {
+                attack_hitbox.w = 0;
+                attack_hitbox.h = 0;
+            }
+        }
+        break;
+
+        default: 
+        {
+            attack_hitbox.w = 0;
+            attack_hitbox.h = 0;
+        }
     }
 }
 
@@ -243,6 +276,17 @@ void AA_Player::Init()
         },
         8
     );
+    animations[PLAYER_KICK] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/kick/kick1.png",
+            "assets/sprites/player/kick/kick2.png",
+            "assets/sprites/player/kick/kick3.png",
+            "assets/sprites/player/kick/kick4.png",
+            "assets/sprites/player/kick/kick5.png",
+        },
+        8
+    );
 
     UpdateBodyHitbox();
     SetState(PLAYER_FALL);
@@ -280,9 +324,15 @@ void AA_Player::Update()
                 return;
             }
 
-            if(keys[SDL_SCANCODE_F])
+            if(keys[SDL_SCANCODE_E])
             {
                 SetState(PLAYER_PUNCH);
+                return;
+            }
+
+            if(keys[SDL_SCANCODE_F])
+            {
+                SetState(PLAYER_KICK);
                 return;
             }
 
@@ -327,6 +377,16 @@ void AA_Player::Update()
         case PLAYER_PUNCH:
         {
             if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 5)
+            {
+                SetState(PLAYER_IDLE);
+                return;
+            }
+        }
+        break;
+
+        case PLAYER_KICK:
+        {
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 4)
             {
                 SetState(PLAYER_IDLE);
                 return;

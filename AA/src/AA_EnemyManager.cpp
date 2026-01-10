@@ -67,7 +67,7 @@ void AA_EnemyManager::UpdateEnemies()
         SDL_FRect enemy_data = (*it)->GetData();
      
         
-        if(AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_PUNCH)
+        if(AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_PUNCH || AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_KICK)
         {
            SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetAttackHitbox();
 
