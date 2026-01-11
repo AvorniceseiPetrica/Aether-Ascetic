@@ -3,8 +3,11 @@
 #include <SDL3/SDL.h>
 #include "AA_Config.h"
 #include "AA_State.h"
+#include "AA_MenuButton.h"
+#include <vector>
 
 #define BUTTON_WIDTH 400
+#define BUTTON_HEIGHT 200
 
 class AA_MenuState : public AA_State
 {
@@ -42,11 +45,15 @@ class AA_MenuState : public AA_State
         bool start_game_pressed;
         bool quit_game_pressed;
 
+        std::vector<AA_MenuButton> buttons;
+        long unsigned int current_button_index = 0;
+
     public:
 
         AA_MenuState() = default;
         ~AA_MenuState() = default;
         void Init() override;
+        void HandleEvents();
         void Update() override;
         void Render() override;
 };

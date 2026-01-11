@@ -68,7 +68,10 @@ void AA_Game::HandleEvents()
 void AA_Game::Update()
 {
     if(current_state != nullptr)
+    {
+        current_state->HandleEvents();
         current_state->Update();
+    }
     
     if(next_state != nullptr)
     {
@@ -101,7 +104,6 @@ void AA_Game::Run()
     while(is_running)
     {
         current_frame_start = SDL_GetTicks();
-        HandleEvents();
         Update();
         Render();
         current_frame_end = SDL_GetTicks();

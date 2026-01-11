@@ -14,6 +14,7 @@ class AA_PlayState : public AA_State
         AA_PlayState() = default;
         ~AA_PlayState() = default;
         void Init() override;
+        void HandleEvents();
         void Update() override;
         void Render() override;
 };

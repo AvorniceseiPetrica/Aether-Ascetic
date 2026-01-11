@@ -14,48 +14,84 @@ void AA_MenuState::Init()
 
     start_game_pressed = false;
     quit_game_pressed = false;
+
+    AA_MenuButton start_game_button = AA_MenuButton(
+        WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2,
+        WINDOW_HEIGHT / 2 - 300,
+        BUTTON_WIDTH,
+        BUTTON_HEIGHT,
+        "assets/menu/start_game.png",
+        "assets/menu/start_game_pressed.png"
+    );
+    AA_MenuButton quit_game_button = AA_MenuButton(
+        WINDOW_WIDTH / 2 - BUTTON_WIDTH / 2,
+        WINDOW_HEIGHT / 2 + 100,
+        BUTTON_WIDTH,
+        BUTTON_HEIGHT,
+        "assets/menu/quit_game.png",
+        "assets/menu/quit_game_pressed.png"
+    );
+
+    buttons.push_back(start_game_button);
+    buttons.push_back(quit_game_button);
     
     SDL_SetRenderScale(AA_RefLinks::GetRenderer(), 1, 1);
 
     SDL_Log("Menustate initialized...\n");
 }
 
+void AA_MenuState::HandleEvents()
+{
+    SDL_Event e;
+
+    while(SDL_PollEvent(&e))
+    {
+        if(e.type == SDL_EVENT_QUIT)
+        {
+            exit(0);
+            return;
+        }
+
+        if(e.type == SDL_EVENT_KEY_DOWN)
+        {
+            switch(e.key.scancode)
+            {
+                case SDL_SCANCODE_DOWN:
+                {
+                    if(current_button_index == buttons.size() - 1)
+                        current_button_index = 0;
+                    else
+                        current_button_index++;
+                }
+                break;
+
+                case SDL_SCANCODE_UP:
+                {
+                    if(current_button_index == 0)
+                        current_button_index = buttons.size() - 1;
+                    else
+                        current_button_index--;
+                }
+                break;
+
+                default: break;
+            }
+        }
+    }
+}
+
 void AA_MenuState::Update()
 {
-    const bool *keys = SDL_GetKeyboardState(nullptr);
+    for(auto& button : buttons)
+        button.SetIfPressed(false);
 
-    if(keys[SDL_SCANCODE_1] && !keys[SDL_SCANCODE_2])
-    {
-        start_game_pressed = true;
-        quit_game_pressed = false;
-    }
-
-    if(keys[SDL_SCANCODE_2] && !keys[SDL_SCANCODE_1])
-    {
-        quit_game_pressed = true;
-        start_game_pressed = false;
-    }
-    
-    if(keys[SDL_SCANCODE_RETURN])
-    {
-        if(start_game_pressed)
-            AA_RefLinks::GetGame()->ChangeState(new AA_PlayState);
-        if(quit_game_pressed)
-            exit(0);
-    }
+    buttons[current_button_index].SetIfPressed(true);
 }
 
 void AA_MenuState::Render()
 {
     SDL_RenderTexture(AA_RefLinks::GetRenderer(), background, nullptr, &background_rect);
     
-    if(start_game_pressed)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), start_game_button_pressed, nullptr, &start_game_rect);
-    else
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), start_game_button_unpressed, nullptr, &start_game_rect);
-    
-    if(quit_game_pressed)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), quit_game_button_pressed, nullptr, &quit_game_rect);
-    else
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), quit_game_button_unpressed, nullptr, &quit_game_rect);
+    for(auto button :  buttons)
+        button.Render();
 }
