@@ -462,3 +462,8 @@ void AA_Player::ChangePosition(float x, float y)
     data.x = x;
     data.y = y;
 }
+
+void AA_Player::ChangeState(PLAYER_STATES new_state)
+{
+    SetState(new_state);
+}

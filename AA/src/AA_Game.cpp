@@ -13,7 +13,7 @@ void AA_Game::InitSDL(std::string window_name, int window_width, int window_heig
         SDL_Log("\n\tAA_Game::InitSDL()\t<< Failed to initialize video subsystems >>\n\n");
     else
     {
-        window = SDL_CreateWindow(window_name.c_str(), window_width, window_height, 0);
+        window = SDL_CreateWindow(window_name.c_str(), window_width, window_height, SDL_WINDOW_FULLSCREEN);
 
         if(window == nullptr)
             SDL_Log("\n\tAA_Game::InitSDL()\t<< Could not create window >>\n\n");

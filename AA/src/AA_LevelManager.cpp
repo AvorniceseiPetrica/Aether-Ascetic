@@ -29,9 +29,9 @@ AA_LevelManager::AA_LevelManager(std::string levels_config_path) : player(0, 0)
 void AA_LevelManager::Init()
 {
     current_level_id = 0;
-    ChangeLevel(current_level_id);
-    
     player.Init();
+    
+    ChangeLevel(current_level_id);
     
     AA_RefLinks::SetPlayer(&player);
 
@@ -42,7 +42,7 @@ void AA_LevelManager::Init()
 
 void AA_LevelManager::Update()
 {
-    if(AA_RefLinks::GetPlayer()->GetBodyHitbox()->x > MAP_WIDTH - TILE_WIDTH)
+    if(AA_RefLinks::GetPlayer()->GetData()->x > MAP_WIDTH - TILE_WIDTH)
     {
         ChangeLevel(++current_level_id);
         return;
@@ -63,6 +63,8 @@ void AA_LevelManager::ChangeLevel(long unsigned int level_id)
     if(level_id >= levels.size())
     {
         SDL_Log("\n\tAA_LevelManager::ChangeLevel()\t<< Invalid level id | level_id = %ld >>\n\n", level_id);
+        
+        current_level_id = levels.size() - 1;
         return;
     }
 
@@ -70,4 +72,5 @@ void AA_LevelManager::ChangeLevel(long unsigned int level_id)
     
     current_level->Init();
     player.ChangePosition(current_level->GetPlayerSpawn().x, current_level->GetPlayerSpawn().y);
+    player.ChangeState(PLAYER_FALL);
 }
