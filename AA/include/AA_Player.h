@@ -33,7 +33,7 @@ class AA_Player : public AA_Creature
         int time_since_last_hit;
         
         std::map<PLAYER_STATES, AA_Animation*> animations;
-        AA_Animation *current_animation;
+        AA_Animation *current_animation = nullptr;
 
         SDL_FRect body_hitbox;
         SDL_FRect attack_hitbox;

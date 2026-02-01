@@ -4,6 +4,11 @@
 #include "AA_RefLinks.h"
 #include "AA_PlayState.h"
 
+enum BUTTONS {
+    START_GAME,
+    QUIT_GAME
+};
+
 void AA_MenuState::Init()
 {
     background = AA_TextureLoader::LoadTexture("assets/menu/background.png");
@@ -73,6 +78,24 @@ void AA_MenuState::HandleEvents()
                         current_button_index--;
                 }
                 break;
+
+                case SDL_SCANCODE_RETURN:
+                {
+                    switch(current_button_index)
+                    {
+                        case START_GAME:
+                        {
+                            AA_RefLinks::GetGame()->ChangeState(new AA_PlayState);
+                        }
+                        break;
+
+                        case QUIT_GAME:
+                        {
+                            exit(0);
+                        }
+                        break;
+                    }
+                }
 
                 default: break;
             }
