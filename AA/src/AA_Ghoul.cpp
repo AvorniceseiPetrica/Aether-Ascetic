@@ -2,95 +2,36 @@
 
 #include "AA_TextureLoader.h"
 #include "AA_RefLinks.h"
-
-enum GHOUL_STATES {
-    GHOUL_FALL,
-    GHOUL_RUN,
-    GHOUL_ATTACK,
-    GHOUL_HURT
-};
+#include <vector>
 
 AA_Ghoul::AA_Ghoul(float x, float y, float width, float height, int health) : AA_Enemy(x, y, width, height)
 {
     this->health = health;
 }
 
-void AA_Ghoul::Init()
+void AA_Ghoul::SetState(GHOUL_STATES new_state)
 {
-    frames[0] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul1.png");
-    frames[1] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul2.png");
-    frames[2] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul3.png");
-    frames[3] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul4.png");
-    frames[4] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul5.png");
-    frames[5] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul6.png");
-    frames[6] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul7.png");
-    frames[7] = AA_TextureLoader::LoadTexture("assets/sprites/enemies/ghoul/ghoul8.png");
+    if(new_state != current_state)
+        current_state = new_state;
 
-    frame_counter = -1;
+    if(current_animation)
+        current_animation->Reset();
 
-    moving_right = true;
-
-    current_state = GHOUL_FALL;
-    velocity_y = 0;
-
-    hitbox.w = 128;
-    hitbox.h = 128;
-    hitbot_offset_y = 64;
-    
-    time_since_last_hit = 0;
-    is_dead = false;
+    current_animation = animations[current_state];
 }
 
-void AA_Ghoul::Update()
+void AA_Ghoul::UpdateHitbox()
 {
-    if(health <= 0)
-        is_dead = true;
-
     if(moving_right)
         hitbox_offset_x = 48;
     else
         hitbox_offset_x = 15;
 
-    hitbox.x = data.x - AA_RefLinks::GetCamera()->GetViewPort().x + hitbox_offset_x;
-    hitbox.y = data.y - AA_RefLinks::GetCamera()->GetViewPort().y + hitbot_offset_y;
-
-    time_since_last_hit++;
-
-    switch(current_state)
-    {
-        case GHOUL_FALL: FallStateUpdate();
-        break;
-
-        case GHOUL_RUN: RunStateUpdate();
-        break;
-
-        case GHOUL_ATTACK: AttackStateUpdate();
-        break;
-
-        case GHOUL_HURT: HurtStateUpdate();
-        break;
-    }
+    hitbox.x = data.x + hitbox_offset_x;
+    hitbox.y = data.y + hitbot_offset_y;
 }
 
-void AA_Ghoul::Render()
-{
-    switch(current_state)
-    {
-        case GHOUL_FALL: FallStateRender();
-        break;
-
-        case GHOUL_RUN:  RunStateRender();
-        break;
-
-        case GHOUL_ATTACK: AttackStateRender();
-        break;
-
-        case GHOUL_HURT: HurtStateRender();
-        break;
-    }
-}
-
-void AA_Ghoul::FallStateUpdate()
+void AA_Ghoul::ApplyGravity()
 {
     bool collision_bottom_left;
     bool collision_bottom_right;
@@ -112,26 +53,13 @@ void AA_Ghoul::FallStateUpdate()
         tile_y = (int)(new_y + data.h) / TILE_HEIGHT;
         data.y = (tile_y) * TILE_HEIGHT - data.h - 1;
         velocity_y = 0;
-        current_state = GHOUL_RUN;
+        SetState(GHOUL_RUN);
     }
     else
         data.y = new_y;
 }
 
-void AA_Ghoul::FallStateRender()
-{
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
-    };
-
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), frames[0], nullptr, &dst);
-}
-
-void AA_Ghoul::RunStateUpdate()
+void AA_Ghoul::HandleRunning()
 {
     float new_x = data.x;
     bool collision_bottom_left;
@@ -157,64 +85,81 @@ void AA_Ghoul::RunStateUpdate()
         moving_right = !moving_right;
     else
         data.x = new_x;
-
-    frame_counter++;
-
-    if(frame_counter > 63)
-        frame_counter = 0;
 }
 
-void AA_Ghoul::RunStateRender()
+void AA_Ghoul::Init()
 {
-    SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
-    SDL_FRect dst = {
-        .x = data.x - camera.x,
-        .y = data.y - camera.y,
-        .w = data.w,
-        .h = data.h
+    std::vector<std::string> running_frames_paths = {
+            "assets/sprites/enemies/ghoul/ghoul1.png",
+            "assets/sprites/enemies/ghoul/ghoul2.png",
+            "assets/sprites/enemies/ghoul/ghoul3.png",
+            "assets/sprites/enemies/ghoul/ghoul4.png",
+            "assets/sprites/enemies/ghoul/ghoul5.png",
+            "assets/sprites/enemies/ghoul/ghoul6.png",
+            "assets/sprites/enemies/ghoul/ghoul7.png",
+            "assets/sprites/enemies/ghoul/ghoul8.png"
     };
 
-    if(!moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
+    animations[GHOUL_FALL] = new AA_Animation(
+        running_frames_paths,
+        8
+    );
+    animations[GHOUL_RUN] = new AA_Animation(
+        running_frames_paths,
+        8
+    );
+    animations[GHOUL_ATTACK] = new AA_Animation(
+        running_frames_paths,
+        8
+    );
+    animations[GHOUL_HURT] = new AA_Animation(
+        running_frames_paths,
+        8
+    );
 
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
+    moving_right = true;
+
+    current_state = GHOUL_FALL;
+    velocity_y = 0;
+
+    hitbox.w = 128;
+    hitbox.h = 128;
+    hitbot_offset_y = 64;
+    
+    time_since_last_hit = 0;
+
+    SetState(GHOUL_FALL);
+
 }
 
-void AA_Ghoul::HurtStateUpdate()
+void AA_Ghoul::Update()
 {
-    frame_counter = 0;
-    
-    float new_x = data.x;
-    bool collision_left;
-    bool collision_right;
-    bool collision_bottom_left;
-    bool collision_bottom_right;
-    
-    new_x += knockback_velocity * knockback_direction;
-    knockback_velocity *= 0.9;
+    if(health <= 0)
+        is_dead = true;
 
-    collision_left = CheckCollision(new_x, data.y + data.h / 2);
-    collision_right = CheckCollision(new_x + data.w, data.y + data.h / 2);
-    collision_bottom_left = CheckCollision(new_x, data.y + data.h);
-    collision_bottom_right = CheckCollision(new_x + data.w, data.y + data.h);
+    UpdateHitbox();
 
-    if(!collision_left && !collision_right)
-        data.x = new_x;
-    else
-        knockback_velocity = 0;
+    current_animation->Update();
 
-    time_since_last_hit++;
-
-    if(knockback_velocity < 1)
+    switch(current_state)
     {
-        health--;
-        current_state = GHOUL_RUN;
+        case GHOUL_FALL: 
+        {
+            ApplyGravity();
+        }
+        break;
+
+        case GHOUL_RUN: 
+        {
+            HandleRunning();
+        }
+        break;
+
+        default: break;
     }
 }
 
-void AA_Ghoul::HurtStateRender()
+void AA_Ghoul::Render()
 {
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
@@ -223,23 +168,15 @@ void AA_Ghoul::HurtStateRender()
         .w = data.w,
         .h = data.h
     };
+    SDL_FRect htbx = {
+        .x = hitbox.x - camera.x,
+        .y = hitbox.y - camera.y,
+        .w = hitbox.w,
+        .h = hitbox.h
+    };
 
-    if(!moving_right)
-        SDL_RenderTexture(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst);
-    else
-        SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), frames[frame_counter / 8], nullptr, &dst, 0, nullptr, SDL_FLIP_HORIZONTAL);
-
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &hitbox);
-}
-
-void AA_Ghoul::AttackStateUpdate()
-{
-    
-}
-
-void AA_Ghoul::AttackStateRender()
-{
-
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &htbx);
+    SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, moving_right ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 void AA_Ghoul::TakeDamage(bool to_right)
@@ -258,10 +195,4 @@ void AA_Ghoul::TakeDamage(bool to_right)
     time_since_last_hit = 0;
     knockback_velocity = 50;
     current_state = GHOUL_HURT;
-}
-
-void AA_Ghoul::SetState(int new_state)
-{
-    if(new_state != current_state)
-        current_state = new_state;
 }

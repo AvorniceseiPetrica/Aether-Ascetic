@@ -1,15 +1,21 @@
 #pragma once
 
 #include "AA_Enemy.h"
+#include "AA_Animation.h"
+#include <map>
+
+enum GHOUL_STATES {
+    GHOUL_FALL,
+    GHOUL_RUN,
+    GHOUL_ATTACK,
+    GHOUL_HURT
+};
 
 class AA_Ghoul : public AA_Enemy
 {
     private:
 
-        SDL_Texture *frames[8];
-
-        int frame_counter;
-        int current_state;
+        GHOUL_STATES current_state;
         float velocity_y;
         int speed = 5;
         float gravity = 0.5;
@@ -22,6 +28,14 @@ class AA_Ghoul : public AA_Enemy
         int time_since_last_hit;
         float knockback_direction = 1.0;
         float knockback_velocity;
+
+        std::map<GHOUL_STATES, AA_Animation*> animations;
+        AA_Animation *current_animation = nullptr;
+
+        void SetState(GHOUL_STATES new_state);
+        void UpdateHitbox();
+        void ApplyGravity();
+        void HandleRunning();
 
     public:
 
@@ -39,5 +53,4 @@ class AA_Ghoul : public AA_Enemy
         void AttackStateUpdate();
         void AttackStateRender();
         void TakeDamage(bool to_right) override;
-        void SetState(int new_state);
 };
