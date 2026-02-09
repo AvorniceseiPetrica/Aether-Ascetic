@@ -31,9 +31,9 @@ void AA_EnemyManager::LoadEnemies(std::string enemies_config_path)
         int enemy_type;
         float tile_x, tile_y, width, height;
 
-        while(!f.eof())
+        while(f>>enemy_type>>tile_x>>tile_y>>width>>height)
         {
-            f>>enemy_type>>tile_x>>tile_y>>width>>height;
+            SDL_Log("Read enemy: enemy_type = %d, tile_x = %f, tile_y = %f, width = %f, height = %f", enemy_type, tile_x, tile_y, width, height);
 
             switch(enemy_type)
             {

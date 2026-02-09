@@ -259,3 +259,9 @@ void AA_Ghoul::TakeDamage(bool to_right)
     knockback_velocity = 50;
     current_state = GHOUL_HURT;
 }
+
+void AA_Ghoul::SetState(int new_state)
+{
+    if(new_state != current_state)
+        current_state = new_state;
+}

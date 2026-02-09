@@ -39,4 +39,5 @@ class AA_Ghoul : public AA_Enemy
         void AttackStateUpdate();
         void AttackStateRender();
         void TakeDamage(bool to_right) override;
+        void SetState(int new_state);
 };

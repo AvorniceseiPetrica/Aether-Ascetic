@@ -81,7 +81,7 @@ bool AA_Player::HandleCollisions(float new_x, float new_y)
             CheckCollision(new_x + data.w - 30, new_y) || 
             CheckCollision(new_x + 30, new_y + data.h) || 
             CheckCollision(new_x + data.w - 30, new_y + data.h)
-        );
+    );
 }
 
 void AA_Player::UpdateBodyHitbox()

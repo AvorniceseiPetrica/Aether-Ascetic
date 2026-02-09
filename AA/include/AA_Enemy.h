@@ -13,7 +13,7 @@ class AA_Enemy : public AA_Creature
 
         int damage;
         int type;
-        bool is_dead;
+        bool is_dead = false;
 
     public:
 
