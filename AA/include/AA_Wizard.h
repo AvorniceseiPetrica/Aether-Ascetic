@@ -1,18 +1,26 @@
+#pragma once
+
 #include "AA_Enemy.h"
+#include "AA_Animation.h"
+#include <map>
 
 enum WIZARD_STATES {
-    WIZARD_IDLE_STATE
+    WIZARD_IDLE_STATE,
+    WIZARD_ATTACK_STATE
 };
 
 class AA_Wizard : public AA_Enemy
 {
     private:
 
-        int current_state;
-        int idle_frame_counter;
-        SDL_Texture* idle_frames[5];
+        WIZARD_STATES current_state;
+        std::map<WIZARD_STATES, AA_Animation*> animations;
+        AA_Animation *current_animation = nullptr;
+        SDL_FRect vision;
+        bool moving_right = false;
 
         void SetState(WIZARD_STATES new_state);
+        void UpdateVision();
 
     public:
 
@@ -21,7 +29,5 @@ class AA_Wizard : public AA_Enemy
         void Init() override;
         void Update() override;
         void Render() override;
-        void IdleStateUpdate();
-        void IdleStateRender();
         void TakeDamage(bool to_right) override;
 };

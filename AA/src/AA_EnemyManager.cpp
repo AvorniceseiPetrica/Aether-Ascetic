@@ -33,8 +33,6 @@ void AA_EnemyManager::LoadEnemies(std::string enemies_config_path)
 
         while(f>>enemy_type>>tile_x>>tile_y>>width>>height)
         {
-            SDL_Log("Read enemy: enemy_type = %d, tile_x = %f, tile_y = %f, width = %f, height = %f", enemy_type, tile_x, tile_y, width, height);
-
             switch(enemy_type)
             {
                 case ENEMY_GHOUL: enemies.push_back(new AA_Ghoul(tile_x * TILE_WIDTH, tile_y * TILE_HEIGHT, width, height, 3));
