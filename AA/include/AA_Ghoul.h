@@ -28,6 +28,7 @@ class AA_Ghoul : public AA_Enemy
         int time_since_last_hit;
         float knockback_direction = 1.0;
         float knockback_velocity;
+        int knocked_out_timer = 0;
 
         std::map<GHOUL_STATES, AA_Animation*> animations;
         AA_Animation *current_animation = nullptr;
@@ -36,6 +37,7 @@ class AA_Ghoul : public AA_Enemy
         void UpdateHitbox();
         void ApplyGravity();
         void HandleRunning();
+        void HandleHurt();
 
     public:
 

@@ -66,10 +66,10 @@ void AA_Ghoul::HandleRunning()
     bool collision_bottom_right;
     bool collision_middle_left;
     bool collision_middle_right;
-    SDL_FRect *player_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+    SDL_FRect player_attack_hitbox = AA_RefLinks::GetPlayer()->GetAttackHitbox();
 
-    if(SDL_HasRectIntersectionFloat(player_hitbox, &data))
-        AA_RefLinks::GetPlayer()->TakeDamage();   
+    if(SDL_HasRectIntersectionFloat(&player_attack_hitbox, &data))
+        TakeDamage(true);   
 
     if(moving_right)
         new_x += speed;
@@ -85,6 +85,28 @@ void AA_Ghoul::HandleRunning()
         moving_right = !moving_right;
     else
         data.x = new_x;
+}
+
+void AA_Ghoul::HandleHurt()
+{
+    float new_x = data.x;
+    bool collision_middle_left,
+        collision_middle_right;
+    
+    new_x += knockback_direction * knockback_velocity;
+
+    collision_middle_left = CheckCollision(new_x, data.y + data.h / 2);
+    collision_middle_right = CheckCollision(new_x + data.w, data.y + data.h / 2);
+
+    if(collision_middle_left || collision_middle_right)
+    {
+        knockback_velocity = 0;
+        return;
+    }
+    else
+        data.x = new_x;
+    
+    knockback_velocity *= 0.9;
 }
 
 void AA_Ghoul::Init()
@@ -127,6 +149,7 @@ void AA_Ghoul::Init()
     hitbot_offset_y = 64;
     
     time_since_last_hit = 0;
+    knockback_velocity = 0;
 
     SetState(GHOUL_FALL);
 
@@ -138,6 +161,8 @@ void AA_Ghoul::Update()
         is_dead = true;
 
     UpdateHitbox();
+
+    time_since_last_hit++;
 
     current_animation->Update();
 
@@ -154,6 +179,19 @@ void AA_Ghoul::Update()
             HandleRunning();
         }
         break;
+
+        case GHOUL_HURT:
+        {
+            HandleHurt();
+            
+            if(knockback_velocity <= 1)
+            {
+                knocked_out_timer++;
+
+                if(knocked_out_timer > 50)
+                    SetState(GHOUL_RUN);
+            }
+        }
 
         default: break;
     }
@@ -181,18 +219,14 @@ void AA_Ghoul::Render()
 
 void AA_Ghoul::TakeDamage(bool to_right)
 {
-    if(current_state == GHOUL_HURT)
-        return;
-
     if(to_right)
         knockback_direction = 1.0;
     else
         knockback_direction = -1.0;
 
-    if(time_since_last_hit < 100 && time_since_last_hit > 0)
-        return;
-
+    knockback_velocity = 40;
+    knocked_out_timer = 0;
     time_since_last_hit = 0;
-    knockback_velocity = 50;
-    current_state = GHOUL_HURT;
+
+    SetState(GHOUL_HURT);
 }
