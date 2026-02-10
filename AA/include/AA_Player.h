@@ -61,4 +61,5 @@ class AA_Player : public AA_Creature
         bool IsMovingRight();
         void ChangePosition(float x, float y);
         void ChangeState(PLAYER_STATES new_state);
+        int GetHealth();
 };

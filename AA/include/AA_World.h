@@ -9,6 +9,7 @@ class AA_World
 
         AA_Camera camera;
         AA_LevelManager *level_manager = nullptr;
+        SDL_Texture *hearts[3];
 
     public:
 

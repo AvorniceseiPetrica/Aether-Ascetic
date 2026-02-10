@@ -288,6 +288,8 @@ void AA_Player::Init()
         8
     );
 
+    health = 1;
+
     UpdateBodyHitbox();
     SetState(PLAYER_FALL);
 }
@@ -466,4 +468,9 @@ void AA_Player::ChangePosition(float x, float y)
 void AA_Player::ChangeState(PLAYER_STATES new_state)
 {
     SetState(new_state);
+}
+
+int AA_Player::GetHealth()
+{
+    return health;
 }
