@@ -1,5 +1,6 @@
 #include <SDL3/SDL.h>
 #include "AA_DrawableEntity.h"
+#include "AA_Animation.h"
 
 class AA_Fireball : public AA_DrawableEntity
 {
@@ -9,6 +10,8 @@ class AA_Fireball : public AA_DrawableEntity
         int damage;
         bool moving_right;
         bool collided = false;
+
+        AA_Animation *animation;
 
     public:
 

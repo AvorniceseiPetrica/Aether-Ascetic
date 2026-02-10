@@ -58,9 +58,18 @@ void AA_Wizard::Update()
     current_animation->Update();
     UpdateVision();
 
-    for(auto it = fireballs.begin(); it != fireballs.end(); it++)
-        if((*it)->HasCollided())
-            fireballs.erase(it);
+    for(auto it = fireballs.begin(); it != fireballs.end(); ) 
+    {
+        if ((*it)->HasCollided()) 
+        {
+            delete *it;
+            it = fireballs.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
 
     SDL_FRect *player_rect = AA_RefLinks::GetPlayer()->GetBodyHitbox();
 
@@ -82,7 +91,14 @@ void AA_Wizard::Update()
 
             if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 9 && ready_to_shoot == true)
             {   
-                AA_Fireball *fb = new AA_Fireball(data.x, data.y, 50, 50, moving_right);
+                float fireball_x;
+
+                if(moving_right)
+                    fireball_x = data.x + data.w;
+                else
+                    fireball_x = data.x;
+
+                AA_Fireball *fb = new AA_Fireball(fireball_x, data.y + data.h / 2.7, 70, 70, moving_right);
                 fb->Init(); 
                 fireballs.push_back(fb);
                 ready_to_shoot = false;

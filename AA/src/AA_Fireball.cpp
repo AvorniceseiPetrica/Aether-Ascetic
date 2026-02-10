@@ -13,6 +13,15 @@ void AA_Fireball::Init()
     speed = 10;
     damage = 1;
     texture = AA_TextureLoader::LoadTexture("assets/sprites/red.png");
+
+    animation = new AA_Animation(
+        {
+            "assets/sprites/fx/fireball/fireball1.png",
+            "assets/sprites/fx/fireball/fireball2.png",
+            "assets/sprites/fx/fireball/fireball3.png"
+        },
+        8
+    );
 }
 
 void AA_Fireball::Update()
@@ -32,6 +41,8 @@ void AA_Fireball::Update()
         data.x = new_x;
     else
         collided = true;
+    
+    animation->Update();
 }
 
 void AA_Fireball::Render()
@@ -45,7 +56,7 @@ void AA_Fireball::Render()
         .h = data.h
     };
 
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), texture, nullptr, &dst);
+    SDL_RenderTexture(AA_RefLinks::GetRenderer(), animation->GetFrame(), nullptr, &dst);
 }
 
 bool AA_Fireball::CheckCollision(float x, float y)
