@@ -3,6 +3,7 @@
 #include "AA_Enemy.h"
 #include "AA_Animation.h"
 #include <map>
+#include "AA_Fireball.h"
 
 enum WIZARD_STATES {
     WIZARD_IDLE_STATE,
@@ -18,6 +19,8 @@ class AA_Wizard : public AA_Enemy
         AA_Animation *current_animation = nullptr;
         SDL_FRect vision;
         bool moving_right = false;
+        std::vector<AA_Fireball*> fireballs;
+        bool ready_to_shoot = false;
 
         void SetState(WIZARD_STATES new_state);
         void UpdateVision();

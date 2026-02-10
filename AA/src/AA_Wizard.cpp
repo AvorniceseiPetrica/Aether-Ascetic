@@ -9,8 +9,17 @@ AA_Wizard::AA_Wizard(float x, float y, float width, float height, int health) : 
 
 void AA_Wizard::UpdateVision()
 {
-    vision.x = data.x - vision.w / 2;
-    vision.y = data.y - vision.h / 2;   
+    if(current_state == WIZARD_IDLE_STATE)
+    {
+        vision.x = data.x - 4 * TILE_WIDTH;
+        vision.y = data.y;
+    }
+
+    if(current_state == WIZARD_ATTACK_STATE)
+    {
+        vision.x = data.x - 5 * TILE_WIDTH;
+        vision.y = data.y - 1.5 * TILE_HEIGHT;
+    }
 }
 
 void AA_Wizard::Init()
@@ -49,12 +58,16 @@ void AA_Wizard::Update()
     current_animation->Update();
     UpdateVision();
 
+    for(auto it = fireballs.begin(); it != fireballs.end(); it++)
+        if((*it)->HasCollided())
+            fireballs.erase(it);
+
+    SDL_FRect *player_rect = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+
     switch(current_state)
     {
         case WIZARD_IDLE_STATE :
         {
-            SDL_FRect *player_rect = AA_RefLinks::GetPlayer()->GetBodyHitbox();
-
             if(SDL_HasRectIntersectionFloat(player_rect, &vision))
                 SetState(WIZARD_ATTACK_STATE);
         }
@@ -62,6 +75,23 @@ void AA_Wizard::Update()
         
         case WIZARD_ATTACK_STATE :
         {
+            if(data.x - player_rect->x > 0)
+                moving_right = false;
+            else
+                moving_right = true;
+
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 9 && ready_to_shoot == true)
+            {   
+                AA_Fireball *fb = new AA_Fireball(data.x, data.y, 50, 50, moving_right);
+                fb->Init(); 
+                fireballs.push_back(fb);
+                ready_to_shoot = false;
+            }
+
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() < 9)
+                ready_to_shoot = true;
+                
+
             SDL_FRect *player_rect = AA_RefLinks::GetPlayer()->GetBodyHitbox();
 
             if(!SDL_HasRectIntersectionFloat(player_rect, &vision))
@@ -71,10 +101,16 @@ void AA_Wizard::Update()
         
         default: break;
     }
+
+    for(auto fireball : fireballs)
+        fireball->Update();
 }
 
 void AA_Wizard::Render()
 {
+    for(auto fireball : fireballs)
+        fireball->Render();
+
     SDL_FRect camera = AA_RefLinks::GetCamera()->GetViewPort();
     SDL_FRect dst = {
         .x = data.x - camera.x,
@@ -91,7 +127,7 @@ void AA_Wizard::Render()
 
     SDL_SetRenderDrawColor(AA_RefLinks::GetRenderer(), 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &vis);
-    SDL_RenderTexture(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst);
+    SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, moving_right ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
 void AA_Wizard::SetState(WIZARD_STATES new_state)
