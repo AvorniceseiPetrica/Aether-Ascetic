@@ -287,8 +287,16 @@ void AA_Player::Init()
         },
         8
     );
+    animations[PLAYER_HURT] = new AA_Animation
+    (
+        {
+            "assets/sprites/player/hurt/hurt1.png",
+            "assets/sprites/player/hurt/hurt2.png"
+        },
+        8
+    );
 
-    health = 1;
+    health = 3;
 
     UpdateBodyHitbox();
     SetState(PLAYER_FALL);
@@ -395,6 +403,16 @@ void AA_Player::Update()
             }
         }
         break;
+
+        case PLAYER_HURT:
+        {
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 1)
+            {
+                SetState(PLAYER_FALL);
+                return;
+            }
+        }
+        break;
     }
 
     current_animation->Update();
@@ -451,7 +469,9 @@ PLAYER_STATES AA_Player::GetCurrentState()
 
 void AA_Player::TakeDamage()
 {
-    
+    health--;
+
+    SetState(PLAYER_HURT);
 }
 
 bool AA_Player::IsMovingRight()

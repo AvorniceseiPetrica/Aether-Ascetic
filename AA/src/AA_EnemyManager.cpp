@@ -63,21 +63,10 @@ void AA_EnemyManager::UpdateEnemies()
     for (auto it = enemies.begin(); it != enemies.end();)
     {
         SDL_FRect enemy_data = (*it)->GetData();
-     
-        
-        if(AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_PUNCH || AA_RefLinks::GetPlayer()->GetCurrentState() == PLAYER_KICK)
-        {
-           SDL_FRect punch_hitbox = AA_RefLinks::GetPlayer()->GetAttackHitbox();
+        SDL_FRect *body_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
 
-           if(SDL_HasRectIntersectionFloat(&punch_hitbox, &enemy_data))
-           {
-                if(AA_RefLinks::GetPlayer()->GetBodyHitbox()->x < enemy_data.x)
-                    (*it)->TakeDamage(true);
-                else
-                    (*it)->TakeDamage(false);
-           }
-        }
-
+        if(SDL_HasRectIntersectionFloat(body_hitbox, &enemy_data))
+            AA_RefLinks::GetPlayer()->TakeDamage();
 
         if (
             enemy_data.x < 0 ||

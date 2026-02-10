@@ -14,7 +14,8 @@ enum PLAYER_STATES {
     PLAYER_PUNCH,
     PLAYER_KICK,
     PLAYER_CROUCH_KICK,
-    PLAYER_FLYING_KICK
+    PLAYER_FLYING_KICK,
+    PLAYER_HURT
 };
 
 class AA_Player : public AA_Creature
