@@ -22,6 +22,28 @@ void AA_Wizard::UpdateVision()
     }
 }
 
+void AA_Wizard::HandleHurt()
+{
+    float new_x = data.x;
+    bool collision_middle_left,
+        collision_middle_right;
+    
+    new_x += knockback_direction * knockback_velocity;
+
+    collision_middle_left = CheckCollision(new_x, data.y + data.h / 2);
+    collision_middle_right = CheckCollision(new_x + data.w, data.y + data.h / 2);
+
+    if(collision_middle_left || collision_middle_right)
+    {
+        knockback_velocity = 0;
+        return;
+    }
+    else
+        data.x = new_x;
+    
+    knockback_velocity *= 0.9;
+}
+
 void AA_Wizard::Init()
 {
     animations[WIZARD_IDLE_STATE] = new AA_Animation(
@@ -46,6 +68,12 @@ void AA_Wizard::Init()
             "assets/sprites/enemies/wizard/wizard_attack8.png",
             "assets/sprites/enemies/wizard/wizard_attack9.png",
             "assets/sprites/enemies/wizard/wizard_attack10.png",
+        },
+        8
+    );
+    animations[WIZARD_HURT_STATE] = new AA_Animation(
+        {
+            "assets/sprites/enemies/wizard/wizard_hurt.png"
         },
         8
     );
@@ -112,8 +140,26 @@ void AA_Wizard::Update()
 
             if(!SDL_HasRectIntersectionFloat(player_rect, &vision))
                 SetState(WIZARD_IDLE_STATE);
+
+            SDL_FRect player_attack_hitbox = AA_RefLinks::GetPlayer()->GetAttackHitbox();
+
+            if(SDL_HasRectIntersectionFloat(&player_attack_hitbox, &data))
+                TakeDamage(!moving_right);
         }
         break;
+
+        case WIZARD_HURT_STATE :
+        {
+            HandleHurt();
+
+            if(knockback_velocity <= 1)
+            {
+                knocked_out_timer++;
+
+                if(knocked_out_timer > 50)
+                    SetState(WIZARD_IDLE_STATE);
+            }
+        }
         
         default: break;
     }
@@ -171,5 +217,14 @@ void AA_Wizard::SetState(WIZARD_STATES new_state)
 
 void AA_Wizard::TakeDamage(bool to_right)
 {
+    if(to_right)
+        knockback_direction = 1.0;
+    else
+        knockback_direction = -1.0;
 
+    knockback_velocity = 40;
+    knocked_out_timer = 0;
+    time_since_last_hit = 0;
+
+    SetState(WIZARD_HURT_STATE);
 }

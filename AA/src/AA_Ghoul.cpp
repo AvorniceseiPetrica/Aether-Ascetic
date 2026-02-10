@@ -135,7 +135,9 @@ void AA_Ghoul::Init()
         8
     );
     animations[GHOUL_HURT] = new AA_Animation(
-        running_frames_paths,
+        {
+            "assets/sprites/enemies/ghoul/ghoul_hurt.png"
+        },
         8
     );
 

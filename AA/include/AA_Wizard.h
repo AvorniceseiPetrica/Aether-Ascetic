@@ -7,7 +7,8 @@
 
 enum WIZARD_STATES {
     WIZARD_IDLE_STATE,
-    WIZARD_ATTACK_STATE
+    WIZARD_ATTACK_STATE,
+    WIZARD_HURT_STATE
 };
 
 class AA_Wizard : public AA_Enemy
@@ -21,9 +22,14 @@ class AA_Wizard : public AA_Enemy
         bool moving_right = false;
         std::vector<AA_Fireball*> fireballs;
         bool ready_to_shoot = false;
+        float knockback_direction = 1.0;
+        float knockback_velocity;
+        int knocked_out_timer;
+        int time_since_last_hit;
 
         void SetState(WIZARD_STATES new_state);
         void UpdateVision();
+        void HandleHurt();
 
     public:
 
