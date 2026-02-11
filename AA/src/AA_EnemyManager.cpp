@@ -62,7 +62,7 @@ void AA_EnemyManager::UpdateEnemies()
 
     for (auto it = enemies.begin(); it != enemies.end();)
     {
-        SDL_FRect enemy_data = (*it)->GetData();
+        SDL_FRect enemy_data = (*it)->GetBodyHitbox();
         SDL_FRect *body_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
 
         if(SDL_HasRectIntersectionFloat(body_hitbox, &enemy_data) && !AA_RefLinks::GetPlayer()->IsInvincible())

@@ -180,7 +180,7 @@ void AA_Player::UpdateAttackHitbox()
                     attack_hitbox.x = data.x + 10;
 
                 attack_hitbox.y = data.y;
-                attack_hitbox.w = 30;
+                attack_hitbox.w = 60;
                 attack_hitbox.h = 150;
             }
             else

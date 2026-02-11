@@ -8,7 +8,6 @@
 enum WIZARD_STATES {
     WIZARD_IDLE_STATE,
     WIZARD_ATTACK_STATE,
-    WIZARD_FALL_STATE,
     WIZARD_HURT_STATE
 };
 
@@ -29,6 +28,7 @@ class AA_Wizard : public AA_Enemy
         int time_since_last_hit;
         float velocity_y = 0;
         float gravity = 1;
+        SDL_FRect hitbox;
 
         void SetState(WIZARD_STATES new_state);
         void UpdateVision();
@@ -42,4 +42,5 @@ class AA_Wizard : public AA_Enemy
         void Update() override;
         void Render() override;
         void TakeDamage(bool to_right) override;
+        SDL_FRect GetBodyHitbox() override;
 };

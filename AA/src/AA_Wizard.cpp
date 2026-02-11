@@ -69,7 +69,7 @@ void AA_Wizard::Init()
             "assets/sprites/enemies/wizard/wizard_attack9.png",
             "assets/sprites/enemies/wizard/wizard_attack10.png",
         },
-        8
+        10
     );
     animations[WIZARD_HURT_STATE] = new AA_Animation(
         {
@@ -94,7 +94,7 @@ void AA_Wizard::Update()
         SDL_FRect fireball_data = fireball->GetData();
         SDL_FRect *player_body_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
         
-        if(SDL_HasRectIntersectionFloat(&fireball_data, player_body_hitbox))
+        if(SDL_HasRectIntersectionFloat(&fireball_data, player_body_hitbox) && !AA_RefLinks::GetPlayer()->IsInvincible())
             AA_RefLinks::GetPlayer()->TakeDamage();
     }
 
@@ -104,7 +104,6 @@ void AA_Wizard::Update()
         return;
     }
 
-    current_animation->Update();
     UpdateVision();
 
     for(auto it = fireballs.begin(); it != fireballs.end(); ) 
@@ -130,9 +129,6 @@ void AA_Wizard::Update()
 
             collision_bottom_left = CheckCollision(data.x, data.y + data.h);
             collision_bottom_right = CheckCollision(data.x + data.w, data.y + data.h);
-
-            if(!collision_bottom_left && !collision_bottom_right)
-                SetState(WIZARD_FALL_STATE);
 
             if(SDL_HasRectIntersectionFloat(player_rect, &vision))
                 SetState(WIZARD_ATTACK_STATE);
@@ -188,6 +184,8 @@ void AA_Wizard::Update()
 
     for(auto fireball : fireballs)
         fireball->Update();
+
+    current_animation->Update();
 }
 
 void AA_Wizard::Render()
@@ -249,4 +247,14 @@ void AA_Wizard::TakeDamage(bool to_right)
     time_since_last_hit = 0;
 
     SetState(WIZARD_HURT_STATE);
+}
+
+SDL_FRect AA_Wizard::GetBodyHitbox()
+{
+    return {
+        .x = data.x,
+        .y = data.y,
+        .w = 192,
+        .h = 192
+    };
 }

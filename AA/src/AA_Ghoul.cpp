@@ -29,6 +29,14 @@ void AA_Ghoul::UpdateHitbox()
 
     hitbox.x = data.x + hitbox_offset_x;
     hitbox.y = data.y + hitbot_offset_y;
+
+    if(current_state == GHOUL_HURT)
+    {
+        hitbox.w = 0;
+        hitbox.h = 0;
+        hitbox.x = 0;
+        hitbox.y = 0;
+    }
 }
 
 void AA_Ghoul::ApplyGravity()
@@ -230,4 +238,9 @@ void AA_Ghoul::TakeDamage(bool to_right)
     time_since_last_hit = 0;
 
     SetState(GHOUL_HURT);
+}
+
+SDL_FRect AA_Ghoul::GetBodyHitbox()
+{
+    return hitbox;
 }

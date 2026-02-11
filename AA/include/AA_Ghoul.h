@@ -47,4 +47,5 @@ class AA_Ghoul : public AA_Enemy
         void Update() override;
         void Render() override;
         void TakeDamage(bool to_right) override;
+        SDL_FRect GetBodyHitbox() override;
 };

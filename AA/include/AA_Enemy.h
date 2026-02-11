@@ -25,4 +25,5 @@ class AA_Enemy : public AA_Creature
         int GetHealth();
         bool IsDead();
         virtual void TakeDamage(bool to_right) = 0;
+        virtual SDL_FRect GetBodyHitbox() = 0;
 };
