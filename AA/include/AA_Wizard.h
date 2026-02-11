@@ -8,6 +8,7 @@
 enum WIZARD_STATES {
     WIZARD_IDLE_STATE,
     WIZARD_ATTACK_STATE,
+    WIZARD_FALL_STATE,
     WIZARD_HURT_STATE
 };
 
@@ -26,6 +27,8 @@ class AA_Wizard : public AA_Enemy
         float knockback_velocity;
         int knocked_out_timer;
         int time_since_last_hit;
+        float velocity_y = 0;
+        float gravity = 1;
 
         void SetState(WIZARD_STATES new_state);
         void UpdateVision();

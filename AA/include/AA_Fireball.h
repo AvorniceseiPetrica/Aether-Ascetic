@@ -22,4 +22,5 @@ class AA_Fireball : public AA_DrawableEntity
         void Render() override;
         bool CheckCollision(float new_x, float new_y);
         bool HasCollided();
+        SDL_FRect GetData();
 };

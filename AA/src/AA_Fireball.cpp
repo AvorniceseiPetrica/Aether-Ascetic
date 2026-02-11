@@ -73,3 +73,8 @@ bool AA_Fireball::HasCollided()
 {
     return collided;
 }
+
+SDL_FRect AA_Fireball::GetData()
+{
+    return data;
+}

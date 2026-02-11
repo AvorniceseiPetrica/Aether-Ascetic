@@ -136,7 +136,13 @@ void AA_Ghoul::Init()
     );
     animations[GHOUL_HURT] = new AA_Animation(
         {
-            "assets/sprites/enemies/ghoul/ghoul_hurt.png"
+            "assets/sprites/enemies/enemy_death/enemy_death1.png",
+            "assets/sprites/enemies/enemy_death/enemy_death2.png",
+            "assets/sprites/enemies/enemy_death/enemy_death3.png",
+            "assets/sprites/enemies/enemy_death/enemy_death4.png",
+            "assets/sprites/enemies/enemy_death/enemy_death5.png",
+            "assets/sprites/enemies/enemy_death/enemy_death6.png",
+            "assets/sprites/enemies/enemy_death/enemy_death7.png",
         },
         8
     );
@@ -184,15 +190,8 @@ void AA_Ghoul::Update()
 
         case GHOUL_HURT:
         {
-            HandleHurt();
-            
-            if(knockback_velocity <= 1)
-            {
-                knocked_out_timer++;
-
-                if(knocked_out_timer > 50)
-                    SetState(GHOUL_RUN);
-            }
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 6)
+                is_dead = true;
         }
 
         default: break;

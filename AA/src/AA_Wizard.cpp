@@ -73,7 +73,13 @@ void AA_Wizard::Init()
     );
     animations[WIZARD_HURT_STATE] = new AA_Animation(
         {
-            "assets/sprites/enemies/wizard/wizard_hurt.png"
+            "assets/sprites/enemies/enemy_death/enemy_death1.png",
+            "assets/sprites/enemies/enemy_death/enemy_death2.png",
+            "assets/sprites/enemies/enemy_death/enemy_death3.png",
+            "assets/sprites/enemies/enemy_death/enemy_death4.png",
+            "assets/sprites/enemies/enemy_death/enemy_death5.png",
+            "assets/sprites/enemies/enemy_death/enemy_death6.png",
+            "assets/sprites/enemies/enemy_death/enemy_death7.png",
         },
         8
     );
@@ -83,6 +89,21 @@ void AA_Wizard::Init()
 
 void AA_Wizard::Update()
 {
+    for(auto fireball : fireballs)
+    {
+        SDL_FRect fireball_data = fireball->GetData();
+        SDL_FRect *player_body_hitbox = AA_RefLinks::GetPlayer()->GetBodyHitbox();
+        
+        if(SDL_HasRectIntersectionFloat(&fireball_data, player_body_hitbox))
+            AA_RefLinks::GetPlayer()->TakeDamage();
+    }
+
+    if(data.x > MAP_WIDTH || data.y > MAP_HEIGHT)
+    {
+        is_dead = true;
+        return;
+    }
+
     current_animation->Update();
     UpdateVision();
 
@@ -105,6 +126,14 @@ void AA_Wizard::Update()
     {
         case WIZARD_IDLE_STATE :
         {
+            bool collision_bottom_left, collision_bottom_right;
+
+            collision_bottom_left = CheckCollision(data.x, data.y + data.h);
+            collision_bottom_right = CheckCollision(data.x + data.w, data.y + data.h);
+
+            if(!collision_bottom_left && !collision_bottom_right)
+                SetState(WIZARD_FALL_STATE);
+
             if(SDL_HasRectIntersectionFloat(player_rect, &vision))
                 SetState(WIZARD_ATTACK_STATE);
         }
@@ -150,15 +179,8 @@ void AA_Wizard::Update()
 
         case WIZARD_HURT_STATE :
         {
-            HandleHurt();
-
-            if(knockback_velocity <= 1)
-            {
-                knocked_out_timer++;
-
-                if(knocked_out_timer > 50)
-                    SetState(WIZARD_IDLE_STATE);
-            }
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 6)
+                is_dead = true;
         }
         
         default: break;
