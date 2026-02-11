@@ -1,3 +1,5 @@
+#pragma once
+
 #include "AA_Enemy.h"
 
 #include <vector>

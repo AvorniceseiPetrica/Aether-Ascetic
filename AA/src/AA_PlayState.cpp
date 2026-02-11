@@ -2,6 +2,7 @@
 
 #include "AA_RefLinks.h"
 #include "AA_MenuState.h"
+#include "AA_GameOverState.h"
 
 void AA_PlayState::Init()
 {
@@ -29,11 +30,8 @@ void AA_PlayState::Update()
 {
     const bool *keys = SDL_GetKeyboardState(nullptr);
 
-    if(keys[SDL_SCANCODE_ESCAPE])
-    {
-        AA_RefLinks::GetGame()->ChangeState(new AA_MenuState);
-        return;
-    }
+    if(AA_RefLinks::GetPlayer()->GetHealth() <= 0)
+        AA_RefLinks::GetGame()->ChangeState(new AA_GameOverState);
 
     world.Update();
 }

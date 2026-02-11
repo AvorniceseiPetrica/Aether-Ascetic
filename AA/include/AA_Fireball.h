@@ -1,3 +1,5 @@
+#pragma once
+
 #include <SDL3/SDL.h>
 #include "AA_DrawableEntity.h"
 #include "AA_Animation.h"
