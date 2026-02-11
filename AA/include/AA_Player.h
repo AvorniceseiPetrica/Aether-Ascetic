@@ -39,6 +39,11 @@ class AA_Player : public AA_Creature
         SDL_FRect body_hitbox;
         SDL_FRect attack_hitbox;
 
+        int hurt_timer;
+        bool invincible;
+        bool invincible_timer_started;
+        int invincible_timer;
+
         void SetState(PLAYER_STATES new_state);
         void HandleHorizontalMovement();
         void ApplyGravity();
@@ -63,4 +68,5 @@ class AA_Player : public AA_Creature
         void ChangePosition(float x, float y);
         void ChangeState(PLAYER_STATES new_state);
         int GetHealth();
+        bool IsInvincible();
 };

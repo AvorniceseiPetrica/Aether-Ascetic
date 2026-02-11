@@ -304,6 +304,18 @@ void AA_Player::Init()
 
 void AA_Player::Update()
 {
+    if(invincible_timer_started)
+    {
+        invincible_timer++;
+
+        if(invincible_timer > 100)
+        {
+            invincible_timer = 0;
+            invincible = false;
+            invincible_timer_started = false;
+        }
+    }
+
     UpdateBodyHitbox();
     UpdateAttackHitbox();
 
@@ -406,7 +418,9 @@ void AA_Player::Update()
 
         case PLAYER_HURT:
         {
-            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 1)
+            hurt_timer++;
+
+            if(current_animation->GetFrameCounterValue() / current_animation->GetFrameSpeed() == 1 && hurt_timer > 20)
             {
                 SetState(PLAYER_FALL);
                 return;
@@ -470,6 +484,9 @@ PLAYER_STATES AA_Player::GetCurrentState()
 void AA_Player::TakeDamage()
 {
     health--;
+    hurt_timer = 0;
+    invincible = true;
+    invincible_timer_started = true;
 
     SetState(PLAYER_HURT);
 }
@@ -493,4 +510,9 @@ void AA_Player::ChangeState(PLAYER_STATES new_state)
 int AA_Player::GetHealth()
 {
     return health;
+}
+
+bool AA_Player::IsInvincible()
+{
+    return invincible;
 }
