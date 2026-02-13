@@ -29,7 +29,6 @@ void AA_Animation::Update()
 
 SDL_Texture* AA_Animation::GetFrame()
 {
-    SDL_Log("%d", frame_counter);
     return frames[frame_counter / frame_speed];
 }
 
