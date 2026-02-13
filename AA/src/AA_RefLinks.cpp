@@ -6,6 +6,7 @@ AA_Camera *AA_RefLinks::camera = nullptr;
 AA_Player *AA_RefLinks::player = nullptr;
 AA_Map *AA_RefLinks::map = nullptr;
 AA_Game *AA_RefLinks::game = nullptr;
+int AA_RefLinks::current_level_id = -1;
 
 void AA_RefLinks::SetWindow(SDL_Window *p_window)
 {
@@ -83,4 +84,14 @@ void AA_RefLinks::SetGame(AA_Game *p_game)
 AA_Game* AA_RefLinks::GetGame()
 {
     return game;
+}
+
+void AA_RefLinks::SetCurrentLevelId(int p_current_level_id)
+{
+    current_level_id = p_current_level_id;
+}
+
+int AA_RefLinks::GetCurrentLevelId()
+{
+    return current_level_id;
 }

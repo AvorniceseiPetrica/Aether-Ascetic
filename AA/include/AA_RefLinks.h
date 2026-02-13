@@ -16,6 +16,7 @@ class AA_RefLinks
         static AA_Player *player;
         static AA_Map *map;
         static AA_Game *game;
+        static int current_level_id;
 
     public:
 
@@ -31,4 +32,6 @@ class AA_RefLinks
         static AA_Map* GetMap();
         static void SetGame(AA_Game *p_game);
         static AA_Game* GetGame();
+        static void SetCurrentLevelId(int p_current_level_id);
+        static int GetCurrentLevelId();
 };

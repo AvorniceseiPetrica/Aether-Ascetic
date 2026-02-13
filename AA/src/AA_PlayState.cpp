@@ -3,6 +3,7 @@
 #include "AA_RefLinks.h"
 #include "AA_MenuState.h"
 #include "AA_GameOverState.h"
+#include "AA_WinState.h"
 
 void AA_PlayState::Init()
 {
@@ -32,6 +33,9 @@ void AA_PlayState::Update()
 
     if(AA_RefLinks::GetPlayer()->GetHealth() <= 0)
         AA_RefLinks::GetGame()->ChangeState(new AA_GameOverState);
+
+    // if(AA_RefLinks::GetPlayer()->GetBodyHitbox()->x > MAP_WIDTH - AA_RefLinks::GetPlayer()->GetData()->x && AA_RefLinks::GetCurrentLevelId() == 3)
+    //     AA_RefLinks::GetGame()->ChangeState(new AA_WinState);
 
     world.Update();
 }
