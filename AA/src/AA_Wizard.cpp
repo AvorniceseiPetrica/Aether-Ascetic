@@ -44,6 +44,18 @@ void AA_Wizard::HandleHurt()
     knockback_velocity *= 0.9;
 }
 
+void AA_Wizard::UpdateHitbox()
+{
+    hitbox.x = data.x + 30;
+    hitbox.y = data.y;
+
+    if(current_state == WIZARD_HURT_STATE)
+    {
+        hitbox.x = 0;
+        hitbox.y = 0;
+    }
+}
+
 void AA_Wizard::Init()
 {
     animations[WIZARD_IDLE_STATE] = new AA_Animation(
@@ -85,10 +97,15 @@ void AA_Wizard::Init()
     );
 
     SetState(WIZARD_IDLE_STATE);
+    
+    hitbox.w = 120;
+    hitbox.h = 192;
 }
 
 void AA_Wizard::Update()
 {
+    UpdateHitbox();
+
     for(auto fireball : fireballs)
     {
         SDL_FRect fireball_data = fireball->GetData();
@@ -206,9 +223,16 @@ void AA_Wizard::Render()
         .w = vision.w,
         .h = vision.h
     };
+    SDL_FRect htbx = {
+        .x = hitbox.x - camera.x,
+        .y = hitbox.y - camera.y,
+        .w = hitbox.w,
+        .h = hitbox .h
+    };
 
     SDL_SetRenderDrawColor(AA_RefLinks::GetRenderer(), 0x00, 0x00, 0x00, 0xFF);
     SDL_RenderRect(AA_RefLinks::GetRenderer(), &vis);
+    SDL_RenderRect(AA_RefLinks::GetRenderer(), &htbx);
     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, moving_right ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
@@ -251,10 +275,5 @@ void AA_Wizard::TakeDamage(bool to_right)
 
 SDL_FRect AA_Wizard::GetBodyHitbox()
 {
-    return {
-        .x = data.x,
-        .y = data.y,
-        .w = 192,
-        .h = 192
-    };
+    return hitbox;
 }

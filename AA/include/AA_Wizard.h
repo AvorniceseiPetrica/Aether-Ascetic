@@ -33,6 +33,7 @@ class AA_Wizard : public AA_Enemy
         void SetState(WIZARD_STATES new_state);
         void UpdateVision();
         void HandleHurt();
+        void UpdateHitbox();
 
     public:
 
