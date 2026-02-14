@@ -29,8 +29,6 @@ void AA_PlayState::HandleEvents()
 
 void AA_PlayState::Update()
 {
-    const bool *keys = SDL_GetKeyboardState(nullptr);
-
     if(AA_RefLinks::GetPlayer()->GetHealth() <= 0)
         AA_RefLinks::GetGame()->ChangeState(new AA_GameOverState);
 

@@ -35,8 +35,6 @@ void AA_LevelManager::Init()
     
     AA_RefLinks::SetPlayer(&player);
 
-    SDL_FRect *player_hitbox = player.GetBodyHitbox();
-
     SDL_Log("Level manager initialized...\n");
 }
 
@@ -80,12 +78,8 @@ void AA_LevelManager::ChangeLevel(long unsigned int level_id)
 
     player.ChangePosition(current_level->GetPlayerSpawn().x, current_level->GetPlayerSpawn().y);
 
-    //SDL_Log("clid = %d, a = %lu, x = %f", current_level_id, levels.size() - 1, AA_RefLinks::GetPlayer()->GetData()->x);
-
-    if(current_level_id == levels.size() - 1 && AA_RefLinks::GetPlayer()->GetData()->x > MAP_WIDTH - 3 * TILE_WIDTH)
+    if((long unsigned int)current_level_id == levels.size() - 1 && AA_RefLinks::GetPlayer()->GetData()->x > MAP_WIDTH - 3 * TILE_WIDTH)
         AA_RefLinks::GetGame()->ChangeState(new AA_WinState);
-
-    //AA_RefLinks::SetCurrentLevelId(level_id);
 
     player.ChangeState(PLAYER_FALL);
 }

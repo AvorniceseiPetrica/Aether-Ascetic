@@ -142,11 +142,6 @@ void AA_Wizard::Update()
     {
         case WIZARD_IDLE_STATE :
         {
-            bool collision_bottom_left, collision_bottom_right;
-
-            collision_bottom_left = CheckCollision(data.x, data.y + data.h);
-            collision_bottom_right = CheckCollision(data.x + data.w, data.y + data.h);
-
             if(SDL_HasRectIntersectionFloat(player_rect, &vision))
                 SetState(WIZARD_ATTACK_STATE);
         }

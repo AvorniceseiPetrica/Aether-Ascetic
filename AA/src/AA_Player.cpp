@@ -429,6 +429,8 @@ void AA_Player::Update()
             }
         }
         break;
+
+        default: break;
     }
 
     current_animation->Update();

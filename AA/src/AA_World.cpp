@@ -37,7 +37,7 @@ void AA_World::Render()
     SDL_FRect dst = {
         .x = 0,
         .y = 0,
-        .w = 64 * AA_RefLinks::GetPlayer()->GetHealth(),
+        .w = 64 * (float)AA_RefLinks::GetPlayer()->GetHealth(),
         .h = 64
     };
 
