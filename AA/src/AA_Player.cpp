@@ -198,10 +198,10 @@ void AA_Player::UpdateAttackHitbox()
                 if(moving_right)
                     attack_hitbox.x = data.x + 70;
                 else
-                    attack_hitbox.x = data.x + 50;
+                    attack_hitbox.x = data.x + 20;
 
                 attack_hitbox.y = data.y;
-                attack_hitbox.w = 30;
+                attack_hitbox.w = 60;
                 attack_hitbox.h = 150;
             }
             else
@@ -216,6 +216,8 @@ void AA_Player::UpdateAttackHitbox()
         {
             attack_hitbox.w = 0;
             attack_hitbox.h = 0;
+            attack_hitbox.x = 0;
+            attack_hitbox.y = 0;
         }
     }
 }

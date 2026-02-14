@@ -1,2 +1,0 @@
-1 1 48 48 assets/props/level1/floating_rocks.png
-1 1 96 96 assets/props/level1/table.png

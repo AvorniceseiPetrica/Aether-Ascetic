@@ -1,1 +1,0 @@
-2 2 72 72 assets/props/level2/grass1.png

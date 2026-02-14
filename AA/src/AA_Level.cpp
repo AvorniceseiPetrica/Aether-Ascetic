@@ -4,10 +4,9 @@
 #include "AA_TextureLoader.h"
 #include <fstream>
 
-AA_Level::AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn, std::string p_layers_config, std::string p_enemies_config_path)
+AA_Level::AA_Level(std::string p_map_path, SDL_Point p_player_spawn, std::string p_layers_config, std::string p_enemies_config_path)
 {
     map_path = p_map_path;
-    props_config_path = p_props_config_path;
     layers_config = p_layers_config;
     player_spawn = p_player_spawn;
     enemies_config_path = p_enemies_config_path;
@@ -44,9 +43,6 @@ void AA_Level::Init()
         }
     }
 
-    props.LoadProps(props_config_path);
-    props.Init();
-
     AA_RefLinks::SetMap(&map);
 
     enemy_manager.LoadEnemies(enemies_config_path);
@@ -67,8 +63,6 @@ void AA_Level::Update()
 void AA_Level::Render()
 {
     RenderLayers();
-
-    props.Render();
     
     map.Render();
 

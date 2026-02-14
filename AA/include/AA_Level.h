@@ -19,9 +19,6 @@ class AA_Level
         std::string layers_config;
         std::vector <float> layers_parallaxes;
 
-        AA_PropManager props;
-        std::string props_config_path;
-
         SDL_Point player_spawn;
 
         AA_EnemyManager enemy_manager;
@@ -30,7 +27,7 @@ class AA_Level
 
     public:
 
-        AA_Level(std::string p_map_path, std::string p_props_config_path, SDL_Point p_player_spawn, std::string p_layers_config, std::string p_enemies_config_path);
+        AA_Level(std::string p_map_path, SDL_Point p_player_spawn, std::string p_layers_config, std::string p_enemies_config_path);
         ~AA_Level();
         void Init();
         void Update();
