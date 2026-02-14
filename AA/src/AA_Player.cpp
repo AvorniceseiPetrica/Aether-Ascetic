@@ -443,24 +443,9 @@ void AA_Player::Render()
         .h = (float)height
     };
 
-    SDL_FRect body_hitbox = *GetBodyHitbox();
-    SDL_FRect attack_hitbox = GetAttackHitbox();
-
-    body_hitbox.x -= AA_RefLinks::GetCamera()->GetViewPort().x;
-    body_hitbox.y -= AA_RefLinks::GetCamera()->GetViewPort().y;
-
-    attack_hitbox.x -= AA_RefLinks::GetCamera()->GetViewPort().x;
-    attack_hitbox.y -= AA_RefLinks::GetCamera()->GetViewPort().y;
-
     SDL_FlipMode flip_mode = moving_right ? SDL_FLIP_NONE : SDL_FLIP_HORIZONTAL;
 
     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, flip_mode);
-    
-    SDL_SetRenderDrawColor(AA_RefLinks::GetRenderer(), 0xFF, 0x00, 0x00, 0x00);
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &body_hitbox);
-
-    SDL_SetRenderDrawColor(AA_RefLinks::GetRenderer(), 0x55, 0xFF, 0x55, 0x00);
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &attack_hitbox);
 }
 
 SDL_FRect* AA_Player::GetData()

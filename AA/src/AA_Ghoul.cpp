@@ -215,14 +215,7 @@ void AA_Ghoul::Render()
         .w = data.w,
         .h = data.h
     };
-    SDL_FRect htbx = {
-        .x = hitbox.x - camera.x,
-        .y = hitbox.y - camera.y,
-        .w = hitbox.w,
-        .h = hitbox.h
-    };
 
-    SDL_RenderRect(AA_RefLinks::GetRenderer(), &htbx);
     SDL_RenderTextureRotated(AA_RefLinks::GetRenderer(), current_animation->GetFrame(), nullptr, &dst, 0, nullptr, moving_right ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE);
 }
 
